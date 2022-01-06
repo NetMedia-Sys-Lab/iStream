@@ -29,7 +29,7 @@ export default class Login extends Component {
          <main>
             <div className="container h-100">
                <div className="row justify-content-center align-items-center main-height">
-                  <div className="col-md-9">
+                  <div className="col-md-8">
                      <form className="center-container" onSubmit={this.login}>
                         <h1 className="center-text">Welcome to iStream</h1>
                         <hr />
@@ -48,9 +48,12 @@ export default class Login extends Component {
                               </button>
                            </div>
                         </div>
-                        <div className="center-text py-2">
-                           New User? <a href="/register">Register Now</a>
-                        </div>
+                        <p className="text-center text-muted mt-3 mb-0">
+                           New User?{" "}
+                           <a href="/register" className="fw-bold text-body">
+                              <u>Register Now</u>
+                           </a>
+                        </p>
                      </form>
                   </div>
                </div>
