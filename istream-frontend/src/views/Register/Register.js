@@ -24,19 +24,16 @@ export default class Register extends Component {
          this.state.email === "" ||
          this.state.email === null
       ) {
-         toast.error("Please enter an username and an email");
+         toast.error("Please fill username and email sections first.");
          return;
       }
 
       userRegistration(this.state)
-         .then((res) => {
+         .then(() => {
             toast.success("User registered successfully.");
+            // window.location.assign("/login");
          })
-         .catch((error) => toast.warn(error));
-
-      // .then(
-      // 	()=>{window.location.assign('/login')}
-      // )
+         .catch((error) => toast.warn(error.data));
    };
 
    render() {
@@ -45,10 +42,7 @@ export default class Register extends Component {
             <div className="container h-100">
                <div className="row justify-content-center align-items-center main-height">
                   <div className="col-md-8">
-                     <form
-                        className="center-container"
-                        onSubmit={this.submitRegistration}
-                     >
+                     <form className="center-container" onSubmit={this.submitRegistration}>
                         <h2 className="text-center">Create an account</h2>
                         <hr />
                         <div className="form-group mb-4">
@@ -111,7 +105,7 @@ export default class Register extends Component {
                         <p className="text-center text-muted mt-3 mb-0">
                            Have already an account?{" "}
                            <a href="/login" className="fw-bold text-body">
-                              <u>Login here</u>
+                              <u>Login</u>
                            </a>
                         </p>
                      </form>

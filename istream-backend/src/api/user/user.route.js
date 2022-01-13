@@ -4,11 +4,9 @@ const router = require("express").Router();
 const controller = require("./../../controllers/user/user.controller");
 // const passwordController = require("../controllers/password.controller");
 
-//REGISTER ROUTE
 router.post("/register", controller.userRegistration);
 
-//LOGIN ROUTE
-// router.post("/login", validateInfo, controller.user_login);
+router.get("/getAllUsers", controller.getAllUser);
 
 //USER TOKEN ROUTE
 // router.get("/verify-token", authorization, controller.user_token_verify);

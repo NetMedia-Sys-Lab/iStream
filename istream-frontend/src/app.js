@@ -12,14 +12,16 @@ import Login from "src/views/Login/Login";
 import Register from "src/views/Register/Register";
 
 ReactDOM.render(
-   <Router>
-      <Routes>
-         <Route path="/" element={<Home />} />
-         <Route path="/login" element={<Login />} />
-         <Route path="/Register" element={<Register />} />
-      </Routes>
-      <ToastContainer position="bottom-left"/>
-   </Router>,
+   <div>
+      <Router>
+         <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
+         </Routes>
+         <ToastContainer position="bottom-left" autoClose={5000} />
+      </Router>
+   </div>,
    document.getElementById("root")
 );
 
