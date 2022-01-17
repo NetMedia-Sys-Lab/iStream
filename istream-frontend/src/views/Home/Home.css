@@ -1,6 +1,7 @@
 .experiment-button{
     background-color: white;
     border-color: white;
+    transition: 0s;
 }
 
 tr:hover button{

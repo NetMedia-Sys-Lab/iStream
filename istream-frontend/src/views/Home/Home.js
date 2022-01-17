@@ -134,7 +134,7 @@ export default class Home extends Component {
             <div className="h-100 main-height">
                <Header />
                <div className="container">
-                  <div className="row justify-content-end mt-2">
+                  <div className="row justify-content-end mt-4">
                      <h2 className="col-md-10 ">My Experiments</h2>
                      <Button
                         className="col-md-2"
