@@ -1,0 +1,14 @@
+.experiment-button{
+    background-color: white;
+    border-color: white;
+}
+
+tr:hover button{
+    transition: 0s;
+    background-color: #ECECEC;
+    border-color: #ECECEC;
+    -webkit-transition: 0s;
+    -moz-transition: 0s;
+    -ms-transition: 0s;
+    -o-transition: 0s;
+}

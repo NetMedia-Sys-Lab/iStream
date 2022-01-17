@@ -11,7 +11,7 @@ export default class Header extends Component {
       return (
          <nav
             className="navbar navbar-expand-lg navbar-light"
-            style={{ "backgroundColor": "#F6F6F6" }}
+            style={{ "backgroundColor": "#dddddd" }}
          >
             <div className="container">
                <span className="navbar-brand mb-0 h1">iStream</span>

@@ -10,3 +10,18 @@ export const createNewExperiment = (request) => {
       }
    );
 };
+
+export const getUserExperimentsList = (user) => {
+   return API.get("/experiment/getUserExperimentsList", {
+      params: {
+         user,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

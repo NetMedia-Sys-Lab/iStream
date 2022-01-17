@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import Header from "src/views/Common/Header";
 import { Button, Modal } from "react-bootstrap";
 import { createNewExperiment } from "src/api/ExperimentAPI";
+import ExperimentsList from "./ExperimentsList";
+import { toast } from "react-toastify";
+import "./Home.css";
 
 export default class Home extends Component {
    state = {
@@ -27,7 +30,7 @@ export default class Home extends Component {
       };
 
       createNewExperiment(newExperimentObj).then((res) => {
-         console.log(res);
+         toast.success(res);
          // const isNew = 0; //0 means new experiment
          //redirect to the experiment configuration screen and pass the experiment id along
          // this.props.history.push(
@@ -127,21 +130,28 @@ export default class Home extends Component {
 
    render() {
       return (
-         <div>
-            <Header />
-            <div className="container">
-               <div className="row justify-content-end mt-2">
-                  <h2 className="col-md-10 ">My Experiments</h2>
-                  <Button
-                     className="col-md-2"
-                     onClick={() => this.setState({ showCreateExperimentModal: true })}
-                  >
-                     Create New Experiment
-                  </Button>
+         <main>
+            <div className="h-100 main-height">
+               <Header />
+               <div className="container">
+                  <div className="row justify-content-end mt-2">
+                     <h2 className="col-md-10 ">My Experiments</h2>
+                     <Button
+                        className="col-md-2"
+                        onClick={() => this.setState({ showCreateExperimentModal: true })}
+                     >
+                        Create New Experiment
+                     </Button>
+                  </div>
+                  {this.generateCreateExperimentModal()}
+                  <div className="row justify-content-center">
+                     <div className="center-container">
+                        <ExperimentsList />
+                     </div>
+                  </div>
                </div>
-               {this.generateCreateExperimentModal()}
             </div>
-         </div>
+         </main>
       );
    }
 }

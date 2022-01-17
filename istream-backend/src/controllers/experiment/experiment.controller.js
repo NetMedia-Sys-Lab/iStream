@@ -68,5 +68,20 @@ module.exports.createNewExperiment = (req, res) => {
    writeToFile(networkConfigFilePath, stringifyNetworkConfigData, "createNewExperiment");
    writeToFile(experimentConfigFilePath, stringifyExperimentConfigData, "createNewExperiment");
 
-   res.send("Success");
+   res.status(200).send("New Experiment Created Successfully");
+};
+
+module.exports.getUserExperimentsList = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentsListFileName = `src/database/users/${username}/experiments_list.json`;
+   fs.readFile(experimentsListFileName, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage =
+            "Something went wrong in getUserExperimentsList: Couldn't read experimentsListFileName file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      res.send(data);
+   });
 };
