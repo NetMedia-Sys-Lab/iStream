@@ -7,17 +7,19 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "src/css/style.css";
 
-import Home from "src/views/Home/Home";
+import Preview from "src/views/Preview/Preview";
 import Login from "src/views/Login/Login";
 import Register from "src/views/Register/Register";
+import Home from "src/views/Home/Home";
 
 ReactDOM.render(
    <div>
       <Router>
          <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Preview />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/Register" element={<Register />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/home" element={<Home />} />
          </Routes>
          <ToastContainer position="bottom-left" autoClose={5000} />
       </Router>

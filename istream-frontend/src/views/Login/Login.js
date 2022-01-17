@@ -31,7 +31,7 @@ export default class Login extends Component {
       });
    };
 
-   handleSubmit = (event) => {
+   handleLogin = (event) => {
       event.preventDefault();
       if (this.state.selectedUser === "") {
          return;
@@ -41,19 +41,8 @@ export default class Login extends Component {
          (user) => user.userId === this.state.selectedUser
       );
 
-      //Store the user in the redux store
-      // this.props.selectUser(currentUser);
-
-      //call the backend and pass the currentUser.
-
-      //axios.post('http://localhost:3000/login',{userId : this.state.value}).then((res) => {
-      //    console.log(res.data);
-      //Add user to redux store
-      //this.props.selectUser()
-      //});
-
-      //navigate to the home page
-      // this.props.history.push("/home");
+      localStorage.setItem("user", JSON.stringify(currentUser));
+      window.location.assign("home");
    };
 
    render() {
@@ -96,7 +85,7 @@ export default class Login extends Component {
 
                      <div className="row justify-content-center">
                         <div className="col-sm-4">
-                           <button className="green-button" onClick={this.handleSubmit}>
+                           <button className="green-button" onClick={this.handleLogin}>
                               Login
                            </button>
                         </div>

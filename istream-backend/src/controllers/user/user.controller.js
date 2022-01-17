@@ -1,4 +1,5 @@
 const fs = require("fs");
+const writeToFile = require("../../utils/fileUtils");
 
 //USER REGISTRATION CONTROLLER
 module.exports.userRegistration = (req, res) => {
@@ -30,15 +31,7 @@ module.exports.userRegistration = (req, res) => {
       //Add the new user to the existing users list.
       allUsers.push(newUser);
       let stringifyData = JSON.stringify(allUsers);
-
-      fs.writeFile(registeredUsersFilePath, stringifyData, function (err) {
-         if (err) {
-            let errorMessage =
-               "Something went wrong in addNewUser: Couldn't write to registered users file.";
-            console.log(errorMessage);
-            res.status(500).send(errorMessage);
-         }
-      });
+      writeToFile(registeredUsersFilePath, stringifyData, "userRegistration");
 
       //create the folder hierarchy for the new user
       const dirName = `src/database/users/${username}`;
@@ -47,28 +40,22 @@ module.exports.userRegistration = (req, res) => {
       fs.mkdirSync(dirNameExperiments);
 
       //create the experimentListFile for the new user. Initilize the file as an empty list
-      const experimentListFile = `src/database/users/${username}/experiment_list.json`;
-      fs.writeFile(experimentListFile, JSON.stringify([]), function (err) {
-         if (err) {
-            let errorMessage = "Something went wrong in addNewUser.";
-            console.log(errorMessage);
-            res.status(500).send(errorMessage);
-         }
-      });
+      const experimentListFile = `src/database/users/${username}/experiments_list.json`;
+      writeToFile(experimentListFile, JSON.stringify([]), "userRegistration");
 
       //create the machine List  for the new user. Initilize the file as an empty list. It will be a list of objects where each object is denotes a ssh dependencies
-      const sshMachinesListFile = `src/database/users/${username}/machine_list.json`;
-      fs.writeFile(sshMachinesListFile, JSON.stringify([]), function (err) {
-         if (err) {
-            let errorMessage = "Something went wrong in addNewUser.";
-            console.log(errorMessage);
-            res.status(500).send(errorMessage);
-         }
-      });
+      // const sshMachinesListFile = `src/database/users/${username}/machine_list.json`;
+      // fs.writeFile(sshMachinesListFile, JSON.stringify([]), function (err) {
+      //    if (err) {
+      //       let errorMessage = "Something went wrong in addNewUser.";
+      //       console.log(errorMessage);
+      //       res.status(500).send(errorMessage);
+      //    }
+      // });
 
       //Create the folder where the ssh keys would be saved
-      const sshKeysFolder = `src/database/users/${username}/SSHKeys`;
-      fs.mkdirSync(sshKeysFolder);
+      // const sshKeysFolder = `src/database/users/${username}/SSHKeys`;
+      // fs.mkdirSync(sshKeysFolder);
 
       //create the modules folder for the new user
       const modulesDirName = `src/database/users/${username}/Modules`;

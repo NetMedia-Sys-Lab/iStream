@@ -14,7 +14,8 @@ app.use(express.json()); //to return files as json
 app.use(cors()); //for cross origin  files
 
 //ROUTES
-app.use("/auth", require("./api/user/user.route"));
+app.use("/auth", require("./api/user.route"));
+app.use("/experiment", require("./api/experiment.route"));
 
 //SERVER PORT
 server.listen(PORT, () => {

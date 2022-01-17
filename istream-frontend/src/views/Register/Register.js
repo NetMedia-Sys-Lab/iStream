@@ -31,7 +31,7 @@ export default class Register extends Component {
       userRegistration(this.state)
          .then(() => {
             toast.success("User registered successfully.");
-            // window.location.assign("/login");
+            window.location.assign("/login");
          })
          .catch((error) => toast.warn(error.data));
    };
