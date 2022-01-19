@@ -13,21 +13,44 @@ export default class ExperimentsList extends Component {
       });
    }
 
+   gotoSelectedExperiment = (experimentId) => {
+      console.log("here");
+   };
+
+   deleteSelectedExperiment = (experimentId) => {
+
+   }
+
+   duplicateSelectedExperiment = (experimentId) => {
+
+   }
+
    render() {
       const tableData = this.state.userExperimentsList.map((experiment) => {
          return (
             <tr key={experiment.experimentId}>
-               <td className="align-middle">{experiment.experimentName}</td>
-               <td className="align-middle">{experiment.description}</td>
-               <td className="align-middle">{experiment.experimentDate}</td>
+               <td
+                  onClick={() => this.gotoSelectedExperiment(experiment.experimentId)}
+                  className="align-middle"
+                  style={{ cursor: "pointer" }}
+               >
+                  {experiment.experimentName}
+               </td>
+               <td
+                  onClick={() => this.gotoSelectedExperiment(experiment.experimentId)}
+                  className="align-middle"
+                  style={{ cursor: "pointer" }}
+               >
+                  {experiment.description}
+               </td>
+               <td
+                  onClick={() => this.gotoSelectedExperiment(experiment.experimentId)}
+                  className="align-middle"
+                  style={{ cursor: "pointer" }}
+               >
+                  {experiment.experimentDate}
+               </td>
                <td className="align-middle">
-                  <button
-                     className="btn btn-light mx-1 experiment-button"
-                     title="Open Experiment"
-                     onClick={() => this.gotoSelectedExperiment(experiment.experimentId)}
-                  >
-                     <i className="fa fa-folder text-primary" style={{ cursor: "pointer" }}></i>
-                  </button>
                   <button
                      className="btn btn-light mx-1 experiment-button"
                      title="Delete Experiment"
