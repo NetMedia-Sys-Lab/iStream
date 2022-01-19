@@ -27,6 +27,7 @@ export default class CreateExperimentModal extends Component {
 
       createNewExperiment(newExperimentObj).then((res) => {
          toast.success(res);
+
          // const isNew = 0; //0 means new experiment
          //redirect to the experiment configuration screen and pass the experiment id along
          // this.props.history.push(
@@ -108,10 +109,7 @@ export default class CreateExperimentModal extends Component {
                         >
                            Create
                         </Button>
-                        <Button
-                           onClick={this.props.toggleDisplayModal}
-                           variant="danger"
-                        >
+                        <Button onClick={this.props.toggleDisplayModal} variant="danger">
                            Cancel
                         </Button>
                      </div>

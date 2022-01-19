@@ -85,3 +85,44 @@ module.exports.getUserExperimentsList = (req, res) => {
       res.send(data);
    });
 };
+
+module.exports.deleteExperiment = (req, res) => {
+   const { userId, username, experimentId } = req.body;
+
+   //Remove the folder whose experiment id is experimentID
+   const deleteFolder = `src/database/users/${username}/Experiments/${experimentId}`;
+   try {
+      fs.rmdirSync(deleteFolder, {
+         recursive: true,
+      });
+   } catch (err) {
+      let errorMessage = "Something went wrong in deleteExperiment: Couldn't delete directory.";
+      console.log(errorMessage);
+      res.status(500).send(errorMessage);
+   }
+
+   //Update the user experiment_list.json file
+   const experimentsFilePath = `src/database/users/${username}/experiments_list.json`;
+   fs.readFile(experimentsFilePath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage =
+            "Something went wrong in deleteExperiment: Couldn't read experimentsList file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      experimentList = JSON.parse(data);
+      const updatedExperimentList = experimentList.filter(
+         (experiment) => experiment.experimentId != experimentId
+      );
+
+      //Write the updated file again
+      writeToFile(experimentsFilePath, JSON.stringify(updatedExperimentList), "deleteExperiment");
+
+      res.status(200).send("Experiment Deleted Successfully");
+   });
+};
+
+module.exports.duplicateExperiment = (req, res) => {
+   
+};

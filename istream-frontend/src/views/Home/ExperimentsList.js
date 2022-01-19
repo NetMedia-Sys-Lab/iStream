@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { getUserExperimentsList } from "src/api/ExperimentAPI";
+import { toast } from "react-toastify";
+import { getUserExperimentsList, deleteExperiment } from "src/api/ExperimentAPI";
 
 export default class ExperimentsList extends Component {
    state = {
@@ -8,24 +9,41 @@ export default class ExperimentsList extends Component {
    };
 
    componentDidMount() {
+      this.fetchUserExperiments();
+   }
+
+   fetchUserExperiments = () => {
       getUserExperimentsList(this.state.user).then((res) => {
          this.setState({ userExperimentsList: res });
       });
-   }
+   };
 
    gotoSelectedExperiment = (experimentId) => {
       console.log("here");
    };
 
    deleteSelectedExperiment = (experimentId) => {
+      const data = {
+         userId: this.state.user.userId,
+         username: this.state.user.username,
+         experimentId: experimentId,
+      };
 
-   }
+      deleteExperiment(data).then((res) => {
+         toast.success(res);
+         this.fetchUserExperiments();
+      });
+   };
 
    duplicateSelectedExperiment = (experimentId) => {
+      const data = {
+         userId: this.state.user.userId,
+         username: this.state.user.username,
+         experimentId: experimentId,
+      };
+   };
 
-   }
-
-   render() {
+   showTable = () => {
       const tableData = this.state.userExperimentsList.map((experiment) => {
          return (
             <tr key={experiment.experimentId}>
@@ -82,6 +100,22 @@ export default class ExperimentsList extends Component {
             </thead>
             <tbody>{tableData}</tbody>
          </table>
+      );
+   };
+
+   emptyTable = () => {
+      return (
+         <p className="text-center">
+            <b>No experiments found. Please create an experiment first. </b>
+         </p>
+      );
+   };
+
+   render() {
+      return (
+         <div>
+            {this.state.userExperimentsList.length === 0 ? this.emptyTable() : this.showTable()}
+         </div>
       );
    }
 }
