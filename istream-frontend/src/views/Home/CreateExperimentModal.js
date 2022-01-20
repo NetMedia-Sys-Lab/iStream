@@ -27,12 +27,7 @@ export default class CreateExperimentModal extends Component {
 
       createNewExperiment(newExperimentObj).then((res) => {
          toast.success(res);
-
-         // const isNew = 0; //0 means new experiment
-         //redirect to the experiment configuration screen and pass the experiment id along
-         // this.props.history.push(
-         //    `/experimentconfig/${newExperimentObj.userName}/${newExperimentObj.experimentId}/${isNew}`
-         // );
+         window.location.assign(`/experiment/${newExperimentObj.experimentId}`);
       });
    };
 

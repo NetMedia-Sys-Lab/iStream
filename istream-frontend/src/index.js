@@ -11,6 +11,7 @@ import Preview from "src/views/Preview/Preview";
 import Login from "src/views/Login/Login";
 import Register from "src/views/Register/Register";
 import Home from "src/views/Home/Home";
+import Experiment from "src/views/Experiment/Experiment";
 
 ReactDOM.render(
    <div>
@@ -20,6 +21,7 @@ ReactDOM.render(
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/experiment/:experimentId" element={<Experiment />} />
          </Routes>
          <ToastContainer position="bottom-left" autoClose={5000} />
       </Router>

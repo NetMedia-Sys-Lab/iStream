@@ -23,7 +23,7 @@ export default class ExperimentsList extends Component {
    };
 
    gotoSelectedExperiment = (experimentId) => {
-      console.log("here");
+      window.location.assign(`/experiment/${experimentId}`);
    };
 
    deleteSelectedExperiment = (experimentId) => {
