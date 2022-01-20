@@ -1,4 +1,5 @@
 const fs = require("fs");
+const fsExtra = require("fs-extra");
 const experimentModel = require("../../models/experiment.model");
 const writeToFile = require("../../utils/fileUtils");
 
@@ -92,7 +93,7 @@ module.exports.deleteExperiment = (req, res) => {
    //Remove the folder whose experiment id is experimentID
    const deleteFolder = `src/database/users/${username}/Experiments/${experimentId}`;
    try {
-      fs.rmdirSync(deleteFolder, {
+      fs.rmSync(deleteFolder, {
          recursive: true,
       });
    } catch (err) {
@@ -116,7 +117,6 @@ module.exports.deleteExperiment = (req, res) => {
          (experiment) => experiment.experimentId != experimentId
       );
 
-      //Write the updated file again
       writeToFile(experimentsFilePath, JSON.stringify(updatedExperimentList), "deleteExperiment");
 
       res.status(200).send("Experiment Deleted Successfully");
@@ -124,5 +124,51 @@ module.exports.deleteExperiment = (req, res) => {
 };
 
 module.exports.duplicateExperiment = (req, res) => {
-   
+   const { userId, username, oldExperimentId, experimentName, newExperimentId } = req.body;
+
+   const newExperimentDate = new Date(parseInt(newExperimentId)).toLocaleDateString();
+   const newExperimentTime = new Date(parseInt(newExperimentId)).toLocaleTimeString();
+   const folderToCopy = `src/database/users/${username}/Experiments/${oldExperimentId}`;
+   const copyToFolder = `src/database/users/${username}/Experiments/${newExperimentId}`;
+
+   try {
+      fs.mkdirSync(copyToFolder);
+      fsExtra.copySync(folderToCopy, copyToFolder);
+   } catch (err) {
+      let errorMessage =
+         "Something went wrong in duplicateExperiment: Couldn't copy experiment directory.";
+      console.log(errorMessage);
+      res.status(500).send(errorMessage);
+   }
+
+   const userExperimentsListFile = `src/database/users/${username}/experiments_list.json`;
+   //fetch the data from the file
+   fs.readFile(userExperimentsListFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage =
+            "Something went wrong in duplicateExperiment: Couldn't read experimentsList file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      const oldExperiment = jsonData.find((exp) => exp.experimentId == oldExperimentId);
+
+      const newExperiment = {
+         experimentId: newExperimentId,
+         experimentName: experimentName,
+         description: oldExperiment.description,
+         experimentDate: newExperimentDate,
+         experimentTime: newExperimentTime,
+         networkComponentExistence: oldExperiment.networkComponentExistence,
+         transcoderComponentExistence: oldExperiment.transcoderComponentExistence,
+      };
+
+      //Add the new experiment to the existing experiments list.
+      jsonData.unshift(newExperiment);
+
+      writeToFile(userExperimentsListFile, JSON.stringify(jsonData), "duplicateExperiment");
+
+      res.status(200).send("Experiment duplicated Successfully");
+   });
 };

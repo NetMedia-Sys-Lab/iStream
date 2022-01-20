@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
-import { getUserExperimentsList, deleteExperiment } from "src/api/ExperimentAPI";
+import {
+   getUserExperimentsList,
+   deleteExperiment,
+   duplicateExperiment,
+} from "src/api/ExperimentAPI";
 
 export default class ExperimentsList extends Component {
    state = {
@@ -36,11 +40,24 @@ export default class ExperimentsList extends Component {
    };
 
    duplicateSelectedExperiment = (experimentId) => {
+      let experimentName = prompt("Enter Experiment Name");
+      if (experimentName === null || experimentName === "") {
+         toast.warn("Please enter a valid experiment name");
+         return;
+      }
+
       const data = {
          userId: this.state.user.userId,
          username: this.state.user.username,
-         experimentId: experimentId,
+         oldExperimentId: experimentId,
+         experimentName: experimentName,
+         newExperimentId: Date.now().toString(),
       };
+
+      duplicateExperiment(data).then((res) => {
+         toast.success(res);
+         this.fetchUserExperiments();
+      });
    };
 
    showTable = () => {
