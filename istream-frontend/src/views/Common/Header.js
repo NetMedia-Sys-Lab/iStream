@@ -13,7 +13,7 @@ export default class Header extends Component {
             className="navbar navbar-expand-lg navbar-dark bg-dark"
          >
             <div className="container">
-               <span className="navbar-brand mb-0 h1">iStream</span>
+               <span className="navbar-brand mb-0 ms-1 h1">iStream</span>
 
                <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
@@ -22,11 +22,11 @@ export default class Header extends Component {
                            Home
                         </a>
                      </li>
-                     <li className="nav-item">
+                     {/* <li className="nav-item">
                         <a className="nav-link" href="/temp">
                            Setting
                         </a>
-                     </li>
+                     </li> */}
                      <li className="nav-item">
                         <a className="nav-link" href="/login" onClick={this.logout}>
                            Logout

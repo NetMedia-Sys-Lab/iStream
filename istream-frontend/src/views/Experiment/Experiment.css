@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0
+}
+
+html {
+    height: 100%
+}
+
+.radioPad{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.radioPadWrapper{
+    display: block;
+    cursor: pointer;
+    border-radius: 10px;
+    background: #244D5B;
+    color: white;
+    margin: 0.2rem;
+    padding: 1rem;
+    text-align: center;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}    
+
+.radioPadWrapper:active, .radioPadWrapperSelected{
+    background: rgb(155, 147, 72) !important;
+}
+
+.radioPadWrapper:hover{
+    background: rgb(97, 136, 74);
+}
+      
+.radioPadRadio{
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    opacity: 0;
+}
+  
