@@ -5,6 +5,7 @@ import ProgressBar from "src/views/Common/ProgressBar";
 export default class Stepper extends Component {
    state = {
       currentStep: 1,
+      showAddModule: false,
    };
 
    goToNextStep = () => {
@@ -71,6 +72,24 @@ export default class Stepper extends Component {
       );
    }
 
+   get addModuleButton() {
+      if (this.props.isUserModule && this.state.currentStep === 1) {
+         return (
+            <Button
+               variant="success"
+               className="float-end me-1"
+               onClick={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ showAddModule: true });
+               }}
+            >
+               Add Module
+            </Button>
+         );
+      }
+      return null;
+   }
+
    render() {
       return (
          <div>
@@ -81,7 +100,7 @@ export default class Stepper extends Component {
                <Modal.Body>
                   <form>
                      <ProgressBar
-                        value={this.props.currentStep}
+                        value={this.state.currentStep}
                         numberOfSteps={this.props.totalNumberOfSteps + 1}
                      />
                      <br />
@@ -96,6 +115,7 @@ export default class Stepper extends Component {
                         {this.previousButton}
                         {this.nextButton}
                         {this.submitButton}
+                        {this.addModuleButton}
                      </div>
                   </form>
                </Modal.Body>

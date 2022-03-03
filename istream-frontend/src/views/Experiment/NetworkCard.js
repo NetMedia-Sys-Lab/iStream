@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Common/Stepper";
-
+import { getDefaultModules, getUserModules } from "src/api/ModulesAPI";
 export default class NetworkCard extends Component {
    state = {
+      user: JSON.parse(localStorage.getItem("user")),
+      moduleName: "Network",
       displayModal: false,
       totalNumberOfSteps: 2,
       moduleTypes: ["iStream", "Custom"],
-      iStreamModuleOptions: ["Default Network"],
+      iStreamModuleOptions: [],
       userModuleOptions: [],
       selectedModuleType: "",
       selectedModule: "",
@@ -19,6 +21,16 @@ export default class NetworkCard extends Component {
       showModuleConfiguration: false,
    };
 
+   componentDidMount() {
+      getDefaultModules(this.state.moduleName).then((res) => {
+         this.setState({ iStreamModuleOptions: res });
+      });
+
+      getUserModules(this.state.user, this.state.moduleName).then((res) => {
+         this.setState({ userModuleOptions: res });
+      });
+   }
+
    onNetworkConfigChange = (e) => {
       this.setState({
          networkConfig: {
@@ -28,9 +40,11 @@ export default class NetworkCard extends Component {
       });
    };
 
-   moduleType = () => {
-      const moduleTypeOptions = this.state.moduleTypes.map((loan, key) => {
-         const isCurrent = this.state.selectedModuleType === loan;
+   getModuleOptionsList = (list, isModuleType = false) => {
+      return list.map((loan, key) => {
+         const isCurrent = isModuleType
+            ? this.state.selectedModuleType === loan
+            : this.state.selectedModule === loan;
          return (
             <div key={key} className="radioPad">
                <div>
@@ -43,9 +57,14 @@ export default class NetworkCard extends Component {
                         className="radioPadRadio"
                         type="radio"
                         value={loan}
-                        onClick={(e) =>
-                           this.setState({ selectedModuleType: e.target.value, selectedModule: "" })
-                        }
+                        onClick={(e) => {
+                           isModuleType
+                              ? this.setState({
+                                   selectedModuleType: e.target.value,
+                                   selectedModule: "",
+                                })
+                              : this.setState({ selectedModule: e.target.value });
+                        }}
                      />
                      {loan}
                   </label>
@@ -53,29 +72,17 @@ export default class NetworkCard extends Component {
             </div>
          );
       });
+   };
 
-      const iStreamModuleOptions = this.state.iStreamModuleOptions.map((loan, key) => {
-         const isCurrent = this.state.selectedModule === loan;
-         return (
-            <div key={key} className="radioPad">
-               <div>
-                  <label
-                     className={
-                        isCurrent ? "radioPadWrapper radioPadWrapperSelected" : "radioPadWrapper"
-                     }
-                  >
-                     <input
-                        className="radioPadRadio"
-                        type="radio"
-                        value={loan}
-                        onClick={(e) => this.setState({ selectedModule: e.target.value })}
-                     />
-                     {loan}
-                  </label>
-               </div>
-            </div>
+   moduleType = () => {
+      const moduleTypeOptions = this.getModuleOptionsList(this.state.moduleTypes, true);
+      const iStreamModuleOptions = this.getModuleOptionsList(this.state.iStreamModuleOptions);
+      const userModuleOptions =
+         this.state.userModuleOptions.length === 0 ? (
+            <div>No Modules found. Please add modules to proceed.</div>
+         ) : (
+            this.getModuleOptionsList(this.state.userModuleOptions)
          );
-      });
 
       return (
          <div>
@@ -83,7 +90,11 @@ export default class NetworkCard extends Component {
             <div className="center">{moduleTypeOptions}</div>
             <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
             <div className="center">
-               {this.state.selectedModuleType === "iStream" ? iStreamModuleOptions : ""}
+               {this.state.selectedModuleType !== ""
+                  ? this.state.selectedModuleType === "iStream"
+                     ? iStreamModuleOptions
+                     : userModuleOptions
+                  : ""}
             </div>
          </div>
       );
@@ -208,6 +219,7 @@ export default class NetworkCard extends Component {
                steps={[this.moduleType(), this.configDefaultNetworkModule()]}
                onSubmit={() => this.setState({ showModuleConfiguration: true })}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
+               isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
             />
          </div>
       );

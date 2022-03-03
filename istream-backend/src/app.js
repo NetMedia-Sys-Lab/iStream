@@ -16,6 +16,7 @@ app.use(cors()); //for cross origin  files
 //ROUTES
 app.use("/auth", require("./api/user.route"));
 app.use("/experiment", require("./api/experiment.route"));
+app.use("/modules", require("./api/modules.route"));
 
 //SERVER PORT
 server.listen(PORT, () => {
