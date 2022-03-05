@@ -4,6 +4,7 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const cors = require("cors");
+const fileUpload = require('express-fileupload');
 
 //CONSTANTS
 const PORT = process.env.PORT || 8080;
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json()); //to return files as json
 // app.options("*", cors());
 app.use(cors()); //for cross origin  files
+app.use(fileUpload());
 
 //ROUTES
 app.use("/auth", require("./api/user.route"));

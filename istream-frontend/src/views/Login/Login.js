@@ -11,7 +11,6 @@ export default class Login extends Component {
    componentDidMount() {
       getAllUsers()
          .then((ServerUsers) => {
-            console.log(ServerUsers);
             if (ServerUsers.length === 0) {
                toast.warn("No registered users found");
             } else {

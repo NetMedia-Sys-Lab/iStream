@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ProgressBar from "src/views/Common/ProgressBar";
+import AddModule from "src/views/Common/AddModule";
 
 export default class Stepper extends Component {
    state = {
       currentStep: 1,
-      showAddModule: false,
+      displayAddModule: false,
    };
 
    goToNextStep = () => {
@@ -80,7 +81,7 @@ export default class Stepper extends Component {
                className="float-end me-1"
                onClick={() => {
                   this.props.toggleDisplay();
-                  this.setState({ showAddModule: true });
+                  this.setState({ displayAddModule: true });
                }}
             >
                Add Module
@@ -120,6 +121,15 @@ export default class Stepper extends Component {
                   </form>
                </Modal.Body>
             </Modal>
+            <AddModule
+               display={this.state.displayAddModule}
+               moduleType={this.props.moduleType}
+               toggleDisplay={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddModule: false });
+               }}
+               updateData={this.props.updateData}
+            />
          </div>
       );
    }

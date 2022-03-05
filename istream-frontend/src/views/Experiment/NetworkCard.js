@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Common/Stepper";
 import { getDefaultModules, getUserModules } from "src/api/ModulesAPI";
+
 export default class NetworkCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
@@ -22,6 +23,10 @@ export default class NetworkCard extends Component {
    };
 
    componentDidMount() {
+      this.fetchData();
+   }
+
+   fetchData = () => {
       getDefaultModules(this.state.moduleName).then((res) => {
          this.setState({ iStreamModuleOptions: res });
       });
@@ -29,7 +34,7 @@ export default class NetworkCard extends Component {
       getUserModules(this.state.user, this.state.moduleName).then((res) => {
          this.setState({ userModuleOptions: res });
       });
-   }
+   };
 
    onNetworkConfigChange = (e) => {
       this.setState({
@@ -220,6 +225,8 @@ export default class NetworkCard extends Component {
                onSubmit={() => this.setState({ showModuleConfiguration: true })}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
+               moduleType={this.state.moduleName}
+               updateData={this.fetchData}
             />
          </div>
       );

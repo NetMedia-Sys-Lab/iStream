@@ -30,3 +30,14 @@ export const getUserModules = (user, moduleName) => {
       }
    );
 };
+
+export const createNewModule = (request) => {
+   return API.post("/modules/create", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

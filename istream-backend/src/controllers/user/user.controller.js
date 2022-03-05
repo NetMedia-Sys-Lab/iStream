@@ -13,7 +13,7 @@ module.exports.userRegistration = (req, res) => {
       const allUsers = JSON.parse(registeredUsersFile);
 
       if (Object.keys(allUsers).find((user) => allUsers[user].username === username)) {
-         res.status(500).send("This username already exists. Select another username please.");
+         res.status(409).send("This username already exists. Select another username please.");
          return;
       }
 

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
 export default class Header extends Component {
-   logout = (event) => {
-      event.preventDefault();
+   logout = () => {
       localStorage.removeItem("user");
       window.location.assign("login");
    };

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const decompress = require("decompress");
 
 module.exports.getDefaultModules = (req, res) => {
    const moduleName = req.query.moduleName;
@@ -27,4 +28,31 @@ module.exports.getUserModules = (req, res) => {
       res.status(500).send(errorMessage);
    }
    res.send(moduleList);
+};
+
+module.exports.create = (req, res) => {
+   const { userId, username, moduleType, moduleName, moduleDescription } = req.body;
+   const file = req.files.moduleFile;
+   const zipFilePath = `src/database/users/${username}/Modules/${moduleType}/${moduleName}.zip`;
+   const destinationFilePath = `src/database/users/${username}/Modules/${moduleType}/${moduleName}`;
+
+   file.mv(zipFilePath, (err) => {
+      if (err) {
+         let errorMessage =
+            "Something went wrong in Create new Module: couldn't write file into server";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      decompress(zipFilePath, destinationFilePath).then((err) => {
+         try {
+            fs.unlinkSync(zipFilePath);
+            res.status(200).send("New Module Added Successfully");
+         } catch {
+            let errorMessage = "Something went wrong in Create new Module: couldn't unzip the file";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+   });
 };
