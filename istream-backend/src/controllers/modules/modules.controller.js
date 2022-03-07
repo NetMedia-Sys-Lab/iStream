@@ -34,7 +34,7 @@ module.exports.create = (req, res) => {
    const { userId, username, moduleType, moduleName, moduleDescription } = req.body;
    const file = req.files.moduleFile;
    const zipFilePath = `src/database/users/${username}/Modules/${moduleType}/${moduleName}.zip`;
-   const destinationFilePath = `src/database/users/${username}/Modules/${moduleType}/${moduleName}`;
+   const destinationFilePath = `src/database/users/${username}/Modules/${moduleType}`;
 
    file.mv(zipFilePath, (err) => {
       if (err) {
@@ -44,7 +44,12 @@ module.exports.create = (req, res) => {
          res.status(500).send(errorMessage);
       }
 
-      decompress(zipFilePath, destinationFilePath).then((err) => {
+      decompress(zipFilePath, destinationFilePath, {
+         map: (file) => {
+            file.path = file.path.replace(file.path.split("/")[0], moduleName);
+            return file;
+         },
+      }).then((err) => {
          try {
             fs.unlinkSync(zipFilePath);
             res.status(200).send("New Module Added Successfully");

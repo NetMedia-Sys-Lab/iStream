@@ -84,7 +84,7 @@ export default class NetworkCard extends Component {
       const iStreamModuleOptions = this.getModuleOptionsList(this.state.iStreamModuleOptions);
       const userModuleOptions =
          this.state.userModuleOptions.length === 0 ? (
-            <div>No Modules found. Please add modules to proceed.</div>
+            <div>No Modules found. Please add a module to proceed.</div>
          ) : (
             this.getModuleOptionsList(this.state.userModuleOptions)
          );
@@ -94,7 +94,7 @@ export default class NetworkCard extends Component {
             <h5>Select Module Type</h5>
             <div className="center">{moduleTypeOptions}</div>
             <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
-            <div className="center">
+            <div>
                {this.state.selectedModuleType !== ""
                   ? this.state.selectedModuleType === "iStream"
                      ? iStreamModuleOptions
