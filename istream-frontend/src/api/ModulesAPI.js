@@ -1,9 +1,9 @@
 import API from "./API";
 
-export const getDefaultModules = (moduleName) => {
+export const getDefaultModules = (componentName) => {
    return API.get("/modules/getDefaultModules", {
       params: {
-         moduleName,
+         componentName,
       },
    }).then(
       (response) => {
@@ -15,11 +15,11 @@ export const getDefaultModules = (moduleName) => {
    );
 };
 
-export const getUserModules = (user, moduleName) => {
+export const getUserModules = (user, componentName) => {
    return API.get("/modules/getUserModules", {
       params: {
          user,
-         moduleName,
+         componentName,
       },
    }).then(
       (response) => {
@@ -33,6 +33,34 @@ export const getUserModules = (user, moduleName) => {
 
 export const createNewModule = (request) => {
    return API.post("/modules/create", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const addNewConfig = (request) => {
+   return API.post("/modules/addNewConfig", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getConfigFiles = (user, componentName, moduleName) => {
+   return API.get("/modules/getConfigFiles", {
+      params: {
+         user,
+         componentName,
+         moduleName,
+      },
+   }).then(
       (response) => {
          return response.data;
       },

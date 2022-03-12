@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import { getDefaultModules, getUserModules, getConfigFiles } from "src/api/ModulesAPI";
 
-export default class NetworkCard extends Component {
+export default class ClientCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
-      componentName: "Network",
+      componentName: "Client",
       displayModal: false,
       totalNumberOfSteps: 2,
       moduleTypes: ["iStream", "Custom"],
@@ -269,7 +269,7 @@ export default class NetworkCard extends Component {
                onClick={() => this.setState({ displayModal: true })}
             >
                <h4 className="text-center">
-                  <i className="fa fa-wifi" style={{ color: "#244D5B" }}></i>
+                  <i className="fa fa-desktop" style={{ color: "#244D5B" }}></i>
                   <br />
                   {this.state.componentName} Module
                </h4>

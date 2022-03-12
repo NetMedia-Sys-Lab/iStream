@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ProgressBar from "src/views/Common/ProgressBar";
-import AddModule from "src/views/Common/AddModule";
+import AddModule from "src/views/Experiment/Common/AddModule";
+import AddConfig from "src/views/Experiment/Common/AddConfig";
 
 export default class Stepper extends Component {
    state = {
       currentStep: 1,
       displayAddModule: false,
+      displayAddModuleConfig: false,
    };
 
    goToNextStep = () => {
@@ -56,6 +58,7 @@ export default class Stepper extends Component {
                onClick={() => {
                   this.props.onSubmit();
                   this.props.toggleDisplay();
+                  this.setState({ currentStep: 1 });
                }}
             >
                Submit
@@ -84,7 +87,25 @@ export default class Stepper extends Component {
                   this.setState({ displayAddModule: true });
                }}
             >
-               Add Module
+               Add New Module
+            </Button>
+         );
+      }
+      return null;
+   }
+
+   get addModuleConfigButton() {
+      if (this.props.isUserModule && this.state.currentStep === 2) {
+         return (
+            <Button
+               variant="success"
+               className="float-end me-1"
+               onClick={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddModuleConfig: true });
+               }}
+            >
+               Add New Config
             </Button>
          );
       }
@@ -96,7 +117,7 @@ export default class Stepper extends Component {
          <div>
             <Modal show={this.props.display}>
                <Modal.Header>
-                  <Modal.Title>Network Module Configuration</Modal.Title>
+                  <Modal.Title>{this.props.componentName} Module Configuration</Modal.Title>
                </Modal.Header>
                <Modal.Body>
                   <form>
@@ -117,18 +138,29 @@ export default class Stepper extends Component {
                         {this.nextButton}
                         {this.submitButton}
                         {this.addModuleButton}
+                        {this.addModuleConfigButton}
                      </div>
                   </form>
                </Modal.Body>
             </Modal>
             <AddModule
                display={this.state.displayAddModule}
-               moduleType={this.props.moduleType}
+               componentName={this.props.componentName}
                toggleDisplay={() => {
                   this.props.toggleDisplay();
                   this.setState({ displayAddModule: false });
                }}
                updateData={this.props.updateData}
+            />
+            <AddConfig
+               display={this.state.displayAddModuleConfig}
+               componentName={this.props.componentName}
+               toggleDisplay={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddModuleConfig: false });
+               }}
+               updateData={this.props.updateConfigFiles}
+               selectedModule={this.props.selectedModule}
             />
          </div>
       );

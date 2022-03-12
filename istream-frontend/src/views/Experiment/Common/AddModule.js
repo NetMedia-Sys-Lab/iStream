@@ -17,7 +17,7 @@ export default class AddModule extends Component {
       const newModuleData = new FormData();
       newModuleData.append("userId", this.state.user.userId);
       newModuleData.append("username", this.state.user.username);
-      newModuleData.append("moduleType", this.props.moduleType);
+      newModuleData.append("componentName", this.props.componentName);
       newModuleData.append("moduleName", this.state.moduleName);
       newModuleData.append("moduleDescription", this.state.moduleDescription);
       newModuleData.append("moduleFile", this.state.moduleFile);
@@ -25,6 +25,7 @@ export default class AddModule extends Component {
       createNewModule(newModuleData).then((res) => {
          this.props.updateData();
          toast.success(res);
+         this.setState({ moduleName: "", moduleDescription: "" });
          this.props.toggleDisplay();
       });
    };
@@ -34,7 +35,7 @@ export default class AddModule extends Component {
          <div>
             <Modal show={this.props.display}>
                <Modal.Header>
-                  <Modal.Title>Add New Module</Modal.Title>
+                  <Modal.Title>Add New {this.props.componentName} Module</Modal.Title>
                </Modal.Header>
                <Modal.Body>
                   <form onSubmit={this.onSubmit}>
