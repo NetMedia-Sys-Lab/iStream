@@ -32,11 +32,12 @@ export default class AddConfig extends Component {
    render() {
       return (
          <div>
-            <Modal show={this.props.display}>
+            <Modal dialogClassName="modal-size" show={this.props.display}>
                <Modal.Header>
                   <Modal.Title>Add New Module's Config</Modal.Title>
                </Modal.Header>
                <Modal.Body>
+                  <div><h5>Add your configuration file:</h5></div>
                   <form onSubmit={this.onSubmit}>
                      <div className="form-group row">
                         <label className="col-6 col-form-label">Module's Config File Name</label>
@@ -71,7 +72,7 @@ export default class AddConfig extends Component {
                            Cancel
                         </Button>
                         <Button className="float-end" type="submit">
-                           Save
+                           Upload
                         </Button>
                      </div>
                   </form>

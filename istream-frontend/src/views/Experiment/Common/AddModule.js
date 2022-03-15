@@ -33,11 +33,12 @@ export default class AddModule extends Component {
    render() {
       return (
          <div>
-            <Modal show={this.props.display}>
+            <Modal dialogClassName="modal-size" show={this.props.display}>
                <Modal.Header>
                   <Modal.Title>Add New {this.props.componentName} Module</Modal.Title>
                </Modal.Header>
                <Modal.Body>
+                  <div><h5>Add your module's zip file:</h5></div>
                   <form onSubmit={this.onSubmit}>
                      <div className="form-group row">
                         <label className="col-6 col-form-label">Module Name</label>
@@ -85,7 +86,7 @@ export default class AddModule extends Component {
                            Cancel
                         </Button>
                         <Button className="float-end" type="submit">
-                           Save
+                           Upload
                         </Button>
                      </div>
                   </form>

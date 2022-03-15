@@ -115,7 +115,7 @@ export default class Stepper extends Component {
    render() {
       return (
          <div>
-            <Modal show={this.props.display}>
+            <Modal dialogClassName="modal-size" show={this.props.display}>
                <Modal.Header>
                   <Modal.Title>{this.props.componentName} Module Configuration</Modal.Title>
                </Modal.Header>
