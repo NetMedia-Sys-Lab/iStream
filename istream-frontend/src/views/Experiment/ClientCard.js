@@ -45,15 +45,6 @@ export default class ClientCard extends Component {
       });
    };
 
-   onNetworkConfigChange = (e) => {
-      this.setState({
-         networkConfig: {
-            ...this.state.networkConfig,
-            [e.target.id]: e.target.value,
-         },
-      });
-   };
-
    getOptionsList = (list, type) => {
       return list.map((loan, key) => {
          let isCurrent;
@@ -122,79 +113,6 @@ export default class ClientCard extends Component {
                      ? iStreamModuleOptions
                      : userModuleOptions
                   : ""}
-            </div>
-         </div>
-      );
-   };
-
-   configDefaultNetworkModule = () => {
-      if (
-         this.state.selectedModuleType !== "iStream" &&
-         this.state.selectedModule !== "Default Network"
-      )
-         return null;
-
-      return (
-         <div>
-            <h5>Config Module</h5>
-            <div>
-               <div className="form-group row">
-                  <label className="col-6 col-form-label">Delay (ms):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="text"
-                        value={this.state.networkConfig.delay}
-                        id="delay"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Packet Loss (%):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="text"
-                        value={this.state.networkConfig.packetLoss}
-                        id="packetLoss"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Corrupt Packet (%):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="text"
-                        value={this.state.networkConfig.corruptPacket}
-                        id="corruptPacket"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Bandwidth Limit (Mbit):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="text"
-                        placeholder="Without Limit"
-                        value={
-                           this.state.networkConfig.bandwidth === 0
-                              ? ""
-                              : this.state.networkConfig.bandwidth
-                        }
-                        id="bandwidth"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
             </div>
          </div>
       );
@@ -279,10 +197,7 @@ export default class ClientCard extends Component {
                display={this.state.displayModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[
-                  this.moduleType(),
-                  [this.configDefaultNetworkModule(), this.configUserModule()],
-               ]}
+               steps={[this.moduleType(), [this.configUserModule()]]}
                onSubmit={() => this.setState({ showModuleConfiguration: true })}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
