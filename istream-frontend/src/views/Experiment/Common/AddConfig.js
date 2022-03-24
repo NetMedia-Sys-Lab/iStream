@@ -53,7 +53,7 @@ export default class AddConfig extends Component {
                            />
                         </div>
                      </div>
-                     <div className="form-group row mt-2">
+                     <div className="form-group">
                         <label className="col-6 col-form-label">Upload Module's Config File</label>
                         <div className="col-6">
                            <input

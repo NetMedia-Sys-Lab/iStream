@@ -3,12 +3,14 @@ import { Button, Modal } from "react-bootstrap";
 import ProgressBar from "src/views/Common/ProgressBar";
 import AddModule from "src/views/Experiment/Common/AddModule";
 import AddConfig from "src/views/Experiment/Common/AddConfig";
+import AddVideo from "src/views/Experiment/Common/AddVideo";
 
 export default class Stepper extends Component {
    state = {
       currentStep: 1,
       displayAddModule: false,
       displayAddModuleConfig: false,
+      displayAddNewVideo: false,
    };
 
    goToNextStep = () => {
@@ -80,7 +82,7 @@ export default class Stepper extends Component {
       if (this.props.isUserModule && this.state.currentStep === 1) {
          return (
             <Button
-               variant="success"
+               variant="secondary"
                className="float-end me-1"
                onClick={() => {
                   this.props.toggleDisplay();
@@ -98,7 +100,7 @@ export default class Stepper extends Component {
       if (this.props.isUserModule && this.state.currentStep === 2) {
          return (
             <Button
-               variant="success"
+               variant="secondary"
                className="float-end me-1"
                onClick={() => {
                   this.props.toggleDisplay();
@@ -106,6 +108,24 @@ export default class Stepper extends Component {
                }}
             >
                Add New Config
+            </Button>
+         );
+      }
+      return null;
+   }
+
+   get addNewVideoButton() {
+      if (this.props.componentName === "Video" && this.state.currentStep === 1) {
+         return (
+            <Button
+               variant="secondary"
+               className="float-end me-1"
+               onClick={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddNewVideo: true });
+               }}
+            >
+               Add New Video
             </Button>
          );
       }
@@ -139,6 +159,7 @@ export default class Stepper extends Component {
                         {this.submitButton}
                         {this.addModuleButton}
                         {this.addModuleConfigButton}
+                        {this.addNewVideoButton}
                      </div>
                   </form>
                </Modal.Body>
@@ -161,6 +182,14 @@ export default class Stepper extends Component {
                }}
                updateData={this.props.updateConfigFiles}
                selectedModule={this.props.selectedModule}
+            />
+            <AddVideo
+               display={this.state.displayAddNewVideo}
+               toggleDisplay={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddNewVideo: false });
+               }}
+               componentName={this.props.componentName}
             />
          </div>
       );

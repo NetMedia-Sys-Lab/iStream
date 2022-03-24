@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Header from "src/views/Common/Header";
-// import VideoCard from "src/views/Experiment/VideoCard";
+import VideoCard from "src/views/Experiment/VideoCard";
 import NetworkCard from "src/views/Experiment/NetworkCard";
 import ClientCard from "src/views/Experiment/ClientCard";
+import ServerCard from "src/views/Experiment/ServerCard";
 import "./Experiment.css";
 
 export default class Experiment extends Component {
@@ -16,10 +17,16 @@ export default class Experiment extends Component {
                      <h2>Config Experiment</h2>
                   </div>
                   <div className="row">
-                     <div className="col-md-4">
+                     <div className="col-md-3">
+                        <VideoCard />
+                     </div>
+                     <div className="col-md-3">
+                        <ServerCard />
+                     </div>
+                     <div className="col-md-3">
                         <NetworkCard />
                      </div>
-                     <div className="col-md-4">
+                     <div className="col-md-3">
                         <ClientCard />
                      </div>
                   </div>

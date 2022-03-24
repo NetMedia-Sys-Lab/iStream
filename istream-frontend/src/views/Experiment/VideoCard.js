@@ -1,39 +1,47 @@
 import React, { Component } from "react";
+import Stepper from "src/views/Experiment/Common/Stepper";
 
 export default class VideoCard extends Component {
    state = {
-      showConfig: false,
+      user: JSON.parse(localStorage.getItem("user")),
+      componentName: "Video",
+      displayModal: false,
+      totalNumberOfSteps: 1,
+      showModuleConfiguration: false,
+   };
+
+   videoSelection = () => {
+      return <div>test</div>;
    };
 
    render() {
       return (
          <div className="row justify-content-center mx-1">
-            <div className="center-container" style={{ borderRadius: "10px", padding: "20px" }}>
+            <div
+               className="center-container"
+               style={{ borderRadius: "10px", padding: "20px", cursor: "pointer" }}
+               onClick={() => this.setState({ displayModal: true })}
+            >
                <h4 className="text-center">
                   <i className="fa fa-play" style={{ color: "#244D5B" }}></i>
                   <br />
                   Video Selection
                </h4>
-               <hr />
-               <div className="text-center">
-                  <button
-                     className="btn btn-primary"
-                     type="button"
-                     onClick={() => this.setState({ showConfig: !this.state.showConfig })}
-                  >
-                     configure &nbsp;
-                     <i className="fa fa-chevron-down" />
-                  </button>
-               </div>
-               {this.state.showConfig ? <div>
-                  test
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                  test
-               </div>:""}
+               {/* {this.showModuleConfig()} */}
             </div>
+            <Stepper
+               display={this.state.displayModal}
+               totalNumberOfSteps={this.state.totalNumberOfSteps}
+               // validNextStep={this.state.selectedModule !== "" ? true : false}
+               steps={[this.videoSelection()]}
+               onSubmit={() => this.setState({ showModuleConfiguration: true })}
+               toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
+               // isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
+               componentName={this.state.componentName}
+               // updateData={this.fetchData}
+               // updateConfigFiles={this.getOneModuleConfigFiles}
+               // selectedModule={this.state.selectedModule}
+            />
          </div>
       );
    }

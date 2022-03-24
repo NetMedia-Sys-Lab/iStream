@@ -6,5 +6,7 @@ router.get("/getUserModules", controller.getUserModules);
 router.post("/create", controller.create);
 router.post("/addNewConfig", controller.addNewConfig);
 router.get("/getConfigFiles", controller.getConfigFiles);
+router.post("/addNewVideo", controller.addNewVideo);
+
 
 module.exports = router;

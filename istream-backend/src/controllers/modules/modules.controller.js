@@ -99,3 +99,54 @@ module.exports.getConfigFiles = (req, res) => {
    }
    res.send(configFilesList);
 };
+
+module.exports.addNewVideo = (req, res) => {
+   const { userId, username, componentName, resolution, frameRate, codec, bitRate } = req.body;
+   const file = req.files.video;
+   const videoName = file.name;
+   const videoPath = `src/database/Videos/${videoName.split(".")[0]}_${resolution}.${
+      videoName.split(".")[1]
+   }`;
+
+   const videosListFilePath = `src/database/Videos/videos_list.json`;
+
+   fs.readFile(videosListFilePath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in addNewVideo";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      const newVideo = {
+         name: videoName,
+         resolution: resolution,
+         frameRate: frameRate,
+         bitRate: bitRate,
+         codec: codec,
+      };
+
+      //Add the new experiment to the existing experiments list.
+      jsonData.unshift(newVideo);
+      let stringifyData = JSON.stringify(jsonData);
+
+      fs.writeFile(videosListFilePath, stringifyData, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in addNewVideo";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+   });
+
+   file.mv(videoPath, (err) => {
+      if (err) {
+         let errorMessage =
+            "Something went wrong in add New Config: couldn't write file into server";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      } else {
+         res.status(200).send("New Video Saved Successfully");
+      }
+   });
+};

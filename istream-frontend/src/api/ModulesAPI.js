@@ -69,3 +69,14 @@ export const getConfigFiles = (user, componentName, moduleName) => {
       }
    );
 };
+
+export const AddNewVideo = (request) => {
+   return API.post("/modules/addNewVideo", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

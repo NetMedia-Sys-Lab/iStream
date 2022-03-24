@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import { getDefaultModules, getUserModules, getConfigFiles } from "src/api/ModulesAPI";
 
 export default class ClientCard extends Component {
@@ -15,12 +16,6 @@ export default class ClientCard extends Component {
       selectedModuleType: "",
       selectedModule: "",
       selectedConfigFile: "",
-      networkConfig: {
-         delay: 0,
-         packetLoss: 0,
-         corruptPacket: 0,
-         bandwidth: 0,
-      },
       showModuleConfiguration: false,
    };
 
@@ -92,20 +87,59 @@ export default class ClientCard extends Component {
       });
    };
 
+   radioButtonOptions = (list) => {
+      return list.map((item) => {
+         return (
+            <div className="form-check" key={item}>
+               <input
+                  className="form-check-input"
+                  type="radio"
+                  name="flexRadioDefault"
+                  id="flexRadioDefault1"
+                  onClick={() => {
+                     this.setState({ selectedModule: item });
+                  }}
+                  checked={this.state.selectedModule === item}
+               />
+               <label className="form-check-label">{item}</label>
+            </div>
+         );
+      });
+   };
+
    moduleType = () => {
-      const moduleTypeOptions = this.getOptionsList(this.state.moduleTypes, "ModuleType");
-      const iStreamModuleOptions = this.getOptionsList(this.state.iStreamModuleOptions, "Module");
+      const moduleTypeOptions = (
+         <DropdownButton
+            id="dropdown-basic-button"
+            title={
+               this.state.selectedModuleType === ""
+                  ? "Select Module Type"
+                  : this.state.selectedModuleType
+            }
+            variant="secondary"
+         >
+            {this.state.moduleTypes.map((moduleType) => (
+               <Dropdown.Item key={moduleType}>
+                  <div onClick={() => this.setState({ selectedModuleType: moduleType })}>
+                     {moduleType}
+                  </div>
+               </Dropdown.Item>
+            ))}
+         </DropdownButton>
+      );
+
+      const iStreamModuleOptions = this.radioButtonOptions(this.state.iStreamModuleOptions);
       const userModuleOptions =
          this.state.userModuleOptions.length === 0 ? (
             <div>No Modules found. Please add a module to proceed.</div>
          ) : (
-            this.getOptionsList(this.state.userModuleOptions, "Module")
+            this.radioButtonOptions(this.state.userModuleOptions)
          );
 
       return (
          <div>
             <h5>Select Module Type</h5>
-            <div className="center">{moduleTypeOptions}</div>
+            <div className="mb-3">{moduleTypeOptions}</div>
             <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
             <div>
                {this.state.selectedModuleType !== ""
