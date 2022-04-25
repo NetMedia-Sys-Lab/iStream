@@ -27,6 +27,7 @@ export default class AddVideo extends Component {
       newVideoData.append("video", this.state.videoFile);
 
       AddNewVideo(newVideoData).then((res) => {
+         this.props.updateData();
          toast.success(res);
          this.props.toggleDisplay();
       });

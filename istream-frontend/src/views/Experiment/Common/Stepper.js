@@ -16,10 +16,7 @@ export default class Stepper extends Component {
    goToNextStep = () => {
       let currentStep = this.state.currentStep;
       this.setState({
-         currentStep:
-            currentStep >= this.props.totalNumberOfSteps - 1
-               ? this.props.totalNumberOfSteps
-               : currentStep + 1,
+         currentStep: currentStep >= this.props.totalNumberOfSteps - 1 ? this.props.totalNumberOfSteps : currentStep + 1,
       });
    };
 
@@ -141,14 +138,10 @@ export default class Stepper extends Component {
                </Modal.Header>
                <Modal.Body>
                   <form>
-                     <ProgressBar
-                        value={this.state.currentStep}
-                        numberOfSteps={this.props.totalNumberOfSteps + 1}
-                     />
+                     <ProgressBar value={this.state.currentStep} numberOfSteps={this.props.totalNumberOfSteps + 1} />
                      <br />
                      {this.props.steps.map((step, index) => {
-                        if (index + 1 === this.state.currentStep)
-                           return <div key={index}>{step}</div>;
+                        if (index + 1 === this.state.currentStep) return <div key={index}>{step}</div>;
                         return <div key={index}></div>;
                      })}
 
@@ -190,6 +183,7 @@ export default class Stepper extends Component {
                   this.setState({ displayAddNewVideo: false });
                }}
                componentName={this.props.componentName}
+               updateData={this.props.updateData}
             />
          </div>
       );

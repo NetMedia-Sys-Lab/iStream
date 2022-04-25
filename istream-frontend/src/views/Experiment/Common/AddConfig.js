@@ -37,7 +37,9 @@ export default class AddConfig extends Component {
                   <Modal.Title>Add New Module's Config</Modal.Title>
                </Modal.Header>
                <Modal.Body>
-                  <div><h5>Add your configuration file:</h5></div>
+                  <div>
+                     <h5>Add your configuration file:</h5>
+                  </div>
                   <form onSubmit={this.onSubmit}>
                      <div className="form-group row">
                         <label className="col-6 col-form-label">Module's Config File Name</label>
@@ -53,8 +55,10 @@ export default class AddConfig extends Component {
                            />
                         </div>
                      </div>
-                     <div className="form-group">
-                        <label className="col-6 col-form-label">Upload Module's Config File</label>
+                     <div className="form-group row mt-2">
+                        <label className="col-6 col-form-label">
+                           Upload Module's Config File
+                        </label>
                         <div className="col-6">
                            <input
                               className="form-control"

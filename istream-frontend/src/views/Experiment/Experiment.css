@@ -28,7 +28,7 @@ html {
 }    
 
 .radioPadWrapper:active, .radioPadWrapperSelected{
-    background: rgb(70, 70, 70) !important;
+    background: rgb(80, 80, 80) !important;
 }
 
 .radioPadWrapper:hover{
@@ -41,4 +41,8 @@ html {
     width: 0;
     opacity: 0;
 }
-  
+
+.selectedVideo {
+    background: #b9b9b9;
+}
+

@@ -3,10 +3,17 @@ const controller = require("../controllers/modules/modules.controller");
 
 router.get("/getDefaultModules", controller.getDefaultModules);
 router.get("/getUserModules", controller.getUserModules);
+router.get("/getConfigFiles", controller.getConfigFiles);
+router.get("/getVideosList", controller.getVideosList);
+router.get("/getModuleData", controller.getModuleData);
+router.get("/getNetworkConfiguration", controller.getNetworkConfiguration);
+router.get("/getVideoModuleData", controller.getVideoModuleData);
+
 router.post("/create", controller.create);
 router.post("/addNewConfig", controller.addNewConfig);
-router.get("/getConfigFiles", controller.getConfigFiles);
 router.post("/addNewVideo", controller.addNewVideo);
-
+router.post("/saveModuleData", controller.saveModuleData);
+router.post("/setNetworkConfiguration", controller.setNetworkConfiguration);
+router.post("/saveVideoModuleData", controller.saveVideoModuleData);
 
 module.exports = router;

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getDefaultModules, getUserModules, getConfigFiles } from "src/api/ModulesAPI";
+import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
+import { toast } from "react-toastify";
 
 export default class ClientCard extends Component {
    state = {
@@ -21,6 +22,15 @@ export default class ClientCard extends Component {
 
    componentDidMount() {
       this.fetchData();
+
+      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         this.setState({
+            selectedModuleType: data.type,
+            selectedModule: data.name,
+            selectedConfigFile: data.config,
+            showModuleConfiguration: data.name !== "" ? true : false,
+         });
+      });
    }
 
    fetchData = () => {
@@ -40,54 +50,7 @@ export default class ClientCard extends Component {
       });
    };
 
-   getOptionsList = (list, type) => {
-      return list.map((loan, key) => {
-         let isCurrent;
-         if (type === "ModuleType") isCurrent = this.state.selectedModuleType === loan;
-         else if (type === "Module") isCurrent = this.state.selectedModule === loan;
-         else if (type === "Config") isCurrent = this.state.selectedConfigFile === loan;
-
-         return (
-            <div key={key} className="radioPad">
-               <div>
-                  <label
-                     className={
-                        isCurrent ? "radioPadWrapper radioPadWrapperSelected" : "radioPadWrapper"
-                     }
-                  >
-                     <input
-                        className="radioPadRadio"
-                        type="radio"
-                        value={loan}
-                        onClick={(e) => {
-                           if (type === "ModuleType") {
-                              this.setState({
-                                 selectedModuleType: e.target.value,
-                                 selectedModule: "",
-                                 selectedConfigFile: "",
-                                 showModuleConfiguration: false,
-                              });
-                           } else if (type === "Module") {
-                              this.setState({
-                                 selectedModule: e.target.value,
-                                 selectedConfigFile: "",
-                                 showModuleConfiguration: false,
-                              });
-                              this.getOneModuleConfigFiles(e.target.value);
-                           } else if (type === "Config") {
-                              this.setState({ selectedConfigFile: e.target.value });
-                           }
-                        }}
-                     />
-                     {loan}
-                  </label>
-               </div>
-            </div>
-         );
-      });
-   };
-
-   radioButtonOptions = (list) => {
+   radioButtonOptions = (list, type) => {
       return list.map((item) => {
          return (
             <div className="form-check" key={item}>
@@ -96,12 +59,21 @@ export default class ClientCard extends Component {
                   type="radio"
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
-                  onClick={() => {
-                     this.setState({ selectedModule: item });
+                  onChange={() => {
+                     if (type === "Module") {
+                        this.setState({
+                           selectedConfigFile: "",
+                           showModuleConfiguration: false,
+                           selectedModule: item,
+                        });
+                        this.getOneModuleConfigFiles(item);
+                     } else if (type === "Config") {
+                        this.setState({ selectedConfigFile: item });
+                     }
                   }}
-                  checked={this.state.selectedModule === item}
+                  checked={type === "Module" ? this.state.selectedModule === item : this.state.selectedConfigFile === item}
                />
-               <label className="form-check-label">{item}</label>
+               <label className="form-check-label" key={item}>{item}</label>
             </div>
          );
       });
@@ -111,42 +83,40 @@ export default class ClientCard extends Component {
       const moduleTypeOptions = (
          <DropdownButton
             id="dropdown-basic-button"
-            title={
-               this.state.selectedModuleType === ""
-                  ? "Select Module Type"
-                  : this.state.selectedModuleType
-            }
+            title={this.state.selectedModuleType === "" ? "Select Module Type" : this.state.selectedModuleType}
             variant="secondary"
          >
             {this.state.moduleTypes.map((moduleType) => (
                <Dropdown.Item key={moduleType}>
-                  <div onClick={() => this.setState({ selectedModuleType: moduleType })}>
-                     {moduleType}
-                  </div>
+                  <div onClick={() => this.setState({ selectedModuleType: moduleType })}>{moduleType}</div>
                </Dropdown.Item>
             ))}
          </DropdownButton>
       );
 
-      const iStreamModuleOptions = this.radioButtonOptions(this.state.iStreamModuleOptions);
+      const iStreamModuleOptions = this.radioButtonOptions(this.state.iStreamModuleOptions, "Module");
       const userModuleOptions =
          this.state.userModuleOptions.length === 0 ? (
             <div>No Modules found. Please add a module to proceed.</div>
          ) : (
-            this.radioButtonOptions(this.state.userModuleOptions)
+            this.radioButtonOptions(this.state.userModuleOptions, "Module")
          );
 
       return (
-         <div>
-            <h5>Select Module Type</h5>
-            <div className="mb-3">{moduleTypeOptions}</div>
-            <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
-            <div>
-               {this.state.selectedModuleType !== ""
-                  ? this.state.selectedModuleType === "iStream"
-                     ? iStreamModuleOptions
-                     : userModuleOptions
-                  : ""}
+         <div className="row mb-2">
+            <div className="col-6">
+               <h5>Select Module Type</h5>
+               <div>{moduleTypeOptions}</div>
+            </div>
+            <div className="col-6">
+               <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
+               <div>
+                  {this.state.selectedModuleType !== ""
+                     ? this.state.selectedModuleType === "iStream"
+                        ? iStreamModuleOptions
+                        : userModuleOptions
+                     : ""}
+               </div>
             </div>
          </div>
       );
@@ -159,7 +129,7 @@ export default class ClientCard extends Component {
          this.state.userModuleConfigFiles.length === 0 ? (
             <div>No Config files found. Please add a new config file to proceed.</div>
          ) : (
-            this.getOptionsList(this.state.userModuleConfigFiles, "Config")
+            this.radioButtonOptions(this.state.userModuleConfigFiles, "Config")
          );
 
       return (
@@ -172,7 +142,8 @@ export default class ClientCard extends Component {
 
    showModuleConfig = () => {
       if (this.state.showModuleConfiguration !== true) return;
-      let template = (
+
+      return (
          <div>
             <hr />
             <strong> Module Type: </strong>
@@ -181,35 +152,34 @@ export default class ClientCard extends Component {
             <strong> Module Selected: </strong>
             {this.state.selectedModule}
             <br />
+            {this.state.selectedConfigFile !== "" ? (
+               <div>
+                  <strong>Config File Name: </strong>
+                  {this.state.selectedConfigFile}
+               </div>
+            ) : (
+               ""
+            )}
          </div>
       );
-      if (this.state.selectedModuleType === "iStream")
-         return (
-            <div>
-               {template}
-               <strong> Delay: </strong>
-               {this.state.networkConfig.delay}s
-               <br />
-               <strong> Packet Loss: </strong>
-               {this.state.networkConfig.packetLoss}%
-               <br />
-               <strong> Corrupt Packet: </strong>
-               {this.state.networkConfig.corruptPacket}%
-               <br />
-               <strong> Bandwidth: </strong>
-               {this.state.networkConfig.bandwidth === 0
-                  ? "Without limit"
-                  : this.state.networkConfig.bandwidth + "Mbit"}
-            </div>
-         );
-      else
-         return (
-            <div>
-               {template}
-               <strong>Config File Name: </strong>
-               {this.state.selectedConfigFile}
-            </div>
-         );
+   };
+
+   onSubmit = () => {
+      this.setState({ showModuleConfiguration: true });
+
+      const data = {
+         userId: this.state.user.userId,
+         username: this.state.user.username,
+         componentName: this.state.componentName,
+         experimentId: this.props.experimentId,
+         selectedModuleType: this.state.selectedModuleType,
+         selectedModule: this.state.selectedModule,
+         selectedConfigFile: this.state.selectedConfigFile,
+      };
+
+      saveExperimentModuleData(data).then((res) => {
+         toast.success(res);
+      });
    };
 
    render() {
@@ -232,7 +202,7 @@ export default class ClientCard extends Component {
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
                steps={[this.moduleType(), [this.configUserModule()]]}
-               onSubmit={() => this.setState({ showModuleConfiguration: true })}
+               onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
                componentName={this.state.componentName}

@@ -1,2 +1,2 @@
-#!bash/bin
-docker run --user vlc vlc cvlc -vvv http://10.1.6.221:8080/output.mpd
+#!bin/bash
+tc qdisc add dev eth0 root netem delay 100ms
