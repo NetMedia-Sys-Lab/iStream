@@ -69,3 +69,108 @@ export const getConfigFiles = (user, componentName, moduleName) => {
       }
    );
 };
+
+export const AddNewVideo = (request) => {
+   return API.post("/modules/addNewVideo", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getVideosList = () => {
+   return API.get("/modules/getVideosList").then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const saveExperimentModuleData = (data) => {
+   return API.post("/modules/saveModuleData", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getModuleData = (user, componentName, experimentId) => {
+   return API.get("/modules/getModuleData", {
+      params: {
+         user,
+         componentName,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getNetworkConfiguration = (user, experimentId) => {
+   return API.get("/modules/getNetworkConfiguration", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const setNetworkConfiguration = (data) => {
+   return API.post("/modules/setNetworkConfiguration", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const saveVideoModuleData = (data) => {
+   return API.post("/modules/saveVideoModuleData", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getVideoModuleData = (user, componentName, experimentId) => {
+   return API.get("/modules/getVideoModuleData", {
+      params: {
+         user,
+         componentName,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

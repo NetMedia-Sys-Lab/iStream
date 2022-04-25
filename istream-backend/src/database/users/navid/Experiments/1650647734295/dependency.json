@@ -1,0 +1,26 @@
+{
+    "Video": {
+        "id": ["1648581263727", "1648146517539"]
+    },
+    "Server": {
+        "name": "Nginx Dash",
+        "config": "",
+        "type": "iStream"
+    },
+    "Transcoder": {
+        "name": "test",
+        "config": "No Config",
+        "type": "Custom"
+    },
+    "Network": {
+        "name": "",
+        "config": "",
+        "type": "",
+        "manualConfig": ""
+    },
+    "Client": {
+        "name": "",
+        "config": "",
+        "type": ""
+    }
+}

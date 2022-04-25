@@ -12,6 +12,7 @@ import Login from "src/views/Login/Login";
 import Register from "src/views/Register/Register";
 import Home from "src/views/Home/Home";
 import Experiment from "src/views/Experiment/Experiment";
+import { useParams } from "react-router-dom";
 
 ReactDOM.render(
    <div>
@@ -21,9 +22,12 @@ ReactDOM.render(
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/experiment/:experimentId" element={<Experiment />} />
+            <Route
+               path="/experiment/:experimentId"
+               element={<Experiment experiment={()=>useParams()} />}
+            />
          </Routes>
-         <ToastContainer position="bottom-left" autoClose={5000} />
+         <ToastContainer position="bottom-left" autoClose={4000} />
       </Router>
    </div>,
    document.getElementById("root")

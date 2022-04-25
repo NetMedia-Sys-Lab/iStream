@@ -1,6 +1,11 @@
 const experimentJSONData = {
-   Input: {
+   Video: {
+      id: "",
+   },
+   Server: {
       name: "",
+      config: "",
+      type: "",
    },
    Transcoder: {
       name: "",
@@ -13,26 +18,10 @@ const experimentJSONData = {
       type: "",
       manualConfig: "",
    },
-   Server: {
-      name: "",
-      config: "",
-      type: "",
-   },
    Client: {
       name: "",
       config: "",
       type: "",
-   },
-   Status: {
-      type: "",
-      time: "",
-   },
-   Script: {
-      name: "",
-      type: "",
-   },
-   Machine: {
-      name: "",
    },
 };
 

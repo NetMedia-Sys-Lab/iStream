@@ -3,21 +3,20 @@ import { Button, Modal } from "react-bootstrap";
 import ProgressBar from "src/views/Common/ProgressBar";
 import AddModule from "src/views/Experiment/Common/AddModule";
 import AddConfig from "src/views/Experiment/Common/AddConfig";
+import AddVideo from "src/views/Experiment/Common/AddVideo";
 
 export default class Stepper extends Component {
    state = {
       currentStep: 1,
       displayAddModule: false,
       displayAddModuleConfig: false,
+      displayAddNewVideo: false,
    };
 
    goToNextStep = () => {
       let currentStep = this.state.currentStep;
       this.setState({
-         currentStep:
-            currentStep >= this.props.totalNumberOfSteps - 1
-               ? this.props.totalNumberOfSteps
-               : currentStep + 1,
+         currentStep: currentStep >= this.props.totalNumberOfSteps - 1 ? this.props.totalNumberOfSteps : currentStep + 1,
       });
    };
 
@@ -80,7 +79,7 @@ export default class Stepper extends Component {
       if (this.props.isUserModule && this.state.currentStep === 1) {
          return (
             <Button
-               variant="success"
+               variant="secondary"
                className="float-end me-1"
                onClick={() => {
                   this.props.toggleDisplay();
@@ -98,7 +97,7 @@ export default class Stepper extends Component {
       if (this.props.isUserModule && this.state.currentStep === 2) {
          return (
             <Button
-               variant="success"
+               variant="secondary"
                className="float-end me-1"
                onClick={() => {
                   this.props.toggleDisplay();
@@ -106,6 +105,24 @@ export default class Stepper extends Component {
                }}
             >
                Add New Config
+            </Button>
+         );
+      }
+      return null;
+   }
+
+   get addNewVideoButton() {
+      if (this.props.componentName === "Video" && this.state.currentStep === 1) {
+         return (
+            <Button
+               variant="secondary"
+               className="float-end me-1"
+               onClick={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddNewVideo: true });
+               }}
+            >
+               Add New Video
             </Button>
          );
       }
@@ -121,14 +138,10 @@ export default class Stepper extends Component {
                </Modal.Header>
                <Modal.Body>
                   <form>
-                     <ProgressBar
-                        value={this.state.currentStep}
-                        numberOfSteps={this.props.totalNumberOfSteps + 1}
-                     />
+                     <ProgressBar value={this.state.currentStep} numberOfSteps={this.props.totalNumberOfSteps + 1} />
                      <br />
                      {this.props.steps.map((step, index) => {
-                        if (index + 1 === this.state.currentStep)
-                           return <div key={index}>{step}</div>;
+                        if (index + 1 === this.state.currentStep) return <div key={index}>{step}</div>;
                         return <div key={index}></div>;
                      })}
 
@@ -139,6 +152,7 @@ export default class Stepper extends Component {
                         {this.submitButton}
                         {this.addModuleButton}
                         {this.addModuleConfigButton}
+                        {this.addNewVideoButton}
                      </div>
                   </form>
                </Modal.Body>
@@ -161,6 +175,15 @@ export default class Stepper extends Component {
                }}
                updateData={this.props.updateConfigFiles}
                selectedModule={this.props.selectedModule}
+            />
+            <AddVideo
+               display={this.state.displayAddNewVideo}
+               toggleDisplay={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayAddNewVideo: false });
+               }}
+               componentName={this.props.componentName}
+               updateData={this.props.updateData}
             />
          </div>
       );
