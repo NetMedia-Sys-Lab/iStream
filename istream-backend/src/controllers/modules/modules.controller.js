@@ -298,3 +298,37 @@ module.exports.getVideoModuleData = (req, res) => {
       res.status(200).send(videosList);
    });
 };
+
+module.exports.getConfigFileData = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const componentName = req.query.componentName;
+   const moduleName = req.query.moduleName;
+   const configFileName = req.query.configFileName;
+
+   const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
+
+   fs.readFile(filePath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getConfigFileData: Couldn't read config file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+      //Convert the data to string so that object response is also converted to string
+      data = JSON.stringify(data);
+      res.status(200).send(data);
+   });
+};
+
+module.exports.updateConfigFileData = (req, res) => {
+   const { username, componentName, moduleName, configName, data } = req.body;
+   const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
+
+   fs.writeFile(filePath, data, function (err) {
+      if (err) {
+         let errorMessage = "Something went wrong in updateConfigFileData: Couldn't write in config file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+      res.status(200).send("Config File Saved Successfully");
+   });
+};

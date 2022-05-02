@@ -7,7 +7,7 @@ const cors = require("cors");
 const fileUpload = require('express-fileupload');
 
 //CONSTANTS
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8888;
 
 //MIDDLEWARES
 app.use(express.json()); //to return files as json

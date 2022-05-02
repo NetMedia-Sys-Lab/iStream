@@ -23,8 +23,7 @@ module.exports.createNewExperiment = (req, res) => {
 
    fs.readFile(userExperimentsListFile, "utf8", function (err, data) {
       if (err) {
-         let errorMessage =
-            "Something went wrong in createNewExperiment: Couldn't read userExperimentsListFile file.";
+         let errorMessage = "Something went wrong in createNewExperiment: Couldn't read userExperimentsListFile file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
@@ -55,11 +54,11 @@ module.exports.createNewExperiment = (req, res) => {
    const experimentConfigFilePath = `${ExperimentDirectoryName}/experimentConfig.json`;
 
    fs.mkdirSync(ExperimentDirectoryName);
-   //Make folders for the various module configuration files. The config file for a module goes inside these folders.
-   const folderList = ["Transcoder", "Network", "Server", "Client"];
-   for (let i = 0; i < folderList.length; i++) {
-      fs.mkdirSync(`${ExperimentDirectoryName}/${folderList[i]}`);
-   }
+   // //Make folders for the various module configuration files. The config file for a module goes inside these folders.
+   // const folderList = ["Transcoder", "Network", "Server", "Client"];
+   // for (let i = 0; i < folderList.length; i++) {
+   //    fs.mkdirSync(`${ExperimentDirectoryName}/${folderList[i]}`);
+   // }
 
    const stringifyExperimentData = JSON.stringify(experimentModel.experimentJSONData);
    const stringifyNetworkConfigData = JSON.stringify(experimentModel.networkConfigJSONData);
@@ -77,8 +76,7 @@ module.exports.getUserExperimentsList = (req, res) => {
    const experimentsListFileName = `src/database/users/${username}/experiments_list.json`;
    fs.readFile(experimentsListFileName, "utf8", function (err, data) {
       if (err) {
-         let errorMessage =
-            "Something went wrong in getUserExperimentsList: Couldn't read experimentsListFileName file.";
+         let errorMessage = "Something went wrong in getUserExperimentsList: Couldn't read experimentsListFileName file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
@@ -106,16 +104,13 @@ module.exports.deleteExperiment = (req, res) => {
    const experimentsFilePath = `src/database/users/${username}/experiments_list.json`;
    fs.readFile(experimentsFilePath, "utf8", function (err, data) {
       if (err) {
-         let errorMessage =
-            "Something went wrong in deleteExperiment: Couldn't read experimentsList file.";
+         let errorMessage = "Something went wrong in deleteExperiment: Couldn't read experimentsList file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
 
       experimentList = JSON.parse(data);
-      const updatedExperimentList = experimentList.filter(
-         (experiment) => experiment.experimentId != experimentId
-      );
+      const updatedExperimentList = experimentList.filter((experiment) => experiment.experimentId != experimentId);
 
       writeToFile(experimentsFilePath, JSON.stringify(updatedExperimentList), "deleteExperiment");
 
@@ -135,8 +130,7 @@ module.exports.duplicateExperiment = (req, res) => {
       fs.mkdirSync(copyToFolder);
       fsExtra.copySync(folderToCopy, copyToFolder);
    } catch (err) {
-      let errorMessage =
-         "Something went wrong in duplicateExperiment: Couldn't copy experiment directory.";
+      let errorMessage = "Something went wrong in duplicateExperiment: Couldn't copy experiment directory.";
       console.log(errorMessage);
       res.status(500).send(errorMessage);
    }
@@ -145,8 +139,7 @@ module.exports.duplicateExperiment = (req, res) => {
    //fetch the data from the file
    fs.readFile(userExperimentsListFile, "utf8", function (err, data) {
       if (err) {
-         let errorMessage =
-            "Something went wrong in duplicateExperiment: Couldn't read experimentsList file.";
+         let errorMessage = "Something went wrong in duplicateExperiment: Couldn't read experimentsList file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
@@ -170,5 +163,39 @@ module.exports.duplicateExperiment = (req, res) => {
       writeToFile(userExperimentsListFile, JSON.stringify(jsonData), "duplicateExperiment");
 
       res.status(200).send("Experiment duplicated Successfully");
+   });
+};
+
+module.exports.getExperimentConfig = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+
+   const userExperimentsListFile = `src/database/users/${username}/experiments_list.json`;
+
+   fs.readFile(userExperimentsListFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getExperimentConfig: Couldn't read userExperimentsListFile file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+      const jsonData = JSON.parse(data);
+
+      res.status(200).send(jsonData.filter((data) => data.experimentId === experimentId)[0]);
+   });
+};
+
+module.exports.getExperimentData = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+   const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+   fs.readFile(dependencyFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getExperimentData: Couldn't read dependencyFile file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+      const jsonData = JSON.parse(data);
+
+      res.status(200).send(jsonData);
    });
 };

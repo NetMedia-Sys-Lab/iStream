@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
+import EditConfig from "src/views/Experiment/Common/EditConfig";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
@@ -8,7 +9,7 @@ export default class TranscoderCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       componentName: "Transcoder",
-      displayModal: false,
+      displayStepperModal: false,
       totalNumberOfSteps: 2,
       moduleTypes: ["iStream", "Custom"],
       iStreamModuleOptions: [],
@@ -18,18 +19,24 @@ export default class TranscoderCard extends Component {
       selectedModule: "",
       selectedConfigFile: "",
       showModuleConfiguration: false,
+      displayEditConfigModal: false,
+      selectedEditFile: "",
    };
 
-   componentDidMount() {
+   constructor(props) {
+      super(props);
       this.fetchData();
 
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         this.setState({
-            selectedModuleType: data.type,
-            selectedModule: data.name,
-            selectedConfigFile: data.config,
-            showModuleConfiguration: data.name !== "" ? true : false,
-         });
+         if (data.name !== "") {
+            this.setState({
+               selectedModuleType: data.type,
+               selectedModule: data.name,
+               selectedConfigFile: data.config,
+               showModuleConfiguration: true,
+            });
+            this.getOneModuleConfigFiles(data.name);
+         }
       });
    }
 
@@ -63,7 +70,6 @@ export default class TranscoderCard extends Component {
                      if (type === "Module") {
                         this.setState({
                            selectedConfigFile: "",
-                           showModuleConfiguration: false,
                            selectedModule: item,
                         });
                         this.getOneModuleConfigFiles(item);
@@ -74,6 +80,17 @@ export default class TranscoderCard extends Component {
                   checked={type === "Module" ? this.state.selectedModule === item : this.state.selectedConfigFile === item}
                />
                <label className="form-check-label">{item}</label>
+               {type === "Config" && item !== "No Config" ? (
+                  <button
+                     type="button"
+                     className="btn btn-link p-0 m-0 center"
+                     onClick={() => this.setState({ selectedEditFile: item, displayEditConfigModal: true, displayStepperModal: false })}
+                  >
+                     Edit
+                  </button>
+               ) : (
+                  ""
+               )}
             </div>
          );
       });
@@ -146,15 +163,15 @@ export default class TranscoderCard extends Component {
       return (
          <div>
             <hr />
-            <strong> Module Type: </strong>
+            <strong>Type: </strong>
             {this.state.selectedModuleType}
             <br />
-            <strong> Module Selected: </strong>
+            <strong>Name: </strong>
             {this.state.selectedModule}
             <br />
             {this.state.selectedConfigFile !== "" ? (
                <div>
-                  <strong>Config File Name: </strong>
+                  <strong>Config: </strong>
                   {this.state.selectedConfigFile}
                </div>
             ) : (
@@ -188,28 +205,39 @@ export default class TranscoderCard extends Component {
             <div
                className="center-container"
                style={{ borderRadius: "10px", padding: "20px", cursor: "pointer" }}
-               onClick={() => this.setState({ displayModal: true })}
+               onClick={() => this.setState({ displayStepperModal: true })}
             >
                <h4 className="text-center">
                   <i className="fa fa-file-code-o" style={{ color: "#244D5B" }}></i>
                   <br />
-                  {this.state.componentName} Module
+                  {this.state.componentName}
                </h4>
                {this.showModuleConfig()}
             </div>
             <Stepper
-               display={this.state.displayModal}
+               display={this.state.displayStepperModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
                steps={[this.moduleType(), [this.configUserModule()]]}
                onSubmit={this.onSubmit}
-               toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
+               toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
                componentName={this.state.componentName}
                updateData={this.fetchData}
                updateConfigFiles={this.getOneModuleConfigFiles}
                selectedModule={this.state.selectedModule}
             />
+            {this.state.displayEditConfigModal ? (
+               <EditConfig
+                  display={this.state.displayEditConfigModal}
+                  configName={this.state.selectedEditFile}
+                  moduleName={this.state.selectedModule}
+                  componentName={this.state.componentName}
+                  detached={() => this.setState({ displayEditConfigModal: false, displayStepperModal: true })}
+               />
+            ) : (
+               ""
+            )}
          </div>
       );
    }
