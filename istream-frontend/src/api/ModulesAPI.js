@@ -174,3 +174,32 @@ export const getVideoModuleData = (user, componentName, experimentId) => {
       }
    );
 };
+
+export const getConfigFileData = (user, componentName, moduleName, configFileName) => {
+   return API.get("/modules/getConfigFileData", {
+      params: {
+         user,
+         componentName,
+         moduleName,
+         configFileName,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const updateConfigFileData = (data) => {
+   return API.post("/modules/updateConfigFileData", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

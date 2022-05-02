@@ -47,3 +47,35 @@ export const duplicateExperiment = (request) => {
       }
    );
 };
+
+export function getExperimentConfig(user, experimentId) {
+   return API.get("/experiment/getExperimentConfig", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
+
+export function getExperimentData(user, experimentId) {
+   return API.get("/experiment/getExperimentData", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}

@@ -5,10 +5,11 @@ import NetworkCard from "src/views/Experiment/NetworkCard";
 import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
-import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
-
-
+// import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
+import { getExperimentConfig, getExperimentData } from "src/api/ExperimentAPI";
+import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 import "./Experiment.css";
 
 function withParams(Component) {
@@ -17,7 +18,138 @@ function withParams(Component) {
 
 class Experiment extends Component {
    state = {
+      user: JSON.parse(localStorage.getItem("user")),
       experimentId: this.props.params.experimentId,
+      networkComponentExistence: true,
+      transcoderComponentExistence: true,
+      displayConfig: false,
+      output: ["Experiment is not started yet"],
+      dependencyData: {
+         Video: {
+            id: "",
+         },
+         Server: {
+            name: "",
+            config: "",
+            type: "",
+         },
+         Transcoder: {
+            name: "",
+            config: "",
+            type: "",
+         },
+         Network: {
+            name: "",
+            config: "",
+            type: "",
+            manualConfig: "",
+         },
+         Client: {
+            name: "",
+            config: "",
+            type: "",
+         },
+      },
+      videosList: [],
+   };
+
+   constructor(props) {
+      super(props);
+      getExperimentConfig(this.state.user, this.state.experimentId).then((res) => {
+         this.setState({
+            networkComponentExistence: res.networkComponentExistence,
+            transcoderComponentExistence: res.transcoderComponentExistence,
+         });
+      });
+      getVideosList().then((res) => {
+         this.setState({ videosList: res });
+      });
+   }
+
+   runExperimentModal = () => {
+      return (
+         <div>
+            <Modal show={this.state.displayConfig}>
+               <Modal.Header>
+                  <Modal.Title>Experiment Configuration</Modal.Title>
+               </Modal.Header>
+               <Modal.Body>
+                  <div>
+                     <div>
+                        <h6 className="text-info">Videos: </h6>
+                        {this.state.dependencyData.Video.id.length <= 0 ? (
+                           "No Video Selected"
+                        ) : (
+                           <ul>
+                              {this.state.dependencyData.Video.id.map((video, index) => {
+                                 let videoData = this.state.videosList.find((element) => element.videoId === video);
+                                 return (
+                                    <div key={index}>
+                                       {index + 1}. {videoData.name} - {videoData.resolution}
+                                    </div>
+                                 );
+                              })}
+                           </ul>
+                        )}
+                     </div>
+                     <div>
+                        <h6 className="text-info">Server: </h6>
+                        <span>
+                           {this.state.dependencyData.Server.name} - {this.state.dependencyData.Server.config}
+                        </span>
+                     </div>
+                     <div>
+                        <h6 className="text-info">Transcoder: </h6>
+                        <span>
+                           {this.state.dependencyData.Transcoder.name} - {this.state.dependencyData.Transcoder.config}
+                        </span>
+                     </div>
+                     <div>
+                        <h6 className="text-info">Network: </h6>
+                        <span>
+                           {this.state.dependencyData.Network.name} - {this.state.dependencyData.Network.config}
+                        </span>
+                     </div>
+                     <div>
+                        <h6 className="text-info">Client: </h6>
+                        <span>
+                           {this.state.dependencyData.Client.name} - {this.state.dependencyData.Client.config}
+                        </span>
+                     </div>
+                  </div>
+                  <hr />
+
+                  <div>
+                     <h6 className="text-success">Output: </h6>
+                     <span>{this.state.output}</span>
+                  </div>
+
+                  <hr />
+                  <div className="mt-3">
+                     <Button onClick={() => this.setState({ displayConfig: false })} variant="danger">
+                        Cancel
+                     </Button>
+                     <Button className="float-end" onClick={this.onDownload} variant="primary">
+                        Download Result
+                     </Button>
+                     <Button
+                        className="float-end me-1"
+                        onClick={this.onSaveModel}
+                        style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
+                     >
+                        Run
+                     </Button>
+                  </div>
+               </Modal.Body>
+            </Modal>
+         </div>
+      );
+   };
+
+   runExperiment = () => {
+      getExperimentData(this.state.user, this.state.experimentId).then((res) => {
+         this.setState({ dependencyData: res, displayConfig: true });
+      });
    };
 
    render() {
@@ -29,27 +161,46 @@ class Experiment extends Component {
                   <div className="row mt-4">
                      <h2>Config Experiment</h2>
                   </div>
-                  <div className="row">
-                     <div className="col-md-3">
+                  <div className="row row-cols-3">
+                     <div className="col-sm">
                         <VideoCard experimentId={this.state.experimentId} />
                      </div>
-                     <div className="col-md-3">
+                     <div className="col-sm">
                         <ServerCard experimentId={this.state.experimentId} />
                      </div>
-                     <div className="col-md-3">
-                        <TranscoderCard experimentId={this.state.experimentId} />
-                     </div>
-                     <div className="col-md-3">
-                        <NetworkCard experimentId={this.state.experimentId} />
-                     </div>
-                     <div className="col-md-3">
+
+                     {this.state.transcoderComponentExistence ? (
+                        <div className="col-sm">
+                           <TranscoderCard experimentId={this.state.experimentId} />
+                        </div>
+                     ) : (
+                        ""
+                     )}
+
+                     {this.state.networkComponentExistence ? (
+                        <div className="col-sm">
+                           <NetworkCard experimentId={this.state.experimentId} />
+                        </div>
+                     ) : (
+                        ""
+                     )}
+
+                     <div className="col-sm">
                         <ClientCard experimentId={this.state.experimentId} />
                      </div>
-                     <div className="col-md-3">
+                     {/* <div className="col-md-2">
                         <ExperimentSettingCard experimentId={this.state.experimentId} />
+                     </div> */}
+                  </div>
+                  <div className="row mt-2">
+                     <div className="d-flex justify-content-center">
+                        <Button onClick={this.runExperiment} variant="primary">
+                           Run Experiment
+                        </Button>
                      </div>
                   </div>
                </div>
+               {this.runExperimentModal()}
             </div>
          </main>
       );

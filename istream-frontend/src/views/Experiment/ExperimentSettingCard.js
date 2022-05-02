@@ -23,24 +23,17 @@ export default class ExperimentSettingCard extends Component {
    componentDidMount() {
       this.fetchData();
 
-      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         this.setState({
-            selectedModuleType: data.type,
-            selectedModule: data.name,
-            selectedConfigFile: data.config,
-            showModuleConfiguration: data.name !== "" ? true : false,
-         });
-      });
+      
    }
 
    fetchData = () => {
-      getDefaultModules(this.state.componentName).then((res) => {
-         this.setState({ iStreamModuleOptions: res });
-      });
+    //   getDefaultModules(this.state.componentName).then((res) => {
+    //      this.setState({ iStreamModuleOptions: res });
+    //   });
 
-      getUserModules(this.state.user, this.state.componentName).then((res) => {
-         this.setState({ userModuleOptions: res });
-      });
+    //   getUserModules(this.state.user, this.state.componentName).then((res) => {
+    //      this.setState({ userModuleOptions: res });
+    //   });
    };
 
    getOneModuleConfigFiles = (moduleName) => {
@@ -201,7 +194,7 @@ export default class ExperimentSettingCard extends Component {
                display={this.state.displayModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), [this.configUserModule()]]}
+               steps={[]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}

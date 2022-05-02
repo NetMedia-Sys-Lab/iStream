@@ -19,8 +19,7 @@ export default class VideoCard extends Component {
       this.fetchData();
 
       getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
-         console.log(res);
-         this.setState({ selectedVideos: res, showModuleConfiguration: res.length > 0 ? true : false });
+         if (res.length > 0) this.setState({ selectedVideos: res, showModuleConfiguration: true });
       });
    }
 
@@ -85,7 +84,7 @@ export default class VideoCard extends Component {
       return (
          <div>
             <hr />
-            <b>Selected videos are:</b>
+            <b>Selected videos:</b>
             {this.state.selectedVideos.map((video, index) => {
                let videoData = this.state.videosList.find((element) => element.videoId === video);
                return (
@@ -125,7 +124,7 @@ export default class VideoCard extends Component {
                <h4 className="text-center">
                   <i className="fa fa-play" style={{ color: "#244D5B" }}></i>
                   <br />
-                  Video Selection
+                  {this.state.componentName}
                </h4>
                {this.showModuleConfig()}
             </div>

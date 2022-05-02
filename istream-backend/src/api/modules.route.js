@@ -8,6 +8,7 @@ router.get("/getVideosList", controller.getVideosList);
 router.get("/getModuleData", controller.getModuleData);
 router.get("/getNetworkConfiguration", controller.getNetworkConfiguration);
 router.get("/getVideoModuleData", controller.getVideoModuleData);
+router.get("/getConfigFileData", controller.getConfigFileData);
 
 router.post("/create", controller.create);
 router.post("/addNewConfig", controller.addNewConfig);
@@ -15,5 +16,6 @@ router.post("/addNewVideo", controller.addNewVideo);
 router.post("/saveModuleData", controller.saveModuleData);
 router.post("/setNetworkConfiguration", controller.setNetworkConfiguration);
 router.post("/saveVideoModuleData", controller.saveVideoModuleData);
+router.post("/updateConfigFileData", controller.updateConfigFileData);
 
 module.exports = router;
