@@ -21,23 +21,12 @@ export default class TranscoderCard extends Component {
       showModuleConfiguration: false,
       displayEditConfigModal: false,
       selectedEditFile: "",
+      machineID: "",
    };
 
    constructor(props) {
       super(props);
       this.fetchData();
-
-      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         if (data.name !== "") {
-            this.setState({
-               selectedModuleType: data.type,
-               selectedModule: data.name,
-               selectedConfigFile: data.config,
-               showModuleConfiguration: true,
-            });
-            this.getOneModuleConfigFiles(data.name);
-         }
-      });
    }
 
    fetchData = () => {
@@ -47,6 +36,19 @@ export default class TranscoderCard extends Component {
 
       getUserModules(this.state.user, this.state.componentName).then((res) => {
          this.setState({ userModuleOptions: res });
+      });
+      
+      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.name !== "") {
+            this.setState({
+               selectedModuleType: data.type,
+               selectedModule: data.name,
+               selectedConfigFile: data.config,
+               showModuleConfiguration: true,
+               machineID: data.machineID,
+            });
+            this.getOneModuleConfigFiles(data.name);
+         }
       });
    };
 
@@ -177,6 +179,15 @@ export default class TranscoderCard extends Component {
             ) : (
                ""
             )}
+            <br />
+            {this.state.machineID !== "" ? (
+               <div>
+                  <strong>Machine IP: </strong>
+                  {this.state.machineID}
+               </div>
+            ) : (
+               ""
+            )}
          </div>
       );
    };
@@ -226,6 +237,7 @@ export default class TranscoderCard extends Component {
                updateData={this.fetchData}
                updateConfigFiles={this.getOneModuleConfigFiles}
                selectedModule={this.state.selectedModule}
+               experimentId={this.props.experimentId}
             />
             {this.state.displayEditConfigModal ? (
                <EditConfig

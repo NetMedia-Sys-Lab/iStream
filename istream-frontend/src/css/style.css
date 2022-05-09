@@ -69,6 +69,10 @@ input {
 }
 
 .modal-size{
-	width: 30vw;
-    max-width: 30vw;
+	width: 35vw;
+    max-width: 35vw;
+}
+
+.selectedRow {
+    background: #b9b9b9;
 }

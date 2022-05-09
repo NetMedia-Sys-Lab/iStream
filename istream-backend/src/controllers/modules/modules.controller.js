@@ -200,6 +200,8 @@ module.exports.getModuleData = (req, res) => {
    const componentName = req.query.componentName;
    const experimentId = req.query.experimentId;
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+   const userMachinesListPath = `src/database/users/${username}/machine_list.json`;
+   let machineList = JSON.parse(fs.readFileSync(userMachinesListPath, "utf8"));
 
    fs.readFile(dependencyFile, "utf8", function (err, data) {
       if (err) {
@@ -209,6 +211,10 @@ module.exports.getModuleData = (req, res) => {
       }
       const jsonData = JSON.parse(data);
       const moduleData = jsonData[componentName];
+
+      if (moduleData.machineID !== "") {
+         moduleData.machineID = machineList.find((machine) => machine.machineID === moduleData.machineID)["machineIp"];
+      }
 
       res.status(200).send(moduleData);
    });
@@ -284,7 +290,11 @@ module.exports.getVideoModuleData = (req, res) => {
    const { username } = JSON.parse(req.query.user);
    const componentName = req.query.componentName;
    const experimentId = req.query.experimentId;
+
+   const userMachinesListPath = `src/database/users/${username}/machine_list.json`;
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+
+   let machineList = JSON.parse(fs.readFileSync(userMachinesListPath, "utf8"));
 
    fs.readFile(dependencyFile, "utf8", function (err, data) {
       if (err) {
@@ -294,8 +304,13 @@ module.exports.getVideoModuleData = (req, res) => {
       }
 
       const jsonData = JSON.parse(data);
-      const videosList = jsonData[componentName].id;
-      res.status(200).send(videosList);
+      const videosData = jsonData[componentName];
+
+      if (videosData.machineID !== "") {
+         videosData.machineID = machineList.find((machine) => machine.machineID === videosData.machineID)["machineIp"];
+      }
+
+      res.status(200).send(videosData);
    });
 };
 

@@ -6,10 +6,11 @@ import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
 // import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
-import { getExperimentConfig, getExperimentData } from "src/api/ExperimentAPI";
+import { getExperimentConfig, getExperimentData, buildExperiment } from "src/api/ExperimentAPI";
 import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import { experimentJSONData } from "src/models/Experiment";
 import "./Experiment.css";
 
 function withParams(Component) {
@@ -24,32 +25,7 @@ class Experiment extends Component {
       transcoderComponentExistence: true,
       displayConfig: false,
       output: ["Experiment is not started yet"],
-      dependencyData: {
-         Video: {
-            id: "",
-         },
-         Server: {
-            name: "",
-            config: "",
-            type: "",
-         },
-         Transcoder: {
-            name: "",
-            config: "",
-            type: "",
-         },
-         Network: {
-            name: "",
-            config: "",
-            type: "",
-            manualConfig: "",
-         },
-         Client: {
-            name: "",
-            config: "",
-            type: "",
-         },
-      },
+      dependencyData: experimentJSONData,
       videosList: [],
    };
 
@@ -66,7 +42,7 @@ class Experiment extends Component {
       });
    }
 
-   runExperimentModal = () => {
+   experimentInfoModal = () => {
       return (
          <div>
             <Modal show={this.state.displayConfig}>
@@ -117,27 +93,17 @@ class Experiment extends Component {
                         </span>
                      </div>
                   </div>
-                  <hr />
+                  {/* <hr /> */}
 
-                  <div>
+                  {/* <div>
                      <h6 className="text-success">Output: </h6>
                      <span>{this.state.output}</span>
-                  </div>
+                  </div> */}
 
                   <hr />
                   <div className="mt-3">
-                     <Button onClick={() => this.setState({ displayConfig: false })} variant="danger">
-                        Cancel
-                     </Button>
-                     <Button className="float-end" onClick={this.onDownload} variant="primary">
-                        Download Result
-                     </Button>
-                     <Button
-                        className="float-end me-1"
-                        onClick={this.onSaveModel}
-                        style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
-                     >
-                        Run
+                     <Button className="float-end" onClick={() => this.setState({ displayConfig: false })}>
+                        Done
                      </Button>
                   </div>
                </Modal.Body>
@@ -146,10 +112,14 @@ class Experiment extends Component {
       );
    };
 
-   runExperiment = () => {
+   getExperimentInfo = () => {
       getExperimentData(this.state.user, this.state.experimentId).then((res) => {
          this.setState({ dependencyData: res, displayConfig: true });
       });
+   };
+
+   buildExperiment = () => {
+      this.buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
    };
 
    render() {
@@ -192,15 +162,22 @@ class Experiment extends Component {
                         <ExperimentSettingCard experimentId={this.state.experimentId} />
                      </div> */}
                   </div>
-                  <div className="row mt-2">
-                     <div className="d-flex justify-content-center">
-                        <Button onClick={this.runExperiment} variant="primary">
-                           Run Experiment
+                  <div className="row space">
+                     <div>
+                        <Button className="me-2" onClick={this.getExperimentInfo} variant="info">
+                           Information
                         </Button>
+                        <Button className="me-2" variant="primary" onClick={this.buildExperiment}>
+                           Build
+                        </Button>
+                        <Button className="me-2" style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}>
+                           Run
+                        </Button>
+                        <Button variant="danger">Stop</Button>
                      </div>
                   </div>
                </div>
-               {this.runExperimentModal()}
+               {this.experimentInfoModal()}
             </div>
          </main>
       );

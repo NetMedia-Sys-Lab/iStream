@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
+import { getConfigFiles, saveExperimentModuleData } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class ExperimentSettingCard extends Component {
@@ -22,18 +22,15 @@ export default class ExperimentSettingCard extends Component {
 
    componentDidMount() {
       this.fetchData();
-
-      
    }
 
    fetchData = () => {
-    //   getDefaultModules(this.state.componentName).then((res) => {
-    //      this.setState({ iStreamModuleOptions: res });
-    //   });
-
-    //   getUserModules(this.state.user, this.state.componentName).then((res) => {
-    //      this.setState({ userModuleOptions: res });
-    //   });
+      //   getDefaultModules(this.state.componentName).then((res) => {
+      //      this.setState({ iStreamModuleOptions: res });
+      //   });
+      //   getUserModules(this.state.user, this.state.componentName).then((res) => {
+      //      this.setState({ userModuleOptions: res });
+      //   });
    };
 
    getOneModuleConfigFiles = (moduleName) => {

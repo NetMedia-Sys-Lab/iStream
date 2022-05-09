@@ -4,6 +4,7 @@ import ProgressBar from "src/views/Common/ProgressBar";
 import AddModule from "src/views/Experiment/Common/AddModule";
 import AddConfig from "src/views/Experiment/Common/AddConfig";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
+import MachineConfig from "src/views/Experiment/Common/MachineConfig";
 
 export default class Stepper extends Component {
    state = {
@@ -11,6 +12,7 @@ export default class Stepper extends Component {
       displayAddModule: false,
       displayAddModuleConfig: false,
       displayAddNewVideo: false,
+      displayMachineConfig: false,
    };
 
    goToNextStep = () => {
@@ -122,7 +124,25 @@ export default class Stepper extends Component {
                   this.setState({ displayAddNewVideo: true });
                }}
             >
-               Add New Video
+               Add New
+            </Button>
+         );
+      }
+      return null;
+   }
+
+   get sshButton() {
+      if (this.state.currentStep === 1) {
+         return (
+            <Button
+               variant="secondary"
+               className="float-end me-1"
+               onClick={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayMachineConfig: true });
+               }}
+            >
+               Set SSH
             </Button>
          );
       }
@@ -153,6 +173,7 @@ export default class Stepper extends Component {
                         {this.addModuleButton}
                         {this.addModuleConfigButton}
                         {this.addNewVideoButton}
+                        {this.sshButton}
                      </div>
                   </form>
                </Modal.Body>
@@ -183,6 +204,19 @@ export default class Stepper extends Component {
                   this.setState({ displayAddNewVideo: false });
                }}
                componentName={this.props.componentName}
+               updateData={this.props.updateData}
+            />
+            <MachineConfig
+               display={this.state.displayMachineConfig}
+               onCancel={() => {
+                  this.props.toggleDisplay();
+                  this.setState({ displayMachineConfig: false });
+               }}
+               toggleDisplay={() => {
+                  this.setState({ displayMachineConfig: !this.state.displayMachineConfig });
+               }}
+               componentName={this.props.componentName}
+               experimentId={this.props.experimentId}
                updateData={this.props.updateData}
             />
          </div>

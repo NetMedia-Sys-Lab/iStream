@@ -42,10 +42,6 @@ html {
     opacity: 0;
 }
 
-.selectedVideo {
-    background: #b9b9b9;
-}
-
 .text-info {
     color: #17a2b8!important;
 }
@@ -56,4 +52,8 @@ html {
 
 H6 {
     display: inline;
+}
+
+.space { 
+    margin-top: 20em;
 }

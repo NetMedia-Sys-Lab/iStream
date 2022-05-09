@@ -13,19 +13,20 @@ export default class VideoCard extends Component {
       displayModal: false,
       totalNumberOfSteps: 1,
       showModuleConfiguration: false,
+      machineID: "",
    };
 
    componentDidMount() {
       this.fetchData();
-
-      getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
-         if (res.length > 0) this.setState({ selectedVideos: res, showModuleConfiguration: true });
-      });
    }
 
    fetchData = () => {
       getVideosList().then((res) => {
          this.setState({ videosList: res });
+      });
+
+      getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
+         if (res.id.length > 0) this.setState({ selectedVideos: res.id, showModuleConfiguration: true, machineID: res.machineID });
       });
    };
 
@@ -52,7 +53,7 @@ export default class VideoCard extends Component {
             <tr
                key={video.videoId}
                onClick={() => this.onVideoClick(video.videoId)}
-               className={isSelected ? "selectedVideo" : ""}
+               className={isSelected ? "selectedRow" : ""}
                style={{ cursor: "pointer" }}
             >
                <td>{video.name}</td>
@@ -93,6 +94,14 @@ export default class VideoCard extends Component {
                   </div>
                );
             })}
+            {this.state.machineID !== "" ? (
+               <div>
+                  <strong>Machine IP: </strong>
+                  {this.state.machineID}
+               </div>
+            ) : (
+               ""
+            )}
          </div>
       );
    };
@@ -136,6 +145,7 @@ export default class VideoCard extends Component {
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                componentName={this.state.componentName}
                updateData={this.fetchData}
+               experimentId={this.props.experimentId}
             />
          </div>
       );

@@ -79,3 +79,73 @@ export function getExperimentData(user, experimentId) {
       }
    );
 }
+
+export function buildExperiment(user, experimentId) {
+   return API.get("/experiment/buildExperiment", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
+
+export function addNewMachine(data) {
+   return API.post("/experiment/addNewMachine", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}
+
+export function getUserMachineList(user) {
+   return API.get("/experiment/getUserMachineList", {
+      params: {
+         user,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
+
+export function saveComponentMachineInfo(data) {
+   return API.post("/experiment/saveComponentMachineInfo", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}
+
+export function getComponentSelectedMachine(user, componentName, experimentId) {
+   return API.get("/experiment/getComponentSelectedMachine", {
+      params: {
+         user,
+         componentName,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
