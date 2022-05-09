@@ -6,7 +6,13 @@ import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
 // import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
-import { getExperimentConfig, getExperimentData, buildExperiment } from "src/api/ExperimentAPI";
+import {
+   getExperimentConfig,
+   getExperimentData,
+   buildExperiment,
+   subscribeToBuildExperiment,
+   subscribeToRunExperiment,
+} from "src/api/ExperimentAPI";
 import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
@@ -119,7 +125,17 @@ class Experiment extends Component {
    };
 
    buildExperiment = () => {
-      this.buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
+      buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
+
+      subscribeToBuildExperiment((err, output) => {
+         console.log(output);
+      });
+   };
+
+   runExperiment = () => {
+      subscribeToRunExperiment((err, output) => {
+         console.log(output);
+      });
    };
 
    render() {
@@ -170,7 +186,11 @@ class Experiment extends Component {
                         <Button className="me-2" variant="primary" onClick={this.buildExperiment}>
                            Build
                         </Button>
-                        <Button className="me-2" style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}>
+                        <Button
+                           className="me-2"
+                           onClick={this.runExperiment}
+                           style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
+                        >
                            Run
                         </Button>
                         <Button variant="danger">Stop</Button>

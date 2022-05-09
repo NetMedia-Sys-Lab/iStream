@@ -15,10 +15,10 @@ export default class Preview extends Component {
                      <h3 className="center-text">
                         A Research Platform for Multimedia Streaming
                      </h3>
-                     <h6 className="center-text">
+                     <h5 className="center-text">
                         Developed by Navid Akbari, under supervision of Dr. Mea
                         Wang and Dr. Diwakar Krishnamurthy
-                     </h6>
+                     </h5>
 
                      <div className="row justify-content-center">
                         <div className="col-sm-4">

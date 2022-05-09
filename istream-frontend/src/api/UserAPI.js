@@ -1,4 +1,4 @@
-import API from "./API";
+import { API } from "./API";
 
 export const userRegistration = (request) => {
    return API.post("/auth/register", request).then(

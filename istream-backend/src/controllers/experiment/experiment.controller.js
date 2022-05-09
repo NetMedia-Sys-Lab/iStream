@@ -3,6 +3,16 @@ const fsExtra = require("fs-extra");
 const experimentModel = require("../../models/experiment.model");
 const writeToFile = require("../../utils/fileUtils");
 
+// module.exports = (io) => {
+//    io.on("connection", function (socket) {
+//       socket.on("subscribeToBuildExperiment", (message) => {
+//          console.log("Experiment is start to running");
+//          socket.emit("getExperiment‌BuildInfo", "asdasdasd");
+//       });
+
+//    });
+// };
+
 module.exports.createNewExperiment = (req, res) => {
    const {
       experimentId,
@@ -200,11 +210,6 @@ module.exports.getExperimentData = (req, res) => {
    });
 };
 
-module.exports.buildExperiment = (req, res) => {
-   const { username } = JSON.parse(req.query.user);
-   const experimentId = req.query.experimentId;
-};
-
 module.exports.addNewMachine = (req, res) => {
    const { userId, username, machineIp, sshUsername } = req.body;
    const privateKeyFile = req.files.privateKey;
@@ -314,5 +319,26 @@ module.exports.getComponentSelectedMachine = (req, res) => {
       const machineID = jsonData[componentName].machineID;
 
       res.status(200).send(machineID);
+   });
+};
+
+module.exports.buildExperiment = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+
+   const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+};
+
+module.exports.build = (endpoint, socket) => {
+   socket.on("subscribeToBuildExperiment", () => {
+      console.log("Experiment is start to building");
+      endpoint.emit("getExperiment‌BuildInfo", "build phase");
+   });
+};
+
+module.exports.run = (endpoint, socket) => {
+   socket.on("subscribeToRunExperiment", () => {
+      console.log("Experiment is start to running");
+      endpoint.emit("getExperiment‌RunInfo", "run phase");
    });
 };

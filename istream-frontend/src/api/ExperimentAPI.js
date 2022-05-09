@@ -1,4 +1,7 @@
-import API from "./API";
+// import  from "./API";
+import { API, DOMAIN } from "./API";
+
+import openSocket from "socket.io-client";
 
 export const createNewExperiment = (request) => {
    return API.post("/experiment/create", request).then(
@@ -80,22 +83,6 @@ export function getExperimentData(user, experimentId) {
    );
 }
 
-export function buildExperiment(user, experimentId) {
-   return API.get("/experiment/buildExperiment", {
-      params: {
-         user,
-         experimentId,
-      },
-   }).then(
-      (response) => {
-         return response.data;
-      },
-      (error) => {
-         return error.response;
-      }
-   );
-}
-
 export function addNewMachine(data) {
    return API.post("/experiment/addNewMachine", data).then(
       (response) => {
@@ -148,4 +135,32 @@ export function getComponentSelectedMachine(user, componentName, experimentId) {
          return error.response;
       }
    );
+}
+
+export function buildExperiment(user, experimentId) {
+   return API.get("/experiment/buildExperiment", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
+
+export function subscribeToBuildExperiment(cb) {
+   const SOCKET = openSocket(DOMAIN + "build");
+   SOCKET.on("getExperiment‌BuildInfo", (data) => cb(null, data));
+   SOCKET.emit("subscribeToBuildExperiment");
+}
+
+export function subscribeToRunExperiment(cb) {
+   const SOCKET = openSocket(DOMAIN + "run");
+   SOCKET.on("getExperiment‌RunInfo", (data) => cb(null, data));
+   SOCKET.emit("subscribeToRunExperiment");
 }

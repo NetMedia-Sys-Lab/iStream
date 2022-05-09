@@ -1,1 +1,1 @@
-[{"machineID":"1651791511009","sshUsername":"navid","machineIp":"10.10.10.10","privateKeyName":"id_ed25519"},{"machineID":"1651791866055","sshUsername":"Navid","machineIp":"20.20.20.20","privateKeyName":"id_ed25519"}]
+[{"machineID":"1651791511009","sshUsername":"navid","machineIp":"10.10.10.10","privateKeyName":"id_ed25519"},{"machineID":"1651791866055","sshUsername":"Navid","machineIp":"20.20.20.20","privateKeyName":"id_ed25519"},{"machineID":"1652120714404","sshUsername":"ubuntu","machineIp":"10.1.6.221","privateKeyName":"istream.pem"}]

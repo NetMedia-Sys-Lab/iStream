@@ -1,4 +1,4 @@
-import API from "./API";
+import {API} from "./API";
 
 export const getDefaultModules = (componentName) => {
    return API.get("/modules/getDefaultModules", {

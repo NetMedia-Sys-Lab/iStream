@@ -3,15 +3,16 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
+const { Server } = require("socket.io");
+
 const cors = require("cors");
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
 
 //CONSTANTS
 const PORT = process.env.PORT || 8888;
 
 //MIDDLEWARES
 app.use(express.json()); //to return files as json
-// app.options("*", cors());
 app.use(cors()); //for cross origin  files
 app.use(fileUpload());
 
@@ -25,8 +26,23 @@ server.listen(PORT, () => {
    console.log(`Server started on port ${PORT}`);
 });
 
-// const { logError, isOperationalError } = require("./errorHandler");
-
 process.on("uncaughtException", (error) => {
    console.error(error);
+});
+
+const io = new Server(server, {
+   cors: {
+      methods: ["GET", "POST"],
+      credentials: true,
+   },
+});
+
+var experimentController = require("./controllers/experiment/experiment.controller");
+
+let build = io.of("/build").on("connection", (socket) => {
+   experimentController.build(build, socket);
+});
+
+var run = io.of("/run").on("connection", function (socket) {
+   experimentController.run(run, socket);
 });
