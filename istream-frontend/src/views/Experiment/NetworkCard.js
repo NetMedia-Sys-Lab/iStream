@@ -280,7 +280,7 @@ export default class NetworkCard extends Component {
             <strong>Name: </strong>
             {this.state.selectedModule}
             <br />
-            {this.state.machineID !== "" ? (
+            {this.state.machineID !== "" && this.state.machineID !== "0"  ? (
                <div>
                   <strong>Machine IP: </strong>
                   {this.state.machineID}

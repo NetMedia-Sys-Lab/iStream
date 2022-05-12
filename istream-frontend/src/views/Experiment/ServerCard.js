@@ -179,7 +179,7 @@ export default class ServerCard extends Component {
             ) : (
                ""
             )}
-            {this.state.machineID !== "" ? (
+            {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
                   {this.state.machineID}

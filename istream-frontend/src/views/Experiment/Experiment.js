@@ -125,11 +125,12 @@ class Experiment extends Component {
    };
 
    buildExperiment = () => {
-      buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
-
-      subscribeToBuildExperiment((err, output) => {
-         console.log(output);
-      });
+      // buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
+      const data = {
+         username: this.state.user.username,
+         experimentId: this.state.experimentId,
+      };
+      subscribeToBuildExperiment(data, (err, output) => {});
    };
 
    runExperiment = () => {

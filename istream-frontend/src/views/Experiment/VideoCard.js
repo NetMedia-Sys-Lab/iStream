@@ -94,7 +94,7 @@ export default class VideoCard extends Component {
                   </div>
                );
             })}
-            {this.state.machineID !== "" ? (
+            {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
                   {this.state.machineID}

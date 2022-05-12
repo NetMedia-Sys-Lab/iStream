@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export default class MachineConfig extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
-      machineList: [],
+      machineList: [{ machineID: "0", sshUsername: "No Machine" }],
       displayAddNewMachine: false,
       machineIP: "",
       sshUsername: "",
@@ -24,6 +24,7 @@ export default class MachineConfig extends Component {
 
    fetchData() {
       getUserMachineList(this.state.user).then((res) => {
+         res.unshift({ machineID: "0", sshUsername: "No Machine" });
          this.setState({ machineList: res });
       });
    }

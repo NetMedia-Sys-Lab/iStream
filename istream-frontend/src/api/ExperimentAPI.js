@@ -153,10 +153,10 @@ export function buildExperiment(user, experimentId) {
    );
 }
 
-export function subscribeToBuildExperiment(cb) {
+export function subscribeToBuildExperiment(userInfo, cb) {
    const SOCKET = openSocket(DOMAIN + "build");
    SOCKET.on("getExperiment‌BuildInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeToBuildExperiment");
+   SOCKET.emit("subscribeToBuildExperiment", userInfo);
 }
 
 export function subscribeToRunExperiment(cb) {

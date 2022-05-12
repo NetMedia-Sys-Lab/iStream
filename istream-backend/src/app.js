@@ -37,7 +37,7 @@ const io = new Server(server, {
    },
 });
 
-var experimentController = require("./controllers/experiment/experiment.controller");
+let experimentController = require("./controllers/experiment/experiment.controller");
 
 let build = io.of("/build").on("connection", (socket) => {
    experimentController.build(build, socket);

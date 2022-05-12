@@ -34,7 +34,7 @@ module.exports.create = (req, res) => {
    const { userId, username, componentName, moduleName, moduleDescription } = req.body;
    const file = req.files.moduleFile;
    const zipFilePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}.zip`;
-   const destinationFilePath = `src/database/users/${username}/Modules/${componentName}`;
+   const destinationFilePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}`;
    const configFileDirectory = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs`;
 
    file.mv(zipFilePath, (err) => {
@@ -44,12 +44,9 @@ module.exports.create = (req, res) => {
          res.status(500).send(errorMessage);
       }
 
-      decompress(zipFilePath, destinationFilePath, {
-         map: (file) => {
-            file.path = file.path.replace(file.path.split("/")[0], moduleName);
-            return file;
-         },
-      }).then((err) => {
+      fs.mkdirSync(destinationFilePath);
+
+      decompress(zipFilePath, destinationFilePath).then((err) => {
          try {
             fs.unlinkSync(zipFilePath);
             fs.mkdirSync(configFileDirectory);
@@ -212,7 +209,7 @@ module.exports.getModuleData = (req, res) => {
       const jsonData = JSON.parse(data);
       const moduleData = jsonData[componentName];
 
-      if (moduleData.machineID !== "") {
+      if (moduleData.machineID !== "" && moduleData.machineID !== "0") {
          moduleData.machineID = machineList.find((machine) => machine.machineID === moduleData.machineID)["machineIp"];
       }
 

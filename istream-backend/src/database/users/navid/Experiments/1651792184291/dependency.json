@@ -1,13 +1,13 @@
 {
     "Video": {
-        "id": ["1648146517539"],
+        "id": ["1648146517539", "1648146669739", "1648581263727"],
         "machineID": "1652120714404"
     },
     "Server": {
-        "name": "test",
-        "config": "temp.sh",
-        "type": "Custom",
-        "machineID": "1651791511009"
+        "name": "Nginx Dash",
+        "config": "",
+        "type": "iStream",
+        "machineID": "0"
     },
     "Transcoder": {
         "name": "",

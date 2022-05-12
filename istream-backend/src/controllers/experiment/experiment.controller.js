@@ -254,6 +254,7 @@ module.exports.addNewMachine = (req, res) => {
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       } else {
+         fs.chmodSync(privateKeyPath, 0o600);
          res.status(200).send("Machine Added Successfully");
       }
    });
@@ -329,9 +330,47 @@ module.exports.buildExperiment = (req, res) => {
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
 };
 
+function arrayBuffer2str(buf) {
+   return String.fromCharCode.apply(null, new Uint16Array(buf));
+}
+
 module.exports.build = (endpoint, socket) => {
-   socket.on("subscribeToBuildExperiment", () => {
-      console.log("Experiment is start to building");
+   socket.on("subscribeToBuildExperiment", (userInfo) => {
+      const spawn = require("child_process").spawn;
+      const child = spawn("bash", ["src/database/scripts/build.sh", userInfo.username, userInfo.experimentId]);
+
+      child.stdout.on("data", (data) => {
+         // Send across the data without any modifications
+         try {
+            // socket.emit("getExperimentData", arrayBuffer2str(data));
+            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
+            // 	if (err) {
+            // 		console.log('Something went wrong. Please check the paths and try again');
+            // 	}
+            // })
+            console.log(arrayBuffer2str(data));
+
+            //   socket.send(data)
+         } catch (e) {
+            child.kill();
+         }
+      });
+
+      child.stderr.on("data", (data) => {
+         // Send across the data without any modifications
+         try {
+            // socket.emit("getExperimentData", arrayBuffer2str(data));
+            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
+            // 	if (err) {
+            // 		console.log('Something went wrong. Please check the paths and try again');
+            // 	}
+            // })
+            console.log(arrayBuffer2str(data));
+         } catch (e) {
+            child.kill();
+         }
+      });
+
       endpoint.emit("getExperiment‌BuildInfo", "build phase");
    });
 };
