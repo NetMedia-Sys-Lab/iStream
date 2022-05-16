@@ -14,7 +14,7 @@ if [[ "${serverType}" == "iStream" ]]; then
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) to the designated place"
         videoPath="${mainDir}/src/database/Videos/${videoId[$i]}.mp4"
-        serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/build"
+        serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/Build"
         cp "${videoPath}" "${serverPath}"
     done
 elif [[ "${serverType}" == "Custom" ]]; then
