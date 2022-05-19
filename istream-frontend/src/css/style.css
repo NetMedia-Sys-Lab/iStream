@@ -71,6 +71,7 @@ input {
 .modal-size{
 	width: 35vw;
     max-width: 35vw;
+	max-height: 50vh;
 }
 
 .selectedRow {

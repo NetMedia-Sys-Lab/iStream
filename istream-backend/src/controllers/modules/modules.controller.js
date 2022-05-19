@@ -61,11 +61,18 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.addNewConfig = (req, res) => {
-   const { userId, username, componentName, moduleName, configName } = req.body;
+   const { userId, username, isUserModule, componentName, moduleName, configName } = req.body;
    const file = req.files.configFile;
-   const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}.${
-      file.name.split(".")[1]
-   }`;
+   let filePath = "";
+   if (isUserModule === "true") {
+      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}.${file.name.split(".")[1]}`;
+   } else {
+      const configFileDirectory = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}`;
+      fs.mkdirSync(configFileDirectory, { recursive: true });
+      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configName}.${
+         file.name.split(".")[1]
+      }`;
+   }
 
    file.mv(filePath, (err) => {
       if (err) {
@@ -82,7 +89,13 @@ module.exports.getConfigFiles = (req, res) => {
    const { username } = JSON.parse(req.query.user);
    const componentName = req.query.componentName;
    const moduleName = req.query.moduleName;
-   const configFilesDirectoryPath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs`;
+   const isUserModule = req.query.isUserModule;
+   let configFilesDirectoryPath = "";
+   if (isUserModule === "true") {
+      configFilesDirectoryPath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs`;
+   } else {
+      configFilesDirectoryPath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}`;
+   }
    let configFilesList = [];
    try {
       if (fs.existsSync(configFilesDirectoryPath)) configFilesList = fs.readdirSync(configFilesDirectoryPath);
@@ -159,6 +172,10 @@ module.exports.getVideosList = (req, res) => {
 
 module.exports.saveModuleData = (req, res) => {
    const { userId, username, componentName, experimentId, selectedModuleType, selectedModule, selectedConfigFile } = req.body;
+   let iStreamNetworkManualConfig;
+   if (componentName === "Network") {
+      iStreamNetworkManualConfig = req.body.iStreamNetworkManualConfig;
+   }
 
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
    fs.readFile(dependencyFile, "utf8", function (err, data) {
@@ -173,10 +190,9 @@ module.exports.saveModuleData = (req, res) => {
       jsonData[componentName].name = selectedModule;
       jsonData[componentName].config = selectedConfigFile;
       jsonData[componentName].type = selectedModuleType;
-      // if (componentName == "Network") {
-      //    console.log("here");
-      //    jsonData[componentName].manualConfig = manualConfig.toString();
-      // }
+      if (componentName == "Network") {
+         jsonData[componentName].manualConfig = iStreamNetworkManualConfig.toString();
+      }
 
       stringifyData = JSON.stringify(jsonData);
 
@@ -303,7 +319,7 @@ module.exports.getVideoModuleData = (req, res) => {
       const jsonData = JSON.parse(data);
       const videosData = jsonData[componentName];
 
-      if (videosData.machineID !== "") {
+      if (videosData.machineID !== "" && videosData.machineID !== "0") {
          videosData.machineID = machineList.find((machine) => machine.machineID === videosData.machineID)["machineIp"];
       }
 
@@ -316,8 +332,16 @@ module.exports.getConfigFileData = (req, res) => {
    const componentName = req.query.componentName;
    const moduleName = req.query.moduleName;
    const configFileName = req.query.configFileName;
+   const isUserModule = req.query.isUserModule;
 
-   const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
+   let filePath = "";
+   if (isUserModule === "true") {
+      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
+   } else {
+      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configFileName}`;
+   }
+
+   // const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
 
    fs.readFile(filePath, "utf8", function (err, data) {
       if (err) {
@@ -332,8 +356,15 @@ module.exports.getConfigFileData = (req, res) => {
 };
 
 module.exports.updateConfigFileData = (req, res) => {
-   const { username, componentName, moduleName, configName, data } = req.body;
-   const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
+   const { username, componentName, isUserModule, moduleName, configName, data } = req.body;
+   // const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
+
+   let filePath = "";
+   if (isUserModule === "true") {
+      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
+   } else {
+      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configName}`;
+   }
 
    fs.writeFile(filePath, data, function (err) {
       if (err) {

@@ -18,7 +18,7 @@ if [[ "${clientMachineId}" != "" ]] && [[ "${clientMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${clientMachineId}")
 
     echo "Move files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}"
+    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}" "build"
 
     echo "Run build script"
     commandToRunInCluster="cd '${clientName}' && sh build.sh"

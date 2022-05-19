@@ -4,7 +4,6 @@ const controller = require("../controllers/experiment/experiment.controller");
 router.get("/getUserExperimentsList", controller.getUserExperimentsList);
 router.get("/getExperimentConfig", controller.getExperimentConfig);
 router.get("/getExperimentData", controller.getExperimentData);
-router.get("/buildExperiment", controller.buildExperiment);
 router.get("/getUserMachineList", controller.getUserMachineList);
 router.get("/getComponentSelectedMachine", controller.getComponentSelectedMachine);
 

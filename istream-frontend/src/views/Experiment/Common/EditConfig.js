@@ -12,7 +12,13 @@ export default class EditConfig extends Component {
    constructor(props) {
       super(props);
 
-      getConfigFileData(this.state.user, this.props.componentName, this.props.moduleName, this.props.configName).then((fileData) => {
+      getConfigFileData(
+         this.state.user,
+         this.props.componentName,
+         this.props.moduleName,
+         this.props.configName,
+         this.props.isUserModule
+      ).then((fileData) => {
          this.setState({
             textData: fileData,
          });
@@ -31,6 +37,7 @@ export default class EditConfig extends Component {
       const data = {
          username: this.state.user.username,
          componentName: this.props.componentName,
+         isUserModule: this.props.isUserModule,
          moduleName: this.props.moduleName,
          configName: this.props.configName,
          data: this.state.textData,

@@ -137,30 +137,14 @@ export function getComponentSelectedMachine(user, componentName, experimentId) {
    );
 }
 
-export function buildExperiment(user, experimentId) {
-   return API.get("/experiment/buildExperiment", {
-      params: {
-         user,
-         experimentId,
-      },
-   }).then(
-      (response) => {
-         return response.data;
-      },
-      (error) => {
-         return error.response;
-      }
-   );
-}
-
 export function subscribeToBuildExperiment(userInfo, cb) {
    const SOCKET = openSocket(DOMAIN + "build");
    SOCKET.on("getExperiment‌BuildInfo", (data) => cb(null, data));
    SOCKET.emit("subscribeToBuildExperiment", userInfo);
 }
 
-export function subscribeToRunExperiment(cb) {
+export function subscribeToRunExperiment(userInfo, cb) {
    const SOCKET = openSocket(DOMAIN + "run");
    SOCKET.on("getExperiment‌RunInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeToRunExperiment");
+   SOCKET.emit("subscribeToRunExperiment", userInfo);
 }

@@ -96,7 +96,7 @@ export default class Stepper extends Component {
    }
 
    get addModuleConfigButton() {
-      if (this.props.isUserModule && this.state.currentStep === 2) {
+      if (this.state.currentStep === 2) {
          return (
             <Button
                variant="secondary"
@@ -149,6 +149,25 @@ export default class Stepper extends Component {
       return null;
    }
 
+   // get selectCustomModuleButton() {
+   //    if (this.state.currentStep === 2 && this.props.componentName === "Network") {
+   //       return (
+   //          <Button
+   //             variant="secondary"
+   //             className="float-end me-1"
+   //             onClick={() => {
+   //                // this.props.toggleDisplay();
+   //                // this.setState({ displayAddModuleConfig: true });
+   //                // this.setState({ currentStep: 3 });
+   //             }}
+   //          >
+   //             Custom Config
+   //          </Button>
+   //       );
+   //    }
+   //    return null;
+   // }
+
    render() {
       return (
          <div>
@@ -174,6 +193,7 @@ export default class Stepper extends Component {
                         {this.addModuleConfigButton}
                         {this.addNewVideoButton}
                         {this.sshButton}
+                        {/* {this.selectCustomModuleButton} */}
                      </div>
                   </form>
                </Modal.Body>
@@ -196,6 +216,7 @@ export default class Stepper extends Component {
                }}
                updateData={this.props.updateConfigFiles}
                selectedModule={this.props.selectedModule}
+               isUserModule={this.props.isUserModule}
             />
             <AddVideo
                display={this.state.displayAddNewVideo}

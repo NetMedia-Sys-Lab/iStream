@@ -1,1 +1,1 @@
-{"delay":10,"packetLoss":0,"corruptPacket":0,"bandwidth":0}
+{"delay":10,"packetLoss":10,"corruptPacket":10,"bandwidth":0}

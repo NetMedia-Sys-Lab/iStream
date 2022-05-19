@@ -15,6 +15,7 @@ export default class ServerCard extends Component {
       iStreamModuleOptions: [],
       userModuleOptions: [],
       userModuleConfigFiles: ["No Config"],
+      iStreamModuleConfigFiles: ["No Config"],
       selectedModuleType: "",
       selectedModule: "",
       selectedConfigFile: "",
@@ -53,10 +54,17 @@ export default class ServerCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName).then((res) => {
-         res.unshift("No Config");
-         this.setState({ userModuleConfigFiles: res });
-      });
+      getConfigFiles(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
+         (res) => {
+            res.unshift("No Config");
+
+            if (this.state.selectedModuleType === "Custom") {
+               this.setState({ userModuleConfigFiles: res });
+            } else {
+               this.setState({ iStreamModuleConfigFiles: res });
+            }
+         }
+      );
    };
 
    radioButtonOptions = (list, type) => {
@@ -141,7 +149,7 @@ export default class ServerCard extends Component {
       );
    };
 
-   configUserModule = () => {
+   userModuleConfig = () => {
       if (this.state.selectedModuleType !== "Custom") return null;
 
       const userModuleConfigFiles =
@@ -155,6 +163,24 @@ export default class ServerCard extends Component {
          <div>
             <h5>Config Module</h5>
             <div>{userModuleConfigFiles}</div>
+         </div>
+      );
+   };
+
+   iStreamModuleConfig = () => {
+      if (this.state.selectedModuleType !== "iStream") return null;
+
+      const iStreamModuleConfigFiles =
+         this.state.iStreamModuleConfigFiles.length === 0 ? (
+            <div>No Config files found. Please add a new config file to proceed.</div>
+         ) : (
+            this.radioButtonOptions(this.state.iStreamModuleConfigFiles, "Config")
+         );
+
+      return (
+         <div>
+            <h5>Config Module</h5>
+            <div>{iStreamModuleConfigFiles}</div>
          </div>
       );
    };
@@ -228,7 +254,7 @@ export default class ServerCard extends Component {
                display={this.state.displayStepperModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), [this.configUserModule()]]}
+               steps={[this.moduleType(), [this.userModuleConfig(), this.iStreamModuleConfig()]]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
@@ -244,6 +270,7 @@ export default class ServerCard extends Component {
                   configName={this.state.selectedEditFile}
                   moduleName={this.state.selectedModule}
                   componentName={this.state.componentName}
+                  isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
                   detached={() => this.setState({ displayEditConfigModal: false, displayStepperModal: true })}
                />
             ) : (

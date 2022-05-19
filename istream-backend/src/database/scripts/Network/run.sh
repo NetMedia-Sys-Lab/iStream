@@ -6,25 +6,46 @@ networkName=$(jq -r '.Network.name' src/database/users/${username}/Experiments/$
 networkConfigName=$(jq -r '.Network.config' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 networkType=$(jq -r '.Network.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 networkMachineId=$(jq -r '.Network.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+iStreamNetworkManualConfig=$(jq -r '.Network.manualConfig' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-networkParameter=$(jq -r '.' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
+mainDir=$(pwd)
 
 if [[ "${networkType}" == "iStream" ]]; then
-    filePath="${mainDir}/src/database/supportedModules/Network/${networkName}"
-    # python3 src/database/scripts/Network/createNetworkConfig.py "${networkParameter}"
+    if [[ "${iStreamNetworkManualConfig}" == "false" ]]; then
+        networkParameter=$(jq -r '.' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
+        python3 src/database/scripts/Network/createNetworkConfig.py "${networkParameter}"
+        configFilePath="${mainDir}/src/database/scripts/Network/networkConfiguration.sh"
+    else
+        configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/Network/${networkName}/${networkConfigName}"
+    fi
 elif [[ "${networkType}" == "Custom" ]]; then
-    filePath="${mainDir}/src/database/users/${username}/Modules/Network/${networkName}"
+    configFilePath="${mainDir}/src/database/users/${username}/Modules/Client/${networkName}/Configs/${networkConfigName}"
 fi
 
 if [[ "${networkMachineId}" != "" ]] && [[ "${networkMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${networkMachineId}")
 
-    echo "Move files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}"
+    if [[ !("${networkConfigName}" == "" ||  "${networkConfigName}" == "No Config") ]]; then
+        echo "Move Config file to the designated server"
+        commandToRunInCluster="cd '${networkName}' && mkdir -p Config && cd Config && rm -f config.sh"
+        sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+        sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "run" "${networkName}"
+    fi
 
-    echo "Run build script"
-    commandToRunInCluster="cd '${networkName}' && sh build.sh"
+    echo "Run run script"
+    commandToRunInCluster="cd '${networkName}' && sh run.sh"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
-    sh "${filePath}/build.sh"
+    echo "Not implemented yet"
+    if [[ !("${networkConfigName}" == "" ||  "${networkConfigName}" == "No Config") ]]; then
+        echo "Not implemented yet"
+    fi
+    # sh "${filePath}/build.sh"
+fi
+
+if [[ "${networkType}" == "iStream" ]]; then
+    if [[ "${iStreamNetworkManualConfig}" == "false" ]]; then
+        configFilePath="${mainDir}/src/database/scripts/Network/networkConfiguration.sh"
+        rm "${configFilePath}"
+    fi
 fi

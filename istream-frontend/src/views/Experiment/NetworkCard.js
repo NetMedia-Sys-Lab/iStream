@@ -23,6 +23,8 @@ export default class NetworkCard extends Component {
       iStreamModuleOptions: [],
       userModuleOptions: [],
       userModuleConfigFiles: ["No Config"],
+      iStreamModuleConfigFiles: ["No Config"],
+      iStreamNetworkManualConfig: false,
       selectedModuleType: "",
       selectedModule: "",
       selectedConfigFile: "",
@@ -80,10 +82,17 @@ export default class NetworkCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName).then((res) => {
-         res.unshift("No Config");
-         this.setState({ userModuleConfigFiles: res });
-      });
+      getConfigFiles(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
+         (res) => {
+            res.unshift("No Config");
+
+            if (this.state.selectedModuleType === "Custom") {
+               this.setState({ userModuleConfigFiles: res });
+            } else {
+               this.setState({ iStreamModuleConfigFiles: res });
+            }
+         }
+      );
    };
 
    onNetworkConfigChange = (e) => {
@@ -187,12 +196,47 @@ export default class NetworkCard extends Component {
       );
    };
 
-   configDefaultNetworkModule = () => {
-      if (this.state.selectedModuleType !== "iStream" && this.state.selectedModule !== "Default Network") return null;
+   iStreamModuleConfig = () => {
+      if (this.state.selectedModuleType !== "iStream") return null;
 
       return (
          <div>
-            <h5>Config Module</h5>
+            <div className="form-check">
+               <input
+                  className="form-check-input"
+                  type="radio"
+                  name="DefaultConfig"
+                  id="DefaultConfig"
+                  onChange={() => {
+                     this.setState({ iStreamNetworkManualConfig: false });
+                  }}
+                  checked={!this.state.iStreamNetworkManualConfig}
+               />
+               <label className="form-check-label">Default Config</label>
+            </div>
+            <div className="form-check">
+               <input
+                  className="form-check-input"
+                  type="radio"
+                  name="CustomConfig"
+                  id="CustomConfig"
+                  onChange={() => {
+                     this.setState({ iStreamNetworkManualConfig: true });
+                  }}
+                  checked={this.state.iStreamNetworkManualConfig}
+               />
+               <label className="form-check-label">Custom Config</label>
+            </div>
+            <hr />
+            {this.state.iStreamNetworkManualConfig ? this.iStreamNetworkCustomConfig() : this.iStreamNetworkDefaultConfig()}
+         </div>
+      );
+   };
+
+   iStreamNetworkDefaultConfig = () => {
+      return (
+         <div>
+            <h5>Default Config</h5>
             <div>
                <div className="form-group row">
                   <label className="col-6 col-form-label">Delay (ms):</label>
@@ -252,7 +296,23 @@ export default class NetworkCard extends Component {
       );
    };
 
-   configUserModule = () => {
+   iStreamNetworkCustomConfig = () => {
+      const iStreamModuleConfigFiles =
+         this.state.iStreamModuleConfigFiles.length === 0 ? (
+            <div>No Config files found. Please add a new config file to proceed.</div>
+         ) : (
+            this.radioButtonOptions(this.state.iStreamModuleConfigFiles, "Config")
+         );
+
+      return (
+         <div>
+            <h5>Manual Config</h5>
+            <div>{iStreamModuleConfigFiles}</div>
+         </div>
+      );
+   };
+
+   userModuleConfig = () => {
       if (this.state.selectedModuleType !== "Custom") return null;
       const userModuleConfigFiles =
          this.state.userModuleConfigFiles.length === 0 ? (
@@ -280,7 +340,7 @@ export default class NetworkCard extends Component {
             <strong>Name: </strong>
             {this.state.selectedModule}
             <br />
-            {this.state.machineID !== "" && this.state.machineID !== "0"  ? (
+            {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
                   {this.state.machineID}
@@ -328,6 +388,7 @@ export default class NetworkCard extends Component {
          selectedModuleType: this.state.selectedModuleType,
          selectedModule: this.state.selectedModule,
          selectedConfigFile: this.state.selectedConfigFile,
+         iStreamNetworkManualConfig: this.state.iStreamNetworkManualConfig,
       };
 
       saveExperimentModuleData(data).then((res) => {
@@ -367,7 +428,7 @@ export default class NetworkCard extends Component {
                display={this.state.displayStepperModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), [this.configDefaultNetworkModule(), this.configUserModule()]]}
+               steps={[this.moduleType(), [this.iStreamModuleConfig(), this.userModuleConfig()]]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}

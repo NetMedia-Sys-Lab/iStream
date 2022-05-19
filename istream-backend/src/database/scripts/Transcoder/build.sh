@@ -19,7 +19,7 @@ if [[ "${transcoderMachineId}" != "" ]] && [[ "${transcoderMachineId}" != "0" ]]
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${transcoderMachineId}")
 
     echo "Move files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}"
+    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}" "build"
 
     echo "Run build script"
     commandToRunInCluster="cd '${transcoderName}' && sh build.sh"

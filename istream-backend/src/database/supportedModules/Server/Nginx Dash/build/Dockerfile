@@ -29,7 +29,7 @@ COPY nginx.conf /usr/local/nginx/conf
 
 # RUN sudo ./usr/local/nginx/sbin/nginx -s reload
 
-COPY *.mp4 /usr/local/nginx/html/
+# COPY *.mp4 /usr/local/nginx/html/
 
 # RUN apt-get install -y ffmpeg
 

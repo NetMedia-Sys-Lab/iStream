@@ -1,5 +1,1 @@
-
-docker run server
-
-
-docker cp result 
+#!/bin/bash

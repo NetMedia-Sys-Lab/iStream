@@ -16,6 +16,7 @@ export default class AddConfig extends Component {
       const newModuleConfigData = new FormData();
       newModuleConfigData.append("userId", this.state.user.userId);
       newModuleConfigData.append("username", this.state.user.username);
+      newModuleConfigData.append("isUserModule", this.props.isUserModule);
       newModuleConfigData.append("componentName", this.props.componentName);
       newModuleConfigData.append("moduleName", this.props.selectedModule);
       newModuleConfigData.append("configName", this.state.configName);
@@ -56,9 +57,7 @@ export default class AddConfig extends Component {
                         </div>
                      </div>
                      <div className="form-group row mt-2">
-                        <label className="col-6 col-form-label">
-                           Upload Module's Config File
-                        </label>
+                        <label className="col-6 col-form-label">Upload Module's Config File</label>
                         <div className="col-6">
                            <input
                               className="form-control"

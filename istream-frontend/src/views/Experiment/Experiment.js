@@ -6,13 +6,7 @@ import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
 // import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
-import {
-   getExperimentConfig,
-   getExperimentData,
-   buildExperiment,
-   subscribeToBuildExperiment,
-   subscribeToRunExperiment,
-} from "src/api/ExperimentAPI";
+import { getExperimentConfig, getExperimentData, subscribeToBuildExperiment, subscribeToRunExperiment } from "src/api/ExperimentAPI";
 import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
@@ -30,7 +24,10 @@ class Experiment extends Component {
       networkComponentExistence: true,
       transcoderComponentExistence: true,
       displayConfig: false,
-      output: ["Experiment is not started yet"],
+      displayBuildState: false,
+      displayRunState: false,
+      buildOutput: "",
+      runOutput: "",
       dependencyData: experimentJSONData,
       videosList: [],
    };
@@ -99,16 +96,54 @@ class Experiment extends Component {
                         </span>
                      </div>
                   </div>
-                  {/* <hr /> */}
-
-                  {/* <div>
-                     <h6 className="text-success">Output: </h6>
-                     <span>{this.state.output}</span>
-                  </div> */}
 
                   <hr />
                   <div className="mt-3">
                      <Button className="float-end" onClick={() => this.setState({ displayConfig: false })}>
+                        Done
+                     </Button>
+                  </div>
+               </Modal.Body>
+            </Modal>
+         </div>
+      );
+   };
+
+   buildStateModal = () => {
+      return (
+         <div>
+            <Modal dialogClassName="modal-size" show={this.state.displayBuildState}>
+               <Modal.Header>
+                  <Modal.Title>Build Phase</Modal.Title>
+               </Modal.Header>
+               <Modal.Body>
+                  <textarea rows="15" cols="60" id="modalTextArea" name="modalTextArea" defaultValue={this.state.buildOutput}></textarea>
+
+                  <hr />
+                  <div className="mt-3">
+                     <Button className="float-end" onClick={() => this.setState({ displayBuildState: false, buildOutput: [] })}>
+                        Done
+                     </Button>
+                  </div>
+               </Modal.Body>
+            </Modal>
+         </div>
+      );
+   };
+
+   runStateModal = () => {
+      return (
+         <div>
+            <Modal dialogClassName="modal-size" show={this.state.displayRunState}>
+               <Modal.Header>
+                  <Modal.Title>Run Phase</Modal.Title>
+               </Modal.Header>
+               <Modal.Body>
+                  <textarea rows="15" cols="60" id="modalTextArea" name="modalTextArea" defaultValue={this.state.runOutput}></textarea>
+
+                  <hr />
+                  <div className="mt-3">
+                     <Button className="float-end" onClick={() => this.setState({ displayRunState: false, runOutput: [] })}>
                         Done
                      </Button>
                   </div>
@@ -125,17 +160,33 @@ class Experiment extends Component {
    };
 
    buildExperiment = () => {
-      // buildExperiment(this.state.user, this.state.experimentId).then((res) => {});
+      this.setState({ displayBuildState: true });
       const data = {
          username: this.state.user.username,
          experimentId: this.state.experimentId,
       };
-      subscribeToBuildExperiment(data, (err, output) => {});
+      subscribeToBuildExperiment(data, (err, output) => {
+         output = output.filter((str) => str !== "");
+         let out = "";
+         output.forEach((element) => (out += element + "\n"));
+
+         this.setState({ buildOutput: this.state.buildOutput + out });
+      });
    };
 
    runExperiment = () => {
-      subscribeToRunExperiment((err, output) => {
+      this.setState({ displayRunState: true });
+      const data = {
+         username: this.state.user.username,
+         experimentId: this.state.experimentId,
+      };
+      subscribeToRunExperiment(data, (err, output) => {
          console.log(output);
+         output = output.filter((str) => str !== "");
+         let out = "";
+         output.forEach((element) => (out += element + "\n"));
+
+         this.setState({ runOutput: this.state.runOutput + out });
       });
    };
 
@@ -199,6 +250,8 @@ class Experiment extends Component {
                   </div>
                </div>
                {this.experimentInfoModal()}
+               {this.buildStateModal()}
+               {this.runStateModal()}
             </div>
          </main>
       );

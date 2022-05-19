@@ -1,4 +1,4 @@
-import {API} from "./API";
+import { API } from "./API";
 
 export const getDefaultModules = (componentName) => {
    return API.get("/modules/getDefaultModules", {
@@ -53,12 +53,13 @@ export const addNewConfig = (request) => {
    );
 };
 
-export const getConfigFiles = (user, componentName, moduleName) => {
+export const getConfigFiles = (user, componentName, moduleName, isUserModule) => {
    return API.get("/modules/getConfigFiles", {
       params: {
          user,
          componentName,
          moduleName,
+         isUserModule,
       },
    }).then(
       (response) => {
@@ -175,13 +176,14 @@ export const getVideoModuleData = (user, componentName, experimentId) => {
    );
 };
 
-export const getConfigFileData = (user, componentName, moduleName, configFileName) => {
+export const getConfigFileData = (user, componentName, moduleName, configFileName, isUserModule) => {
    return API.get("/modules/getConfigFileData", {
       params: {
          user,
          componentName,
          moduleName,
          configFileName,
+         isUserModule,
       },
    }).then(
       (response) => {

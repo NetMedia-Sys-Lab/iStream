@@ -58,7 +58,7 @@ module.exports.userRegistration = (req, res) => {
       fs.mkdirSync(`${modulesDirName}/Server`);
       fs.mkdirSync(`${modulesDirName}/Network`);
       fs.mkdirSync(`${modulesDirName}/Client`);
-      fs.mkdirSync(`${modulesDirName}/Input`);
+      // fs.mkdirSync(`${modulesDirName}/Input`);
 
       res.status(200).send("New User Created Successfully");
    } catch (err) {

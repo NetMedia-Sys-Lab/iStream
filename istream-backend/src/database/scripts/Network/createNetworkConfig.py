@@ -3,7 +3,7 @@ import json
 
 networkConfig = json.loads(sys.argv[1])
 
-with open('networkConfiguration.sh', 'w') as bash:
+with open('src/database/scripts/Network/networkConfiguration.sh', 'w') as bash:
     bash.write('#! /bin/bash \n')
     if networkConfig['delay'] != 0 and networkConfig['bandwidth'] != 0:
         bash.write('tc qdisc add dev eth0 root netem delay ' + str(
