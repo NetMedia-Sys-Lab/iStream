@@ -11,8 +11,12 @@ mainDir=$(pwd)
 
 if [[ "${transcoderType}" == "iStream" ]]; then
     configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/Transcoder/${transcoderName}/${transcoderConfigName}"
+    configPathDestination="${mainDir}/src/database/supportedModules/Transcoder/${transcoderName}/Config"
+    componentPath="${mainDir}/src/database/supportedModules/Transcoder/${transcoderName}"
 elif [[ "${transcoderType}" == "Custom" ]]; then
     configFilePath="${mainDir}/src/database/users/${username}/Modules/Transcoder/${transcoderName}/Configs/${transcoderConfigName}"
+    configPathDestination="${mainDir}/src/database/users/${username}/Modules/Transcoder/${transcoderName}/Config"
+    componentPath="${mainDir}/src/database/users/${username}/Modules/Transcoder/${transcoderName}"
 fi
 
 if [[ "${transcoderMachineId}" != "" ]] && [[ "${transcoderMachineId}" != "0" ]]; then
@@ -29,9 +33,12 @@ if [[ "${transcoderMachineId}" != "" ]] && [[ "${transcoderMachineId}" != "0" ]]
     commandToRunInCluster="cd '${transcoderName}' && sh run.sh"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
-    echo "Not implemented yet"
     if [[ !("${transcoderConfigName}" == "" ||  "${transcoderConfigName}" == "No Config") ]]; then
-        echo "Not implemented yet"
+        echo "Move Config file beside the component"
+        mkdir -p "${configPathDestination}"
+        rm -f "${configPathDestination}/Config.sh"
+        cp "${configFilePath}" "${configPathDestination}/Config.sh"
     fi
-    # sh "${filePath}/build.sh"
+    echo "Run run script"
+    sh "${componentPath}/run.sh"
 fi

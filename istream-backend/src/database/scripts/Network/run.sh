@@ -18,8 +18,12 @@ if [[ "${networkType}" == "iStream" ]]; then
     else
         configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/Network/${networkName}/${networkConfigName}"
     fi
+    configPathDestination="${mainDir}/src/database/supportedModules/Network/${networkName}/Config"
+    componentPath="${mainDir}/src/database/supportedModules/Network/${networkName}"
 elif [[ "${networkType}" == "Custom" ]]; then
-    configFilePath="${mainDir}/src/database/users/${username}/Modules/Client/${networkName}/Configs/${networkConfigName}"
+    configFilePath="${mainDir}/src/database/users/${username}/Modules/Network/${networkName}/Configs/${networkConfigName}"
+    configPathDestination="${mainDir}/src/database/users/${username}/Modules/Network/${networkName}/Config"
+    componentPath="${mainDir}/src/database/users/${username}/Modules/Network/${networkName}"
 fi
 
 if [[ "${networkMachineId}" != "" ]] && [[ "${networkMachineId}" != "0" ]]; then
@@ -36,16 +40,18 @@ if [[ "${networkMachineId}" != "" ]] && [[ "${networkMachineId}" != "0" ]]; then
     commandToRunInCluster="cd '${networkName}' && sh run.sh"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
-    echo "Not implemented yet"
-    if [[ !("${networkConfigName}" == "" ||  "${networkConfigName}" == "No Config") ]]; then
-        echo "Not implemented yet"
+    if [[ !("${networkConfigName}" == "" ||  "${networkConfigName}" == "No Config") || "${iStreamNetworkManualConfig}" == "false" ]]; then
+        echo "Move Config file beside the component"
+        mkdir -p "${configPathDestination}"
+        rm -f "${configPathDestination}/Config.sh"
+        cp "${configFilePath}" "${configPathDestination}/Config.sh"
     fi
-    # sh "${filePath}/build.sh"
+    echo "Run run script"
+    sh "${componentPath}/run.sh"
 fi
 
 if [[ "${networkType}" == "iStream" ]]; then
     if [[ "${iStreamNetworkManualConfig}" == "false" ]]; then
-        configFilePath="${mainDir}/src/database/scripts/Network/networkConfiguration.sh"
         rm "${configFilePath}"
     fi
 fi

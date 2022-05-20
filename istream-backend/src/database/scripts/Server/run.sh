@@ -11,8 +11,12 @@ mainDir=$(pwd)
 
 if [[ "${serverType}" == "iStream" ]]; then
     configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/Server/${serverName}/${serverConfigName}"
+    configPathDestination="${mainDir}/src/database/supportedModules/Server/${serverName}/Config"
+    componentPath="${mainDir}/src/database/supportedModules/Server/${serverName}"
 elif [[ "${serverType}" == "Custom" ]]; then
     configFilePath="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Configs/${serverConfigName}"
+    configPathDestination="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Config"
+    componentPath="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}"
 fi
 
 if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
@@ -29,9 +33,12 @@ if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
     commandToRunInCluster="cd '${serverName}' && sh run.sh"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
-    echo "Not implemented yet"
     if [[ !("${serverConfigName}" == "" ||  "${serverConfigName}" == "No Config") ]]; then
-        echo "Not implemented yet"
+        echo "Move Config file beside the component"
+        mkdir -p "${configPathDestination}"
+        rm -f "${configPathDestination}/Config.sh"
+        cp "${configFilePath}" "${configPathDestination}/Config.sh"
     fi
-    # sh "${filePath}/build.sh"
+    echo "Run run script"
+    sh "${componentPath}/run.sh"
 fi

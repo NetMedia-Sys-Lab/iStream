@@ -341,8 +341,6 @@ module.exports.getConfigFileData = (req, res) => {
       filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configFileName}`;
    }
 
-   // const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
-
    fs.readFile(filePath, "utf8", function (err, data) {
       if (err) {
          let errorMessage = "Something went wrong in getConfigFileData: Couldn't read config file.";
@@ -357,10 +355,9 @@ module.exports.getConfigFileData = (req, res) => {
 
 module.exports.updateConfigFileData = (req, res) => {
    const { username, componentName, isUserModule, moduleName, configName, data } = req.body;
-   // const filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
 
    let filePath = "";
-   if (isUserModule === "true") {
+   if (isUserModule === true) {
       filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
    } else {
       filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configName}`;
