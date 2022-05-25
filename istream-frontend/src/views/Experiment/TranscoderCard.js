@@ -205,7 +205,6 @@ export default class TranscoderCard extends Component {
             ) : (
                ""
             )}
-            <br />
             {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>

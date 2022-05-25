@@ -8,21 +8,9 @@ networkMachineId=$(jq -r '.Network.machineID' src/database/users/${username}/Exp
 
 mainDir=$(pwd)
 
-if [[ "${networkType}" == "iStream" ]]; then
-    filePath="${mainDir}/src/database/supportedModules/Network/${networkName}"
-elif [[ "${networkType}" == "Custom" ]]; then
-    filePath="${mainDir}/src/database/users/${username}/Modules/Network/${networkName}"
-fi
-
-if [[ "${networkMachineId}" != "" ]] && [[ "${networkMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${networkMachineId}")
-
-    echo "Move files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}" "build"
-
-    echo "Run build script"
-    commandToRunInCluster="cd '${networkName}' && sh build.sh"
-    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+if [[ "${networkName}" == "" ]]; then
+    echo "No network module selected. Please select a module first."
+    exit
 else
-    sh "${filePath}/build.sh"
+    sh src/database/scripts/Common/build.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}"
 fi

@@ -112,9 +112,9 @@ module.exports.addNewVideo = (req, res) => {
    const file = req.files.video;
    const videoName = file.name;
    const videoID = Date.now().toString();
-   const videoPath = `src/database/Videos/${videoID}.${videoName.split(".")[1]}`;
+   const videoPath = `src/database/users/${username}/Videos/${videoID}.${videoName.split(".")[1]}`;
 
-   const videosListFilePath = `src/database/Videos/videos_list.json`;
+   const videosListFilePath = `src/database/users/${username}/Videos/videos_list.json`;
 
    fs.readFile(videosListFilePath, "utf8", function (err, data) {
       if (err) {
@@ -158,7 +158,8 @@ module.exports.addNewVideo = (req, res) => {
 };
 
 module.exports.getVideosList = (req, res) => {
-   const videosListPath = `src/database/Videos/videos_list.json`;
+   const { username } = JSON.parse(req.query.user);
+   const videosListPath = `src/database/users/${username}/Videos/videos_list.json`;
    fs.readFile(videosListPath, "utf8", function (err, data) {
       if (err) {
          let errorMessage = "Something went wrong in getVideosList: Couldn't read videosList file.";

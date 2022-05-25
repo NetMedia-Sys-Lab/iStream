@@ -82,8 +82,12 @@ export const AddNewVideo = (request) => {
    );
 };
 
-export const getVideosList = () => {
-   return API.get("/modules/getVideosList").then(
+export const getVideosList = (user) => {
+   return API.get("/modules/getVideosList", {
+      params: {
+         user,
+      },
+   }).then(
       (response) => {
          return response.data;
       },

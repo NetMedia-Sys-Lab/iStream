@@ -1,0 +1,23 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# testing
+/istream-frontend/coverage
+
+# production
+/istream-frontend/build
+
+# misc
+/istream-frontend/.DS_Store
+/istream-frontend/.env.local
+/istream-frontend/.env.development.local
+/istream-frontend/.env.test.local
+/istream-frontend/.env.production.local
+
+/istream-frontend/npm-debug.log*
+/istream-frontend/yarn-debug.log*
+/istream-frontend/yarn-error.log*

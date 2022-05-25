@@ -40,7 +40,7 @@ class Experiment extends Component {
             transcoderComponentExistence: res.transcoderComponentExistence,
          });
       });
-      getVideosList().then((res) => {
+      getVideosList(this.state.user).then((res) => {
          this.setState({ videosList: res });
       });
    }

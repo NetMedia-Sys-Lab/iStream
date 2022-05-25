@@ -8,21 +8,9 @@ clientMachineId=$(jq -r '.Client.machineID' src/database/users/${username}/Exper
 
 mainDir=$(pwd)
 
-if [[ "${clientType}" == "iStream" ]]; then
-    filePath="${mainDir}/src/database/supportedModules/Client/${clientName}"
-elif [[ "${clientType}" == "Custom" ]]; then
-    filePath="${mainDir}/src/database/users/${username}/Modules/Client/${clientName}"
-fi
-
-if [[ "${clientMachineId}" != "" ]] && [[ "${clientMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${clientMachineId}")
-
-    echo "Move files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${filePath}" "build"
-
-    echo "Run build script"
-    commandToRunInCluster="cd '${clientName}' && sh build.sh"
-    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+if [[ "${clientName}" == "" ]]; then
+    echo "No client module selected. Please select a module first."
+    exit
 else
-    sh "${filePath}/build.sh"
+    sh src/database/scripts/Common/build.sh "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}"
 fi

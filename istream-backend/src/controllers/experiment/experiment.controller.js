@@ -3,16 +3,6 @@ const fsExtra = require("fs-extra");
 const experimentModel = require("../../models/experiment.model");
 const writeToFile = require("../../utils/fileUtils");
 
-// module.exports = (io) => {
-//    io.on("connection", function (socket) {
-//       socket.on("subscribeToBuildExperiment", (message) => {
-//          console.log("Experiment is start to running");
-//          socket.emit("getExperiment‌BuildInfo", "asdasdasd");
-//       });
-
-//    });
-// };
-
 module.exports.createNewExperiment = (req, res) => {
    const {
       experimentId,

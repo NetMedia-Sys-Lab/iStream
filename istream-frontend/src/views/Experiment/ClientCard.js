@@ -254,7 +254,7 @@ export default class ClientCard extends Component {
                display={this.state.displayModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), [this.userModuleConfig(), this.iStreamModuleConfig()]]}
+               steps={[this.moduleType(), this.userModuleConfig()]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}

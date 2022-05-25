@@ -4,18 +4,30 @@ machineIp=$2
 privateKeyPath=$3
 filePath=$4
 scpKind=$5
-componentName=$6
+name=$6
+configFileExtention=$7
 
 if [[ "${scpKind}" == "build" ]]; then
-    mv "${filePath}/Configs" "${filePath}/.."
+    if [ -d "${filePath}/Configs" ]; then
+        mv "${filePath}/Configs" "${filePath}/.."
+    fi
 
     if [[ -d ${filePath} ]]; then
-        scp -r -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}'"
+
+        rsync -auvz -q -r -e "ssh -i '${privateKeyPath}'" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}'"
+
+        # scp -r -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}'"
     else
         scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}'"
     fi
 
-    mv "${filePath}/../Configs" "${filePath}/"
-elif [[ "${scpKind}" == "run" ]]; then
-    scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}/Config/config.sh'"
+    if [ -d "${filePath}/Configs" ]; then
+        mv "${filePath}/../Configs" "${filePath}/"
+    fi
+elif
+    [[ "${scpKind}" == "config" ]]
+then
+    scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${name}/Config/config.${configFileExtention}'"
+elif [[ "${scpKind}" == "video" ]]; then
+    scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/Videos/${name}'"
 fi

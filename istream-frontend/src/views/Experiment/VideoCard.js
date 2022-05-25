@@ -21,7 +21,7 @@ export default class VideoCard extends Component {
    }
 
    fetchData = () => {
-      getVideosList().then((res) => {
+      getVideosList(this.state.user).then((res) => {
          this.setState({ videosList: res });
       });
 

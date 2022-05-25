@@ -13,6 +13,7 @@ export default class Stepper extends Component {
       displayAddModuleConfig: false,
       displayAddNewVideo: false,
       displayMachineConfig: false,
+      showSubmitButton: false,
    };
 
    goToNextStep = () => {
@@ -30,7 +31,14 @@ export default class Stepper extends Component {
    };
 
    get nextButton() {
-      if (this.state.currentStep < this.props.totalNumberOfSteps && this.props.validNextStep) {
+      if (this.props.selectedModule === "dash.js" && this.state.currentStep === 1 && !this.state.showSubmitButton) {
+         this.setState({ showSubmitButton: true });
+      }
+      if (this.props.selectedModule !== "dash.js" && this.state.showSubmitButton) {
+         this.setState({ showSubmitButton: false });
+      }
+
+      if (this.state.currentStep < this.props.totalNumberOfSteps && this.props.validNextStep && !this.state.showSubmitButton) {
          return (
             <Button className="float-end" onClick={this.goToNextStep}>
                Next
@@ -52,7 +60,7 @@ export default class Stepper extends Component {
    }
 
    get submitButton() {
-      if (this.state.currentStep === this.props.totalNumberOfSteps) {
+      if (this.state.currentStep === this.props.totalNumberOfSteps || this.state.showSubmitButton === true) {
          return (
             <Button
                className="float-end"
@@ -149,25 +157,6 @@ export default class Stepper extends Component {
       return null;
    }
 
-   // get selectCustomModuleButton() {
-   //    if (this.state.currentStep === 2 && this.props.componentName === "Network") {
-   //       return (
-   //          <Button
-   //             variant="secondary"
-   //             className="float-end me-1"
-   //             onClick={() => {
-   //                // this.props.toggleDisplay();
-   //                // this.setState({ displayAddModuleConfig: true });
-   //                // this.setState({ currentStep: 3 });
-   //             }}
-   //          >
-   //             Custom Config
-   //          </Button>
-   //       );
-   //    }
-   //    return null;
-   // }
-
    render() {
       return (
          <div>
@@ -193,7 +182,6 @@ export default class Stepper extends Component {
                         {this.addModuleConfigButton}
                         {this.addNewVideoButton}
                         {this.sshButton}
-                        {/* {this.selectCustomModuleButton} */}
                      </div>
                   </form>
                </Modal.Body>

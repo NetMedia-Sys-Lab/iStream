@@ -51,6 +51,13 @@ module.exports.userRegistration = (req, res) => {
       const sshKeysFolder = `src/database/users/${username}/SSHKeys`;
       fs.mkdirSync(sshKeysFolder);
 
+      // Create the folder where the videos would be saved
+      const videosFolder = `src/database/users/${username}/Videos`;
+      fs.mkdirSync(videosFolder);
+
+      const videosListFile = `src/database/users/${username}/Videos/videos_list.json`;
+      writeToFile(videosListFile, JSON.stringify([]), "userRegistration");
+
       //create the modules folder for the new user
       const modulesDirName = `src/database/users/${username}/Modules`;
       fs.mkdirSync(modulesDirName);
@@ -58,7 +65,7 @@ module.exports.userRegistration = (req, res) => {
       fs.mkdirSync(`${modulesDirName}/Server`);
       fs.mkdirSync(`${modulesDirName}/Network`);
       fs.mkdirSync(`${modulesDirName}/Client`);
-      // fs.mkdirSync(`${modulesDirName}/Input`);
+      fs.mkdirSync(`${modulesDirName}/Videos`);
 
       res.status(200).send("New User Created Successfully");
    } catch (err) {

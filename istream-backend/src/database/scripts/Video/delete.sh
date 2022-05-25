@@ -10,8 +10,8 @@ serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${e
 
 if [[ "${videoMachineId}" == "" ]] || [[ "${videoMachineId}" == "0" ]]; then
     if [[ "${serverType}" == "iStream" ]]; then
-        rm "${mainDir}/src/database/supportedModules/Server/${serverName}/Build/"*.mp4
+        rm -f "${mainDir}/src/database/supportedModules/Server/${serverName}/Build/"*.mp4
     elif [[ "${serverType}" == "Custom" ]]; then
-        rm "${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Build/"*.mp4
+        rm -f "${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Build/"*.mp4
     fi
 fi
