@@ -6,8 +6,6 @@ networkName=$(jq -r '.Network.name' src/database/users/${username}/Experiments/$
 networkType=$(jq -r '.Network.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 networkMachineId=$(jq -r '.Network.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-mainDir=$(pwd)
-
 if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
     exit

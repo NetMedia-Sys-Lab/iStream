@@ -18,11 +18,13 @@ if [[ "${componentType}" == "iStream" ]]; then
     else
         configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/${component}/${componentName}/${componentConfigName}"
     fi
-    configPathDestination="${mainDir}/src/database/supportedModules/${component}/${componentName}/Config"
+    resultsPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Results"
+    configPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Config"
     componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
 elif [[ "${componentType}" == "Custom" ]]; then
     configFilePath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Configs/${componentConfigName}"
-    configPathDestination="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Config"
+    configPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Config"
+    resultsPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Results"
     componentPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}"
 fi
 
@@ -30,12 +32,11 @@ runFileName=$(ls -p "${componentPath}" | grep -v / | grep "run")
 runFileExtention=${runFileName##*.}
 
 if [[ ${runFileExtention} = "py" ]]; then
-    commandToRunInCluster="cd '${componentName}' && python run.py"
-    commandToRunInLocal=(python "${componentPath}/run.py")
+    commandToRunInCluster="cd '${componentName}' && python3 run.py"
+    commandToRunInLocal=(python3 "${componentPath}/run.py")
 elif [[ ${runFileExtention} = "sh" ]]; then
     commandToRunInCluster="cd '${componentName}' && bash run.sh"
     commandToRunInLocal=(sh "${componentPath}/run.sh")
-
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
@@ -43,20 +44,22 @@ if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; 
 
     if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
         echo "Move Config file to the designated server"
-        commandToRunInCluster="cd '${componentName}' && mkdir -p Config && cd Config && rm -f *"
-        sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+        commandToRunInClusterForConfig="cd '${componentName}'  && mkdir -p Results && mkdir -p Config && rm -f Config/* Results/*"
+        sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForConfig}"
         sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${componentName}" "${configFileExtention}"
     fi
 
-    echo "Run run script"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
     if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
         echo "Move Config file beside the component"
-        mkdir -p "${configPathDestination}"
-        rm -f "${configPathDestination}"/*
-        cp "${configFilePath}" "${configPathDestination}/config.${configFileExtention}"
+        mkdir -p "${configPath}"
+        rm -f "${configPath}"/*
+        cp "${configFilePath}" "${configPath}/config.${configFileExtention}"
     fi
+
+    mkdir -p "${resultsPath}"
+    rm -f "${resultsPath}"/*
     echo "Run run script"
     "${commandToRunInLocal[@]}"
 fi

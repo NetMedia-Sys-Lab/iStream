@@ -18,8 +18,8 @@ buildFileName=$(ls -p "${componentPath}" | grep -v / | grep "build")
 buildFileExtention=${buildFileName##*.}
 
 if [[ ${buildFileExtention} = "py" ]]; then
-    commandToRunInCluster="cd '${componentName}' && python build.py"
-    commandToRunInLocal=(python "${componentPath}/build.py")
+    commandToRunInCluster="cd '${componentName}' && python3 build.py"
+    commandToRunInLocal=(python3 "${componentPath}/build.py")
 elif [[ ${buildFileExtention} = "sh" ]]; then
     commandToRunInCluster="cd '${componentName}' && bash build.sh"
     commandToRunInLocal=(sh "${componentPath}/build.sh")

@@ -29,6 +29,12 @@ export default class MachineConfig extends Component {
       });
    }
 
+   componentDidUpdate(prevProps) {
+      if (this.props.display !== prevProps.display && this.props.display === true) {
+         this.fetchData();
+      }
+   }
+
    machineSelectionTable = () => {
       if (this.state.machineList.length === 0) return "No machine found. Please add one first.";
 
@@ -78,7 +84,6 @@ export default class MachineConfig extends Component {
 
       addNewMachine(newMachineData).then((res) => {
          toast.success(res);
-         this.fetchData();
          this.setState({
             machineIP: "",
             sshUsername: "",

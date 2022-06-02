@@ -21,7 +21,7 @@ if [[ "${scpKind}" == "build" ]]; then
         scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}'"
     fi
 
-    if [ -d "${filePath}/Configs" ]; then
+    if [ -d "${filePath}/../Configs" ]; then
         mv "${filePath}/../Configs" "${filePath}/"
     fi
 elif

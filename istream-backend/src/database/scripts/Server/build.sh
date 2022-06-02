@@ -6,8 +6,6 @@ serverName=$(jq -r '.Server.name' src/database/users/${username}/Experiments/${e
 serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 serverMachineId=$(jq -r '.Server.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-mainDir=$(pwd)
-
 if [[ "${serverName}" == "" ]]; then
     echo "No server module selected. Please select a module first."
     exit

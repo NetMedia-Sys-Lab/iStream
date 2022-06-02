@@ -9,8 +9,6 @@ networkMachineId=$(jq -r '.Network.machineID' src/database/users/${username}/Exp
 iStreamNetworkManualConfig=$(jq -r '.Network.manualConfig' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 configFileExtention=${networkConfigName##*.}
 
-mainDir=$(pwd)
-
 if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
     exit
@@ -22,5 +20,3 @@ else
     fi
     sh src/database/scripts/Common/run.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${networkConfigName}" "${iStreamNetworkManualConfig}"
 fi
-
-

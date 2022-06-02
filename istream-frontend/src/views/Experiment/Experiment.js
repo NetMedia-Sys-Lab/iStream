@@ -5,8 +5,15 @@ import NetworkCard from "src/views/Experiment/NetworkCard";
 import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
-// import ExperimentSettingCard from "src/views/Experiment/ExperimentSettingCard";
-import { getExperimentConfig, getExperimentData, subscribeToBuildExperiment, subscribeToRunExperiment } from "src/api/ExperimentAPI";
+import {
+   getExperimentConfig,
+   getExperimentData,
+   subscribeToBuildExperiment,
+   subscribeToRunExperiment,
+   downloadExperimentResult,
+} from "src/api/ExperimentAPI";
+import b64ToBlob from "b64-to-blob";
+import fileSaver from "file-saver";
 import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
@@ -25,7 +32,9 @@ class Experiment extends Component {
       transcoderComponentExistence: true,
       displayConfig: false,
       displayBuildState: false,
+      fullscreenBuildModal: false,
       displayRunState: false,
+      fullscreenRunModal: false,
       buildOutput: "",
       runOutput: "",
       dependencyData: experimentJSONData,
@@ -112,12 +121,33 @@ class Experiment extends Component {
    buildStateModal = () => {
       return (
          <div>
-            <Modal dialogClassName="modal-size" show={this.state.displayBuildState}>
+            <Modal
+               dialogClassName={this.state.fullscreenBuildModal ? "" : "modal-size"}
+               show={this.state.displayBuildState}
+               fullscreen={this.state.fullscreenBuildModal}
+            >
                <Modal.Header>
                   <Modal.Title>Build Phase</Modal.Title>
+                  <Button
+                     variant="secondary"
+                     onClick={() => {
+                        this.setState({ fullscreenBuildModal: !this.state.fullscreenBuildModal });
+                     }}
+                  >
+                     {this.state.fullscreenBuildModal ? (
+                        <i className="fa fa-compress" aria-hidden="true"></i>
+                     ) : (
+                        <i className="fa fa-expand" aria-hidden="true"></i>
+                     )}
+                  </Button>
                </Modal.Header>
                <Modal.Body>
-                  <textarea rows="15" cols="60" id="modalTextArea" name="modalTextArea" defaultValue={this.state.buildOutput}></textarea>
+                  <textarea
+                     style={{ width: "100%", height: this.state.fullscreenBuildModal ? "90%" : "45vh" }}
+                     id="modalTextArea"
+                     name="modalTextArea"
+                     defaultValue={this.state.buildOutput}
+                  ></textarea>
 
                   <hr />
                   <div className="mt-3">
@@ -134,15 +164,37 @@ class Experiment extends Component {
    runStateModal = () => {
       return (
          <div>
-            <Modal dialogClassName="modal-size" show={this.state.displayRunState}>
+            <Modal
+               dialogClassName={this.state.fullscreenRunModal ? "" : "modal-size"}
+               show={this.state.displayRunState}
+               fullscreen={this.state.fullscreenRunModal}
+            >
                <Modal.Header>
                   <Modal.Title>Run Phase</Modal.Title>
+                  <Button
+                     variant="secondary"
+                     onClick={() => {
+                        this.setState({ fullscreenRunModal: !this.state.fullscreenRunModal });
+                     }}
+                  >
+                     {this.state.fullscreenRunModal ? (
+                        <i className="fa fa-compress" aria-hidden="true"></i>
+                     ) : (
+                        <i className="fa fa-expand" aria-hidden="true"></i>
+                     )}
+                  </Button>
                </Modal.Header>
                <Modal.Body>
-                  <textarea rows="15" cols="60" id="modalTextArea" name="modalTextArea" defaultValue={this.state.runOutput}></textarea>
+                  <textarea
+                     style={{ width: "100%", height: this.state.fullscreenRunModal ? "90%" : "45vh" }}
+                     id="modalTextArea"
+                     name="modalTextArea"
+                     defaultValue={this.state.runOutput}
+                  ></textarea>
 
                   <hr />
                   <div className="mt-3">
+                     <Button onClick={this.downloadResults}>Download Results</Button>
                      <Button className="float-end" onClick={() => this.setState({ displayRunState: false, runOutput: [] })}>
                         Done
                      </Button>
@@ -181,12 +233,27 @@ class Experiment extends Component {
          experimentId: this.state.experimentId,
       };
       subscribeToRunExperiment(data, (err, output) => {
-         console.log(output);
          output = output.filter((str) => str !== "");
          let out = "";
          output.forEach((element) => (out += element + "\n"));
 
          this.setState({ runOutput: this.state.runOutput + out });
+      });
+   };
+
+   str2bytes = (str) => {
+      console.log(str.length);
+      var bytes = new Uint8Array(str.length);
+      for (var i = 0; i < str.length; i++) {
+         bytes[i] = str.charCodeAt(i);
+      }
+      return bytes;
+   };
+
+   downloadResults = () => {
+      downloadExperimentResult(this.state.user.username, this.state.experimentId).then((response) => {
+         const blob = b64ToBlob(response, "application/zip");
+         fileSaver.saveAs(blob, `results.zip`);
       });
    };
 

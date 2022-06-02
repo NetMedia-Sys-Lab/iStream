@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: hevc3
+spec:
+   selector:
+      matchLabels:
+         app: hevc3
+   replicas: 1
+   template:
+      metadata:
+         labels:
+            app: hevc3
+      spec:
+         containers:
+            - name: hevc3
+              image: registry.gitlab.com/sonalik/360degreevideotranscoding/rate_control
+              resources:
+                 requests:
+                    cpu: "35"
+                    memory: "79Gi"
+                    #limits:
+                    #cpu: "35"
+                    #memory: "79Gi"
+              volumeMounts:
+                 - mountPath: "/hevc"
+                   name: storage
+         imagePullSecrets:
+            - name: regcred
+         volumes:
+            - name: storage
+              hostPath:
+                 path: /home/sonali/Documents/
+                 type: DirectoryOrCreate

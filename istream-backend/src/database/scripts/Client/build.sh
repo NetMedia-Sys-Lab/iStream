@@ -6,8 +6,6 @@ clientName=$(jq -r '.Client.name' src/database/users/${username}/Experiments/${e
 clientType=$(jq -r '.Client.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 clientMachineId=$(jq -r '.Client.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-mainDir=$(pwd)
-
 if [[ "${clientName}" == "" ]]; then
     echo "No client module selected. Please select a module first."
     exit

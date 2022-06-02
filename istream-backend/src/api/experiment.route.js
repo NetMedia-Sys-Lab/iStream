@@ -6,6 +6,7 @@ router.get("/getExperimentConfig", controller.getExperimentConfig);
 router.get("/getExperimentData", controller.getExperimentData);
 router.get("/getUserMachineList", controller.getUserMachineList);
 router.get("/getComponentSelectedMachine", controller.getComponentSelectedMachine);
+router.get("/downloadExperimentResult", controller.downloadExperimentResult)
 
 router.post("/create", controller.createNewExperiment);
 router.post("/deleteExperiment", controller.deleteExperiment);

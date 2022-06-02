@@ -2,6 +2,7 @@ const fs = require("fs");
 const fsExtra = require("fs-extra");
 const experimentModel = require("../../models/experiment.model");
 const writeToFile = require("../../utils/fileUtils");
+var path = require("path");
 
 module.exports.createNewExperiment = (req, res) => {
    const {
@@ -403,4 +404,15 @@ module.exports.run = (endpoint, socket) => {
          }
       });
    });
+};
+
+module.exports.downloadExperimentResult = async (req, res) => {
+   const username = req.query.username;
+   const experimentId = req.query.experimentId;
+
+   const spawnSync = require("child_process").spawnSync;
+   spawnSync("bash", ["src/database/scripts/downloadResults.sh", username, experimentId]);
+   var file = fs.readFileSync(path.resolve(`src/database/users/${username}/Experiments/${experimentId}/Results.zip`), "base64");
+
+   res.send(file);
 };
