@@ -328,13 +328,7 @@ module.exports.build = (endpoint, socket) => {
          // Send across the data without any modifications
          try {
             endpoint.emit("getExperiment‌BuildInfo", data.toString().split("\n"));
-            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
-            // 	if (err) {
-            // 		console.log('Something went wrong. Please check the paths and try again');
-            // 	}
-            // })
 
-            // console.log(data.toString().split("\n"));
             if (data == "Experiment has been built") {
                socket.disconnect();
             }
@@ -365,7 +359,7 @@ module.exports.build = (endpoint, socket) => {
 module.exports.run = (endpoint, socket) => {
    socket.on("subscribeToRunExperiment", (userInfo) => {
       const spawn = require("child_process").spawn;
-      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
+      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId, userInfo.numberOfRepetition]);
 
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (data) => {

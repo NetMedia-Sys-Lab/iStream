@@ -39,6 +39,7 @@ class Experiment extends Component {
       runOutput: "",
       dependencyData: experimentJSONData,
       videosList: [],
+      numberOfRepetition: 1,
    };
 
    constructor(props) {
@@ -127,6 +128,9 @@ class Experiment extends Component {
                fullscreen={this.state.fullscreenBuildModal}
             >
                <Modal.Header>
+                  <Button variant="danger" onClick={() => this.setState({ displayBuildState: false, buildOutput: [] })}>
+                     <i className="fa fa-window-close" aria-hidden="true"></i>
+                  </Button>
                   <Modal.Title>Build Phase</Modal.Title>
                   <Button
                      variant="secondary"
@@ -151,8 +155,8 @@ class Experiment extends Component {
 
                   <hr />
                   <div className="mt-3">
-                     <Button className="float-end" onClick={() => this.setState({ displayBuildState: false, buildOutput: [] })}>
-                        Done
+                     <Button variant="success" className="float-end" onClick={this.buildExperiment}>
+                        Start
                      </Button>
                   </div>
                </Modal.Body>
@@ -170,6 +174,9 @@ class Experiment extends Component {
                fullscreen={this.state.fullscreenRunModal}
             >
                <Modal.Header>
+                  <Button variant="danger" onClick={() => this.setState({ displayRunState: false, runOutput: [] })}>
+                     <i className="fa fa-window-close" aria-hidden="true"></i>
+                  </Button>
                   <Modal.Title>Run Phase</Modal.Title>
                   <Button
                      variant="secondary"
@@ -185,8 +192,22 @@ class Experiment extends Component {
                   </Button>
                </Modal.Header>
                <Modal.Body>
+                  <div className="form-group row mb-2">
+                     <label className="col-4 col-form-label">Number of Repetition:</label>
+                     <div className="col-2">
+                        <input
+                           className="form-control"
+                           type="number"
+                           value={this.state.numberOfRepetition}
+                           onChange={(event) => {
+                              this.setState({ numberOfRepetition: event.target.value });
+                           }}
+                           required
+                        />
+                     </div>
+                  </div>
                   <textarea
-                     style={{ width: "100%", height: this.state.fullscreenRunModal ? "90%" : "45vh" }}
+                     style={{ width: "100%", height: this.state.fullscreenRunModal ? "85%" : "45vh" }}
                      id="modalTextArea"
                      name="modalTextArea"
                      defaultValue={this.state.runOutput}
@@ -195,8 +216,8 @@ class Experiment extends Component {
                   <hr />
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>
-                     <Button className="float-end" onClick={() => this.setState({ displayRunState: false, runOutput: [] })}>
-                        Done
+                     <Button variant="success" className="float-end" onClick={this.runExperiment}>
+                        Start
                      </Button>
                   </div>
                </Modal.Body>
@@ -212,7 +233,6 @@ class Experiment extends Component {
    };
 
    buildExperiment = () => {
-      this.setState({ displayBuildState: true });
       const data = {
          username: this.state.user.username,
          experimentId: this.state.experimentId,
@@ -227,11 +247,12 @@ class Experiment extends Component {
    };
 
    runExperiment = () => {
-      this.setState({ displayRunState: true });
       const data = {
          username: this.state.user.username,
          experimentId: this.state.experimentId,
+         numberOfRepetition: this.state.numberOfRepetition,
       };
+      this.setState({ runOutput: "" });
       subscribeToRunExperiment(data, (err, output) => {
          output = output.filter((str) => str !== "");
          let out = "";
@@ -302,12 +323,12 @@ class Experiment extends Component {
                         <Button className="me-2" onClick={this.getExperimentInfo} variant="info">
                            Information
                         </Button>
-                        <Button className="me-2" variant="primary" onClick={this.buildExperiment}>
+                        <Button className="me-2" variant="primary" onClick={() => this.setState({ displayBuildState: true })}>
                            Build
                         </Button>
                         <Button
                            className="me-2"
-                           onClick={this.runExperiment}
+                           onClick={() => this.setState({ displayRunState: true })}
                            style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
                         >
                            Run
