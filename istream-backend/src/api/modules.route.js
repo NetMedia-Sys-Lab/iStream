@@ -13,6 +13,7 @@ router.get("/getConfigFileData", controller.getConfigFileData);
 router.post("/create", controller.create);
 router.post("/addNewConfig", controller.addNewConfig);
 router.post("/addNewVideo", controller.addNewVideo);
+router.post("/addNewVideoDataset", controller.addNewVideoDataset);
 router.post("/saveModuleData", controller.saveModuleData);
 router.post("/setNetworkConfiguration", controller.setNetworkConfiguration);
 router.post("/saveVideoModuleData", controller.saveVideoModuleData);

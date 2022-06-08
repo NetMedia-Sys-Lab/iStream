@@ -7,6 +7,7 @@ export default class EditConfig extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       textData: "",
+      fullscreen: true,
    };
 
    constructor(props) {
@@ -52,16 +53,27 @@ export default class EditConfig extends Component {
    render() {
       return (
          <div>
-            <Modal dialogClassName="modal-size" show={this.props.display}>
+            <Modal show={this.props.display} dialogClassName={this.state.fullscreen ? "" : "modal-size"} fullscreen={this.state.fullscreen}>
                <Modal.Header>
                   <Modal.Title>Edit Config {this.props.configName}</Modal.Title>
+                  <Button
+                     variant="secondary"
+                     onClick={() => {
+                        this.setState({ fullscreen: !this.state.fullscreen });
+                     }}
+                  >
+                     {this.state.fullscreen ? (
+                        <i className="fa fa-compress" aria-hidden="true"></i>
+                     ) : (
+                        <i className="fa fa-expand" aria-hidden="true"></i>
+                     )}
+                  </Button>
                </Modal.Header>
                <Modal.Body>
                   File Contents are:
                   <div>
                      <textarea
-                        rows="15"
-                        cols="50"
+                        style={{ width: "100%", height: this.state.fullscreen ? "75vh" : "45vh" }}
                         id="modalTextArea"
                         name="modalTextArea"
                         value={this.state.textData}

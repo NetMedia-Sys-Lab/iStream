@@ -27,6 +27,18 @@ export default class ClientCard extends Component {
 
    constructor(props) {
       super(props);
+      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.name !== "") {
+            this.setState({
+               selectedModuleType: data.type,
+               selectedModule: data.name,
+               selectedConfigFile: data.config,
+               showModuleConfiguration: true,
+               machineID: data.machineID,
+            });
+            this.getOneModuleConfigFiles(data.name);
+         }
+      });
       this.fetchData();
    }
 
@@ -42,13 +54,9 @@ export default class ClientCard extends Component {
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
          if (data.name !== "") {
             this.setState({
-               selectedModuleType: data.type,
-               selectedModule: data.name,
-               selectedConfigFile: data.config,
                showModuleConfiguration: true,
                machineID: data.machineID,
             });
-            this.getOneModuleConfigFiles(data.name);
          }
       });
    };
@@ -82,6 +90,9 @@ export default class ClientCard extends Component {
                            selectedConfigFile: "",
                            selectedModule: item,
                         });
+                        if (item === "Dash.js") {
+                           this.setState({ machineID: "" });
+                        }
                         this.getOneModuleConfigFiles(item);
                      } else if (type === "Config") {
                         this.setState({ selectedConfigFile: item });

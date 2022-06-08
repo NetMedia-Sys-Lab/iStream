@@ -9,7 +9,7 @@ videoMachineId=$(jq -r '.Video.machineID' src/database/users/${username}/Experim
 videosName=()
 
 for i in "${!videoId[@]}"; do
-    videosList=$(jq --arg videoId ${videoId[$i]} '.[] | select(.videoId == $videoId)' src/database/users/${username}/Videos/videos_list.json)
+    videosList=$(jq --arg videoId ${videoId[$i]} '.[] | select(.id == $videoId)' src/database/users/${username}/Videos/videos_list.json)
     videoName=$(jq '.name' <<<${videosList})
     videosName+=($(echo ${videoName} | tr -d '"'))
 done
@@ -25,7 +25,7 @@ if [[ "${videoMachineId}" != "" ]] && [[ "${videoMachineId}" != "0" ]]; then
 
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) to the designated machine"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.mp4"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${videosName[$i]##*.}"
         sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${videoPath}" "video" ${videosName[$i]}
     done
 fi
@@ -33,15 +33,14 @@ fi
 if [[ "${serverType}" == "iStream" ]]; then
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) beside server component"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.mp4"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${videosName[$i]##*.}"
         serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/Build/${videosName[$i]}"
-        cp "${videoPath}" "${serverPath}"
+        # cp "${videoPath}" "${serverPath}"
     done
 elif [[ "${serverType}" == "Custom" ]]; then
-
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) beside server component"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.mp4"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${videosName[$i]##*.}"
         serverPath="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Build/${videosName[$i]}"
         cp "${videoPath}" "${serverPath}"
     done

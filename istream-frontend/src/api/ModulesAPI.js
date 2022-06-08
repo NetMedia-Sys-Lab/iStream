@@ -82,6 +82,18 @@ export const AddNewVideo = (request) => {
    );
 };
 
+export const AddNewVideoDataset = (request) => {
+   return API.post("/modules/addNewVideoDataset", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+
 export const getVideosList = (user) => {
    return API.get("/modules/getVideosList", {
       params: {

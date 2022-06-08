@@ -31,10 +31,10 @@ export default class Stepper extends Component {
    };
 
    get nextButton() {
-      if (this.props.selectedModule === "dash.js" && this.state.currentStep === 1 && !this.state.showSubmitButton) {
+      if (this.props.selectedModule === "Dash.js" && this.state.currentStep === 1 && !this.state.showSubmitButton) {
          this.setState({ showSubmitButton: true });
       }
-      if (this.props.selectedModule !== "dash.js" && this.state.showSubmitButton) {
+      if (this.props.selectedModule !== "Dash.js" && this.state.showSubmitButton) {
          this.setState({ showSubmitButton: false });
       }
 
@@ -140,7 +140,7 @@ export default class Stepper extends Component {
    }
 
    get sshButton() {
-      if (this.state.currentStep === 1) {
+      if (this.state.currentStep === 1 && !(this.props.componentName === "Client" && this.props.selectedModule === "Dash.js")) {
          return (
             <Button
                variant="secondary"

@@ -27,6 +27,18 @@ export default class ServerCard extends Component {
 
    constructor(props) {
       super(props);
+      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.name !== "") {
+            this.setState({
+               selectedModuleType: data.type,
+               selectedModule: data.name,
+               selectedConfigFile: data.config,
+               machineID: data.machineID,
+               showModuleConfiguration: true,
+            });
+            this.getOneModuleConfigFiles(data.name);
+         }
+      });
       this.fetchData();
    }
 
@@ -42,13 +54,9 @@ export default class ServerCard extends Component {
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
          if (data.name !== "") {
             this.setState({
-               selectedModuleType: data.type,
-               selectedModule: data.name,
-               selectedConfigFile: data.config,
                machineID: data.machineID,
                showModuleConfiguration: true,
             });
-            this.getOneModuleConfigFiles(data.name);
          }
       });
    };

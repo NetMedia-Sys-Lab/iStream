@@ -24,7 +24,6 @@ export default class VideoCard extends Component {
       getVideosList(this.state.user).then((res) => {
          this.setState({ videosList: res });
       });
-
       getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
          if (res.id.length > 0) this.setState({ selectedVideos: res.id, showModuleConfiguration: true, machineID: res.machineID });
       });
@@ -43,39 +42,71 @@ export default class VideoCard extends Component {
    };
 
    videoSelectionTable = () => {
-      const tableData = this.state.videosList.map((video) => {
+      const videoTableData = this.state.videosList.map((video) => {
          let isSelected = false;
-         if (this.state.selectedVideos.some((element) => video.videoId === element)) {
+         if (this.state.selectedVideos.some((element) => video.id === element)) {
             isSelected = true;
          }
 
-         return (
-            <tr
-               key={video.videoId}
-               onClick={() => this.onVideoClick(video.videoId)}
-               className={isSelected ? "selectedRow" : ""}
-               style={{ cursor: "pointer" }}
-            >
-               <td>{video.name}</td>
-               <td>{video.resolution}</td>
-               <td>{video.frameRate}</td>
-               <td>{video.bitRate}</td>
-            </tr>
-         );
+         if (!video.isDataset) {
+            return (
+               <tr
+                  key={video.id}
+                  onClick={() => this.onVideoClick(video.id)}
+                  className={isSelected ? "selectedRow" : ""}
+                  style={{ cursor: "pointer" }}
+               >
+                  <td>{video.name}</td>
+                  <td>{video.resolution}</td>
+                  <td>{video.frameRate}</td>
+                  <td>{video.bitRate}</td>
+               </tr>
+            );
+         } else return "";
+      });
+
+      const datasetTableData = this.state.videosList.map((video) => {
+         let isSelected = false;
+         if (this.state.selectedVideos.some((element) => video.id === element)) {
+            isSelected = true;
+         }
+
+         if (video.isDataset) {
+            return (
+               <tr
+                  key={video.id}
+                  onClick={() => this.onVideoClick(video.id)}
+                  className={isSelected ? "selectedRow" : ""}
+                  style={{ cursor: "pointer" }}
+               >
+                  <td>{video.name}</td>
+               </tr>
+            );
+         } else return "";
       });
 
       return (
-         <table className="table table-hover p-5">
-            <thead className="thead-dark">
-               <tr>
-                  <th scope="col">Video Name</th>
-                  <th scope="col">Resolution</th>
-                  <th scope="col">Frame Rate</th>
-                  <th scope="col">Bit Rate</th>
-               </tr>
-            </thead>
-            <tbody>{tableData}</tbody>
-         </table>
+         <div>
+            <table className="table table-hover p-5">
+               <thead className="thead-dark">
+                  <tr>
+                     <th scope="col">Video Name</th>
+                     <th scope="col">Resolution</th>
+                     <th scope="col">Frame Rate</th>
+                     <th scope="col">Bit Rate</th>
+                  </tr>
+               </thead>
+               <tbody>{videoTableData}</tbody>
+            </table>
+            <table className="table table-hover p-5">
+               <thead className="thead-dark">
+                  <tr>
+                     <th scope="col">Dataset Name</th>
+                  </tr>
+               </thead>
+               <tbody>{datasetTableData}</tbody>
+            </table>
+         </div>
       );
    };
 
@@ -87,10 +118,11 @@ export default class VideoCard extends Component {
             <hr />
             <b>Selected videos:</b>
             {this.state.selectedVideos.map((video, index) => {
-               let videoData = this.state.videosList.find((element) => element.videoId === video);
+               let videoData = this.state.videosList.find((element) => element.id === video);
+
                return (
                   <div key={index}>
-                     {index + 1}. {videoData.name} - {videoData.resolution}
+                     {index + 1}. {videoData.name}
                   </div>
                );
             })}

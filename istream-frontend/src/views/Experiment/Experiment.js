@@ -35,8 +35,8 @@ class Experiment extends Component {
       fullscreenBuildModal: false,
       displayRunState: false,
       fullscreenRunModal: false,
-      buildOutput: "",
-      runOutput: "",
+      buildOutput: [],
+      runOutput: [],
       dependencyData: experimentJSONData,
       videosList: [],
       numberOfRepetition: 1,
@@ -71,10 +71,10 @@ class Experiment extends Component {
                         ) : (
                            <ul>
                               {this.state.dependencyData.Video.id.map((video, index) => {
-                                 let videoData = this.state.videosList.find((element) => element.videoId === video);
+                                 let videoData = this.state.videosList.find((element) => element.id === video);
                                  return (
                                     <div key={index}>
-                                       {index + 1}. {videoData.name} - {videoData.resolution}
+                                       {index + 1}. {videoData.name}
                                     </div>
                                  );
                               })}
@@ -128,7 +128,7 @@ class Experiment extends Component {
                fullscreen={this.state.fullscreenBuildModal}
             >
                <Modal.Header>
-                  <Button variant="danger" onClick={() => this.setState({ displayBuildState: false, buildOutput: [] })}>
+                  <Button variant="danger" onClick={() => this.setState({ displayBuildState: false })}>
                      <i className="fa fa-window-close" aria-hidden="true"></i>
                   </Button>
                   <Modal.Title>Build Phase</Modal.Title>
@@ -150,8 +150,8 @@ class Experiment extends Component {
                      style={{ width: "100%", height: this.state.fullscreenBuildModal ? "90%" : "45vh" }}
                      id="modalTextArea"
                      name="modalTextArea"
-                     defaultValue={this.state.buildOutput}
-                  ></textarea>
+                     value={this.state.buildOutput}
+                  />
 
                   <hr />
                   <div className="mt-3">
@@ -174,7 +174,7 @@ class Experiment extends Component {
                fullscreen={this.state.fullscreenRunModal}
             >
                <Modal.Header>
-                  <Button variant="danger" onClick={() => this.setState({ displayRunState: false, runOutput: [] })}>
+                  <Button variant="danger" onClick={() => this.setState({ displayRunState: false })}>
                      <i className="fa fa-window-close" aria-hidden="true"></i>
                   </Button>
                   <Modal.Title>Run Phase</Modal.Title>
@@ -210,8 +210,8 @@ class Experiment extends Component {
                      style={{ width: "100%", height: this.state.fullscreenRunModal ? "85%" : "45vh" }}
                      id="modalTextArea"
                      name="modalTextArea"
-                     defaultValue={this.state.runOutput}
-                  ></textarea>
+                     value={this.state.runOutput}
+                  />
 
                   <hr />
                   <div className="mt-3">
@@ -233,6 +233,7 @@ class Experiment extends Component {
    };
 
    buildExperiment = () => {
+      this.setState({ buildOutput: [] });
       const data = {
          username: this.state.user.username,
          experimentId: this.state.experimentId,
@@ -247,12 +248,12 @@ class Experiment extends Component {
    };
 
    runExperiment = () => {
+      this.setState({ runOutput: [] });
       const data = {
          username: this.state.user.username,
          experimentId: this.state.experimentId,
          numberOfRepetition: this.state.numberOfRepetition,
       };
-      this.setState({ runOutput: "" });
       subscribeToRunExperiment(data, (err, output) => {
          output = output.filter((str) => str !== "");
          let out = "";
@@ -291,24 +292,21 @@ class Experiment extends Component {
                      <div className="col-sm">
                         <VideoCard experimentId={this.state.experimentId} />
                      </div>
+
+                     {this.state.transcoderComponentExistence && (
+                        <div className="col-sm">
+                           <TranscoderCard experimentId={this.state.experimentId} />
+                        </div>
+                     )}
+
                      <div className="col-sm">
                         <ServerCard experimentId={this.state.experimentId} />
                      </div>
 
-                     {this.state.transcoderComponentExistence ? (
-                        <div className="col-sm">
-                           <TranscoderCard experimentId={this.state.experimentId} />
-                        </div>
-                     ) : (
-                        ""
-                     )}
-
-                     {this.state.networkComponentExistence ? (
+                     {this.state.networkComponentExistence && (
                         <div className="col-sm">
                            <NetworkCard experimentId={this.state.experimentId} />
                         </div>
-                     ) : (
-                        ""
                      )}
 
                      <div className="col-sm">
@@ -333,7 +331,7 @@ class Experiment extends Component {
                         >
                            Run
                         </Button>
-                        <Button variant="danger">Stop</Button>
+                        {/* <Button variant="danger">Stop</Button> */}
                      </div>
                   </div>
                </div>

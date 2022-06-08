@@ -42,18 +42,6 @@ export default class NetworkCard extends Component {
 
    constructor(props) {
       super(props);
-      this.fetchData();
-   }
-
-   fetchData = () => {
-      getDefaultModules(this.state.componentName).then((res) => {
-         this.setState({ iStreamModuleOptions: res });
-      });
-
-      getUserModules(this.state.user, this.state.componentName).then((res) => {
-         this.setState({ userModuleOptions: res });
-      });
-
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
          if (data.name === "Default Network") {
             getNetworkConfiguration(this.state.user, this.props.experimentId).then((data) => {
@@ -77,6 +65,26 @@ export default class NetworkCard extends Component {
                machineID: data.machineID,
             });
             this.getOneModuleConfigFiles(data.name);
+         }
+      });
+      this.fetchData();
+   }
+
+   fetchData = () => {
+      getDefaultModules(this.state.componentName).then((res) => {
+         this.setState({ iStreamModuleOptions: res });
+      });
+
+      getUserModules(this.state.user, this.state.componentName).then((res) => {
+         this.setState({ userModuleOptions: res });
+      });
+
+      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.name !== "") {
+            this.setState({
+               showModuleConfiguration: true,
+               machineID: data.machineID,
+            });
          }
       });
    };

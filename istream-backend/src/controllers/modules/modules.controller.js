@@ -125,7 +125,8 @@ module.exports.addNewVideo = (req, res) => {
 
       const jsonData = JSON.parse(data);
       const newVideo = {
-         videoId: videoID,
+         id: videoID,
+         isDataset: false,
          name: videoName,
          resolution: resolution,
          frameRate: frameRate,
@@ -148,11 +149,58 @@ module.exports.addNewVideo = (req, res) => {
 
    file.mv(videoPath, (err) => {
       if (err) {
-         let errorMessage = "Something went wrong in add New Config: couldn't write file into server";
+         let errorMessage = "Something went wrong in add New Video: couldn't write file into server";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       } else {
          res.status(200).send("New Video Saved Successfully");
+      }
+   });
+};
+
+module.exports.addNewVideoDataset = (req, res) => {
+   const { userId, username, componentName, datasetName } = req.body;
+   const dataset = req.files.dataset;
+   const name = dataset.name;
+   const datasetID = Date.now().toString();
+   const datasetPath = `src/database/users/${username}/Videos/${datasetID}.${name.split(".")[1]}`;
+
+   const videosListFilePath = `src/database/users/${username}/Videos/videos_list.json`;
+
+   fs.readFile(videosListFilePath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in addNewVideoDataset";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      const newVideo = {
+         id: datasetID,
+         isDataset: true,
+         name: `${datasetName}.${name.split(".")[1]}`,
+      };
+
+      //Add the new experiment to the existing experiments list.
+      jsonData.unshift(newVideo);
+      let stringifyData = JSON.stringify(jsonData);
+
+      fs.writeFile(videosListFilePath, stringifyData, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in addNewVideoDataset";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+   });
+
+   dataset.mv(datasetPath, (err) => {
+      if (err) {
+         let errorMessage = "Something went wrong in add New Dataset: couldn't write file into server";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      } else {
+         res.status(200).send("New Dataset Saved Successfully");
       }
    });
 };

@@ -8,10 +8,24 @@ videoMachineId=$(jq -r '.Video.machineID' src/database/users/${username}/Experim
 serverName=$(jq -r '.Server.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
+videoId=($(jq -r '.Video.id[]' src/database/users/${username}/Experiments/${experimentId}/dependency.json))
+videoMachineId=$(jq -r '.Video.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+videosName=()
+
+for i in "${!videoId[@]}"; do
+    videosList=$(jq --arg videoId ${videoId[$i]} '.[] | select(.id == $videoId)' src/database/users/${username}/Videos/videos_list.json)
+    videoName=$(jq '.name' <<<${videosList})
+    videosName+=($(echo ${videoName} | tr -d '"'))
+done
+
+
 if [[ "${videoMachineId}" == "" ]] || [[ "${videoMachineId}" == "0" ]]; then
     if [[ "${serverType}" == "iStream" ]]; then
-        rm -f "${mainDir}/src/database/supportedModules/Server/${serverName}/Build/"*.mp4
+        path="${mainDir}/src/database/supportedModules/Server/${serverName}/Build"
     elif [[ "${serverType}" == "Custom" ]]; then
-        rm -f "${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Build/"*.mp4
+        path="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Build"
     fi
+    for i in "${!videoId[@]}"; do
+        rm -f "${path}/${videosName[$i]}"
+    done
 fi
