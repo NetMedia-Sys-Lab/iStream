@@ -35,7 +35,7 @@ if [[ "${serverType}" == "iStream" ]]; then
         echo "Move video number $(($i + 1)) beside server component"
         videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${videosName[$i]##*.}"
         serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/Build/${videosName[$i]}"
-        # cp "${videoPath}" "${serverPath}"
+        cp "${videoPath}" "${serverPath}"
     done
 elif [[ "${serverType}" == "Custom" ]]; then
     for i in "${!videoId[@]}"; do

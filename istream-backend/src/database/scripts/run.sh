@@ -11,7 +11,7 @@ networkComponentExistence=$(jq '.networkComponentExistence' <<<${experimentsList
 for i in $(seq 1 $numberOfRepetition); do
     # Server Component
     echo "------ Server component running started ------"
-    # sh src/database/scripts/Server/run.sh "${username}" "${experimentId}" 2>&1
+    sh src/database/scripts/Server/run.sh "${username}" "${experimentId}" 2>&1
     echo "------ Server component running Finished ------"
 
     # Transcoder Component
