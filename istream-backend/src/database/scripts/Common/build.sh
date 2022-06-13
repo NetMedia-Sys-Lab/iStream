@@ -18,21 +18,24 @@ buildFileName=$(ls -p "${componentPath}" | grep -v / | grep "build")
 buildFileExtention=${buildFileName##*.}
 
 if [[ ${buildFileExtention} = "py" ]]; then
-    commandToRunInCluster="cd '${componentName}' && python3 build.py"
+    commandToRunInClusterForBuild="cd '${componentName}' && python3 build.py"
     commandToRunInLocal=(python3 "${componentPath}/build.py")
 elif [[ ${buildFileExtention} = "sh" ]]; then
-    commandToRunInCluster="cd '${componentName}' && bash build.sh"
+    commandToRunInClusterForBuild="cd '${componentName}' && bash build.sh"
     commandToRunInLocal=(sh "${componentPath}/build.sh")
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
 
+    commandToRunInClusterForDeletingPreviouseFiles="rm -rf '${componentName}'"
+    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForDeletingPreviouseFiles}"
+
     echo "Move files to the designated server"
     sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${componentPath}" "build"
 
     echo "Run build script"
-    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForBuild}"
 else
     echo "Run build script"
     "${commandToRunInLocal[@]}"

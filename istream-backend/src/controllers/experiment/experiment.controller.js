@@ -322,36 +322,25 @@ module.exports.build = (endpoint, socket) => {
    socket.on("subscribeToBuildExperiment", (userInfo) => {
       const spawn = require("child_process").spawn;
       const child = spawn("bash", ["src/database/scripts/build.sh", userInfo.username, userInfo.experimentId]);
-
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (data) => {
-         // Send across the data without any modifications
          try {
             endpoint.emit("getExperiment‌BuildInfo", data.toString().split("\n"));
-
-            if (data == "Experiment has been built") {
-               socket.disconnect();
-            }
-
-            //   socket.send(data)
          } catch (e) {
             child.kill();
          }
       });
 
       child.stderr.on("data", (data) => {
-         // Send across the data without any modifications
          try {
-            // socket.emit("getExperimentData", arrayBuffer2str(data));
-            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
-            // 	if (err) {
-            // 		console.log('Something went wrong. Please check the paths and try again');
-            // 	}
-            // })
             console.log(arrayBuffer2str(data));
          } catch (e) {
             child.kill();
          }
+      });
+
+      child.on("close", function (code) {
+         socket.disconnect();
       });
    });
 };
@@ -363,39 +352,23 @@ module.exports.run = (endpoint, socket) => {
 
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (data) => {
-         // Send across the data without any modifications
          try {
             endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
-            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
-            // 	if (err) {
-            // 		console.log('Something went wrong. Please check the paths and try again');
-            // 	}
-            // })
-
-            // console.log(data);
-            if (data == "Experiment has been run") {
-               socket.disconnect();
-            }
-
-            //   socket.send(data)
          } catch (e) {
             child.kill();
          }
       });
 
       child.stderr.on("data", (data) => {
-         // Send across the data without any modifications
          try {
-            // socket.emit("getExperimentData", arrayBuffer2str(data));
-            // fs.appendFile('./Database/ExperimentsOutput/output.txt', arrayBuffer2str(data), function (err) {
-            // 	if (err) {
-            // 		console.log('Something went wrong. Please check the paths and try again');
-            // 	}
-            // })
             console.log(arrayBuffer2str(data));
          } catch (e) {
             child.kill();
          }
+      });
+
+      child.on("close", function (code) {
+         socket.disconnect();
       });
    });
 };

@@ -30,11 +30,8 @@ for i in $(seq 1 $numberOfRepetition); do
 
     # Client Component
     echo "------ Client component running started ------"
-    # sh src/database/scripts/Client/run.sh "${username}" "${experimentId}" 2>&1
+    sh src/database/scripts/Client/run.sh "${username}" "${experimentId}" 2>&1
     echo "------ Client component running Finished ------"
 done
-
-# This command is an extra command to make sure that the last echo print independently, and that used to close the socket connection
-mainDir=$(pwd)
 
 echo -n "Experiment has been run"

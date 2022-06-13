@@ -14,7 +14,7 @@ echo "------ Video component building Finished ------"
 
 # Server Component
 echo "------ Server component building started ------"
-# sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
+sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
 echo "------ Server component building Finished ------"
 
 # Transcoder Component
@@ -33,13 +33,10 @@ fi
 
 # Client Component
 echo "------ Client component building started ------"
-# sh src/database/scripts/Client/build.sh "${username}" "${experimentId}" 2>&1
+sh src/database/scripts/Client/build.sh "${username}" "${experimentId}" 2>&1
 echo "------ Client component building Finished ------"
 
 # Delete video excessive video content
 sh src/database/scripts/Video/delete.sh "${username}" "${experimentId}"
-
-# This command is an extra command to make sure that the last echo print independently, and that used to close the socket connection
-mainDir=$(pwd)
 
 echo -n "Experiment has been built"
