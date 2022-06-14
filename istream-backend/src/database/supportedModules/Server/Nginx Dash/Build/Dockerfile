@@ -34,6 +34,6 @@ COPY Config/config.sh /usr/local/nginx/html
 
 # RUN sudo ./usr/local/nginx/sbin/nginx -s reload
 
-COPY Build/*.mp4 /usr/local/nginx/html/
+# COPY Build/*.mp4 /usr/local/nginx/html/
 
 CMD ["./usr/local/nginx/sbin/nginx", "-g", "daemon off;"]

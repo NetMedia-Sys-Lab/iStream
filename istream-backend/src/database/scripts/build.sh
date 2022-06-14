@@ -9,12 +9,12 @@ networkComponentExistence=$(jq '.networkComponentExistence' <<<${experimentsList
 
 # Video Component
 echo "------ Video component building started ------"
-sh src/database/scripts/Video/build.sh "${username}" "${experimentId}" 2>&1
+# sh src/database/scripts/Video/build.sh "${username}" "${experimentId}" 2>&1
 echo "------ Video component building Finished ------"
 
 # Server Component
 echo "------ Server component building started ------"
-sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
+# sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
 echo "------ Server component building Finished ------"
 
 # Transcoder Component
