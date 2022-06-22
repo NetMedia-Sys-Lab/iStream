@@ -29,6 +29,7 @@ export default class NetworkCard extends Component {
       selectedModule: "",
       selectedConfigFile: "",
       networkConfig: {
+         port: 9090,
          delay: 0,
          packetLoss: 0,
          corruptPacket: 0,
@@ -47,6 +48,7 @@ export default class NetworkCard extends Component {
             getNetworkConfiguration(this.state.user, this.props.experimentId).then((data) => {
                this.setState({
                   networkConfig: {
+                     port: data.port,
                      delay: data.delay,
                      packetLoss: data.packetLoss,
                      corruptPacket: data.corruptPacket,
@@ -237,6 +239,20 @@ export default class NetworkCard extends Component {
                <label className="form-check-label">Custom Config</label>
             </div>
             <hr />
+            <div className="form-group row">
+               <label className="col-6 col-form-label">Network Port:</label>
+               <div className="col-6">
+                  <input
+                     className="form-control"
+                     type="number"
+                     value={this.state.networkConfig.port}
+                     id="port"
+                     onChange={this.onNetworkConfigChange}
+                     required
+                  />
+               </div>
+            </div>
+            <hr />
             {this.state.iStreamNetworkManualConfig ? this.iStreamNetworkCustomConfig() : this.iStreamNetworkDefaultConfig()}
          </div>
       );
@@ -403,12 +419,13 @@ export default class NetworkCard extends Component {
       saveExperimentModuleData(data).then((res) => {
          toast.success(res);
       });
-
-      if (this.state.selectedModule === "Default Network" && !this.state.iStreamNetworkManualConfig) {
+      // console.log(this.state.networkConfig.packetLoss);
+      if (this.state.selectedModuleType === "iStream" && this.state.selectedModule === "Default Network") {
          const networkData = {
             userId: this.state.user.userId,
             username: this.state.user.username,
             experimentId: this.props.experimentId,
+            port: Number(this.state.networkConfig.port),
             delay: Number(this.state.networkConfig.delay),
             packetLoss: Number(this.state.networkConfig.packetLoss),
             corruptPacket: Number(this.state.networkConfig.corruptPacket),

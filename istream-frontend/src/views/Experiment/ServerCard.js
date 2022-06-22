@@ -32,7 +32,7 @@ export default class ServerCard extends Component {
       selectedEditFile: "",
       machineID: "",
       serverConfig: {
-         serverPort: 8080,
+         port: 8080,
       },
    };
 
@@ -43,7 +43,7 @@ export default class ServerCard extends Component {
             getServerConfiguration(this.state.user, this.props.experimentId).then((data) => {
                this.setState({
                   serverConfig: {
-                     serverPort: data.port,
+                     port: data.port,
                   },
                });
             });
@@ -220,12 +220,12 @@ export default class ServerCard extends Component {
                   <input
                      className="form-control"
                      type="number"
-                     value={this.state.serverConfig.serverPort}
+                     value={this.state.serverConfig.port}
                      id="iStreamServerPort"
                      onChange={(e) =>
                         this.setState({
                            serverConfig: {
-                              serverPort: e.target.value,
+                              port: e.target.value,
                            },
                         })
                      }
@@ -284,7 +284,6 @@ export default class ServerCard extends Component {
          selectedModuleType: this.state.selectedModuleType,
          selectedModule: this.state.selectedModule,
          selectedConfigFile: this.state.selectedConfigFile,
-         iStreamServerPort: this.state.iStreamServerPort,
       };
 
       saveExperimentModuleData(data).then((res) => {
@@ -296,7 +295,7 @@ export default class ServerCard extends Component {
             userId: this.state.user.userId,
             username: this.state.user.username,
             experimentId: this.props.experimentId,
-            serverPort: Number(this.state.serverConfig.serverPort),
+            serverPort: Number(this.state.serverConfig.port),
          };
          setServerConfiguration(serverData).then((res) => {});
       }

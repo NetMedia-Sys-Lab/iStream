@@ -300,10 +300,11 @@ module.exports.getNetworkConfiguration = (req, res) => {
 };
 
 module.exports.setNetworkConfiguration = (req, res) => {
-   const { userId, username, experimentId, delay, packetLoss, corruptPacket, bandwidth } = req.body;
+   const { userId, username, experimentId, port, delay, packetLoss, corruptPacket, bandwidth } = req.body;
    const networkConfigFile = `src/database/users/${username}/Experiments/${experimentId}/networkConfig.json`;
 
    const networkConfigData = {
+      port: port,
       delay: delay,
       packetLoss: packetLoss,
       corruptPacket: corruptPacket,

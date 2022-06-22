@@ -31,6 +31,7 @@ const experimentJSONData = {
 };
 
 const networkConfigJSONData = {
+   port: 9090,
    delay: 0,
    packetLoss: 0,
    corruptPacket: 0,
