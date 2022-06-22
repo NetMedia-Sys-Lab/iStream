@@ -52,6 +52,7 @@ module.exports.createNewExperiment = (req, res) => {
    const ExperimentDirectoryName = `src/database/users/${username}/Experiments/${experimentId}`;
    const dependencyFilePath = `${ExperimentDirectoryName}/dependency.json`;
    const networkConfigFilePath = `${ExperimentDirectoryName}/networkConfig.json`;
+   const serverConfigFilePath = `${ExperimentDirectoryName}/serverConfig.json`;
    const experimentConfigFilePath = `${ExperimentDirectoryName}/experimentConfig.json`;
 
    fs.mkdirSync(ExperimentDirectoryName);
@@ -63,10 +64,12 @@ module.exports.createNewExperiment = (req, res) => {
 
    const stringifyExperimentData = JSON.stringify(experimentModel.experimentJSONData);
    const stringifyNetworkConfigData = JSON.stringify(experimentModel.networkConfigJSONData);
+   const stringifyServerConfigData = JSON.stringify(experimentModel.serverConfigJSONData);
    const stringifyExperimentConfigData = JSON.stringify(experimentModel.experimentConfigJSONData);
 
    writeToFile(dependencyFilePath, stringifyExperimentData, "createNewExperiment");
    writeToFile(networkConfigFilePath, stringifyNetworkConfigData, "createNewExperiment");
+   writeToFile(serverConfigFilePath, stringifyServerConfigData, "createNewExperiment");
    writeToFile(experimentConfigFilePath, stringifyExperimentConfigData, "createNewExperiment");
 
    res.status(200).send("New Experiment Created Successfully");

@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import EditConfig from "src/views/Experiment/Common/EditConfig";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
+import {
+   getDefaultModules,
+   getUserModules,
+   getConfigFiles,
+   getModuleData,
+   saveExperimentModuleData,
+   setServerConfiguration,
+   getServerConfiguration,
+} from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class ServerCard extends Component {
@@ -23,11 +31,23 @@ export default class ServerCard extends Component {
       displayEditConfigModal: false,
       selectedEditFile: "",
       machineID: "",
+      serverConfig: {
+         serverPort: 8080,
+      },
    };
 
    constructor(props) {
       super(props);
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.type === "iStream" && data.name === "Nginx Dash") {
+            getServerConfiguration(this.state.user, this.props.experimentId).then((data) => {
+               this.setState({
+                  serverConfig: {
+                     serverPort: data.port,
+                  },
+               });
+            });
+         }
          if (data.name !== "") {
             this.setState({
                selectedModuleType: data.type,
@@ -178,17 +198,45 @@ export default class ServerCard extends Component {
    iStreamModuleConfig = () => {
       if (this.state.selectedModuleType !== "iStream") return null;
 
-      const iStreamModuleConfigFiles =
-         this.state.iStreamModuleConfigFiles.length === 0 ? (
-            <div>No Config files found. Please add a new config file to proceed.</div>
-         ) : (
-            this.radioButtonOptions(this.state.iStreamModuleConfigFiles, "Config")
+      let iStreamModuleConfigFiles = "";
+      if (!this.props.transcoderComponentExistence)
+         iStreamModuleConfigFiles = (
+            <div>
+               <h5>Simple Transcoding Config</h5>
+               {this.state.iStreamModuleConfigFiles.length === 0 ? (
+                  <div>No Config files found. Please add a new config file to proceed.</div>
+               ) : (
+                  this.radioButtonOptions(this.state.iStreamModuleConfigFiles, "Config")
+               )}
+            </div>
          );
 
       return (
          <div>
-            <h5>Config Module</h5>
-            <div>{iStreamModuleConfigFiles}</div>
+            <h5>General Config</h5>
+            <div className="form-group row">
+               <label className="col-6 col-form-label">Server Port:</label>
+               <div className="col-6">
+                  <input
+                     className="form-control"
+                     type="number"
+                     value={this.state.serverConfig.serverPort}
+                     id="iStreamServerPort"
+                     onChange={(e) =>
+                        this.setState({
+                           serverConfig: {
+                              serverPort: e.target.value,
+                           },
+                        })
+                     }
+                     required
+                  />
+               </div>
+            </div>
+
+            <div>
+               <div>{iStreamModuleConfigFiles}</div>
+            </div>
          </div>
       );
    };
@@ -236,11 +284,22 @@ export default class ServerCard extends Component {
          selectedModuleType: this.state.selectedModuleType,
          selectedModule: this.state.selectedModule,
          selectedConfigFile: this.state.selectedConfigFile,
+         iStreamServerPort: this.state.iStreamServerPort,
       };
 
       saveExperimentModuleData(data).then((res) => {
          toast.success(res);
       });
+
+      if (this.state.selectedModule === "Nginx Dash") {
+         const serverData = {
+            userId: this.state.user.userId,
+            username: this.state.user.username,
+            experimentId: this.props.experimentId,
+            serverPort: Number(this.state.serverConfig.serverPort),
+         };
+         setServerConfiguration(serverData).then((res) => {});
+      }
    };
 
    render() {
@@ -271,6 +330,12 @@ export default class ServerCard extends Component {
                updateConfigFiles={this.getOneModuleConfigFiles}
                selectedModule={this.state.selectedModule}
                experimentId={this.props.experimentId}
+               hideAddNewConfig={
+                  !(
+                     this.state.selectedModuleType === "Custom" ||
+                     (this.state.selectedModuleType === "iStream" && !this.props.transcoderComponentExistence)
+                  )
+               }
             />
             {this.state.displayEditConfigModal ? (
                <EditConfig

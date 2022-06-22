@@ -104,7 +104,7 @@ export default class Stepper extends Component {
    }
 
    get addModuleConfigButton() {
-      if (this.state.currentStep === 2) {
+      if (this.state.currentStep === 2 && !this.props.hideAddNewConfig) {
          return (
             <Button
                variant="secondary"

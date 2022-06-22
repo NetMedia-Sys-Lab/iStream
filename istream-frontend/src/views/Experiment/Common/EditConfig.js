@@ -7,7 +7,7 @@ export default class EditConfig extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       textData: "",
-      fullscreen: true,
+      fullscreen: false,
    };
 
    constructor(props) {

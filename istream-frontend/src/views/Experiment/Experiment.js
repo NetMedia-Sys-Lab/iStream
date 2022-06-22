@@ -300,7 +300,7 @@ class Experiment extends Component {
                      )}
 
                      <div className="col-sm">
-                        <ServerCard experimentId={this.state.experimentId} />
+                        <ServerCard transcoderComponentExistence={this.state.transcoderComponentExistence} experimentId={this.state.experimentId} />
                      </div>
 
                      {this.state.networkComponentExistence && (

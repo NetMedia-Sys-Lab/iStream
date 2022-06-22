@@ -93,7 +93,6 @@ export const AddNewVideoDataset = (request) => {
    );
 };
 
-
 export const getVideosList = (user) => {
    return API.get("/modules/getVideosList", {
       params: {
@@ -155,6 +154,33 @@ export const getNetworkConfiguration = (user, experimentId) => {
 
 export const setNetworkConfiguration = (data) => {
    return API.post("/modules/setNetworkConfiguration", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getServerConfiguration = (user, experimentId) => {
+   return API.get("/modules/getServerConfiguration", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const setServerConfiguration = (data) => {
+   return API.post("/modules/setServerConfiguration", data).then(
       (response) => {
          return response.data;
       },

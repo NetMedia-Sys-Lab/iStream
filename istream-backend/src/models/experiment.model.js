@@ -37,6 +37,10 @@ const networkConfigJSONData = {
    bandwidth: 0,
 };
 
+const serverConfigJSONData = {
+   port: 8080,
+};
+
 const experimentConfigJSONData = {
    repetition: 1,
    serverCPU: 1,
@@ -47,4 +51,5 @@ const experimentConfigJSONData = {
 
 exports.experimentJSONData = experimentJSONData;
 exports.networkConfigJSONData = networkConfigJSONData;
+exports.serverConfigJSONData = serverConfigJSONData;
 exports.experimentConfigJSONData = experimentConfigJSONData;

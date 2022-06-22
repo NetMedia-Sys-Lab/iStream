@@ -43,7 +43,7 @@ export default class NetworkCard extends Component {
    constructor(props) {
       super(props);
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         if (data.name === "Default Network") {
+         if (data.type === "iStream" && data.name === "Default Network") {
             getNetworkConfiguration(this.state.user, this.props.experimentId).then((data) => {
                this.setState({
                   networkConfig: {
@@ -63,6 +63,7 @@ export default class NetworkCard extends Component {
                selectedConfigFile: data.config,
                showModuleConfiguration: true,
                machineID: data.machineID,
+               iStreamNetworkManualConfig: data.manualConfig === "true",
             });
             this.getOneModuleConfigFiles(data.name);
          }
@@ -244,7 +245,7 @@ export default class NetworkCard extends Component {
    iStreamNetworkDefaultConfig = () => {
       return (
          <div>
-            <h5>Default Config</h5>
+            <h5>Network's Config</h5>
             <div>
                <div className="form-group row">
                   <label className="col-6 col-form-label">Delay (ms):</label>
@@ -358,7 +359,7 @@ export default class NetworkCard extends Component {
             )}
          </div>
       );
-      if (this.state.selectedModuleType === "iStream")
+      if (this.state.selectedModuleType === "iStream" && !this.state.iStreamNetworkManualConfig)
          return (
             <div>
                {template}
@@ -403,7 +404,7 @@ export default class NetworkCard extends Component {
          toast.success(res);
       });
 
-      if (this.state.selectedModule === "Default Network") {
+      if (this.state.selectedModule === "Default Network" && !this.state.iStreamNetworkManualConfig) {
          const networkData = {
             userId: this.state.user.userId,
             username: this.state.user.username,
@@ -439,12 +440,18 @@ export default class NetworkCard extends Component {
                steps={[this.moduleType(), [this.iStreamModuleConfig(), this.userModuleConfig()]]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
-               isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
+               isUserModule={this.state.selectedModuleType === "Custom"}
                componentName={this.state.componentName}
                updateData={this.fetchData}
                updateConfigFiles={this.getOneModuleConfigFiles}
                selectedModule={this.state.selectedModule}
                experimentId={this.props.experimentId}
+               hideAddNewConfig={
+                  !(
+                     this.state.selectedModuleType === "Custom" ||
+                     (this.state.selectedModuleType === "iStream" && this.state.iStreamNetworkManualConfig)
+                  )
+               }
             />
             {this.state.displayEditConfigModal ? (
                <EditConfig

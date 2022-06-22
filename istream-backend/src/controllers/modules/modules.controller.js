@@ -323,6 +323,44 @@ module.exports.setNetworkConfiguration = (req, res) => {
    res.status(200).send("Successfully saved network configuration");
 };
 
+module.exports.getServerConfiguration = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+   const serverConfigFile = `src/database/users/${username}/Experiments/${experimentId}/serverConfig.json`;
+
+   fs.readFile(serverConfigFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getServerConfiguration: Couldn't read serverConfig file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      res.status(200).send(jsonData);
+   });
+};
+
+module.exports.setServerConfiguration = (req, res) => {
+   const { userId, username, experimentId, serverPort } = req.body;
+   const serverConfigFile = `src/database/users/${username}/Experiments/${experimentId}/serverConfig.json`;
+
+   const serverConfigData = {
+      port: serverPort,
+   };
+
+   const stringifyServerConfig = JSON.stringify(serverConfigData);
+
+   fs.writeFile(serverConfigFile, stringifyServerConfig, function (err) {
+      if (err) {
+         let errorMessage = "Something went wrong in setServerConfiguration: Couldn't write in ServerConfig file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+   });
+
+   res.status(200).send("Successfully saved server configuration");
+};
+
 module.exports.saveVideoModuleData = (req, res) => {
    const { userId, username, componentName, experimentId, videoList } = req.body;
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
