@@ -244,6 +244,16 @@ export default class ServerCard extends Component {
    showModuleConfig = () => {
       if (this.state.showModuleConfiguration !== true) return;
 
+      let portTemplate = "";
+      if (this.state.selectedModuleType === "iStream") {
+         portTemplate = (
+            <div>
+               <strong>Port: </strong>
+               {this.state.serverConfig.port}
+            </div>
+         );
+      }
+
       return (
          <div>
             <hr />
@@ -269,6 +279,7 @@ export default class ServerCard extends Component {
             ) : (
                ""
             )}
+            {portTemplate}
          </div>
       );
    };

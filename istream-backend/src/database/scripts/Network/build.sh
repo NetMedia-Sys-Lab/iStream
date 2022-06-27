@@ -10,5 +10,18 @@ if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
     exit
 else
+    if [[ "${networkType}" == "iStream" && "${networkName}" == "Default Network" ]]; then
+        networkContainerPort=$(jq -r '.port' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
+        serverContainerPort=$(jq -r '.port' src/database/users/${username}/Experiments/${experimentId}/serverConfig.json)
+        serverMachineId=$(jq -r '.Server.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+
+        serverMachineIp=0
+        if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
+            read sshUsername serverMachineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${serverMachineId}")
+        fi
+
+        python3 src/database/scripts/Network/setupNetworkProxy.py "${networkContainerPort}" "${serverMachineIp}" "${serverContainerPort}"
+    fi
+
     sh src/database/scripts/Common/build.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}"
 fi

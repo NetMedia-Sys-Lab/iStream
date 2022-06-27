@@ -356,7 +356,7 @@ export default class NetworkCard extends Component {
 
    showModuleConfig = () => {
       if (this.state.showModuleConfiguration !== true) return;
-      let template = (
+      let baseTemplate = (
          <div>
             <hr />
             <strong>Type: </strong>
@@ -375,10 +375,22 @@ export default class NetworkCard extends Component {
             )}
          </div>
       );
+
+      let portTemplate = "";
+      if (this.state.selectedModuleType === "iStream") {
+         portTemplate = (
+            <div>
+               <strong>Port: </strong>
+               {this.state.networkConfig.port}
+            </div>
+         );
+      }
+
       if (this.state.selectedModuleType === "iStream" && !this.state.iStreamNetworkManualConfig)
          return (
             <div>
-               {template}
+               {baseTemplate}
+               {portTemplate}
                <strong> Delay: </strong>
                {this.state.networkConfig.delay}s
                <br />
@@ -395,7 +407,8 @@ export default class NetworkCard extends Component {
       else
          return (
             <div>
-               {template}
+               {baseTemplate}
+               {portTemplate}
                <strong>Config: </strong>
                {this.state.selectedConfigFile}
             </div>
