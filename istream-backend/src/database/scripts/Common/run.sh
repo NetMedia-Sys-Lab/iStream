@@ -13,11 +13,7 @@ configFileExtention=${componentConfigName##*.}
 mainDir=$(pwd)
 
 if [[ "${componentType}" == "iStream" ]]; then
-    if [[ "${component}" == "Network" && "${NetworkManualConfig}" == "false" ]]; then
-        configFilePath="${mainDir}/src/database/scripts/Network/${componentConfigName}"
-    else
-        configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/${component}/${componentName}/${componentConfigName}"
-    fi
+    configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/${component}/${componentName}/${componentConfigName}"
     resultsPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Results"
     configPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Config"
     componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
@@ -42,16 +38,17 @@ fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
-    commandToRunInClusterForConfigAndResult="cd '${componentName}' && mkdir -p Results && mkdir -p Config && rm -f Config/* Results/*"
+    commandToRunInClusterForConfigAndResult="cd '${componentName}' && mkdir -p Results && mkdir -p Config && mkdir -p Run && rm -f Config/* Results/* Run/*"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForConfigAndResult}"
+
+    echo "Move run files to the designated server"
+    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${componentPath}" "run" "${componentName}" "${runFileName}"
+
     if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
-        echo "Move Config file to the designated server"
+        echo "Move config file to the designated server"
         sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${componentName}" "${configFileExtention}"
-    elif [[ "${componentType}" == "iStream" && ("${componentConfigName}" == "" || "${componentConfigName}" == "No Config") ]]; then
-        commandToRunInClusterForEmptyConfig="cd '${componentName}/Config' && touch config.sh"
-        sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForEmptyConfig}"
     fi
-    
+
     echo "Run run script"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
@@ -60,14 +57,8 @@ else
     if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
         echo "Move Config file beside the component"
         cp "${configFilePath}" "${configPath}/config.${configFileExtention}"
-    elif [[ "${componentType}" == "iStream" && ("${componentConfigName}" == "" || "${componentConfigName}" == "No Config") ]]; then
-        touch "${configPath}/config.sh"
     fi
 
     echo "Run run script"
     "${commandToRunInLocal[@]}"
-fi
-
-if [[ "${component}" == "Network" && "${NetworkManualConfig}" == "false" ]]; then
-    rm "${configFilePath}"
 fi

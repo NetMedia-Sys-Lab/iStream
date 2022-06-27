@@ -28,7 +28,7 @@ RUN cd /usr/local/nginx/conf && \
 
 COPY Build/nginx.conf /usr/local/nginx/conf
 
-COPY Config/config.sh /usr/local/nginx/html
+# COPY Config/config.sh /usr/local/nginx/html
 
 # RUN chmod +x /usr/local/nginx/html/$transcoderConfigName
 

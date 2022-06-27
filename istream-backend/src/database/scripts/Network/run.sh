@@ -13,10 +13,13 @@ if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
     exit
 else
-    if [[ "${networkType}" == "iStream" && "${iStreamNetworkManualConfig}" == "false" ]]; then
-        networkParameter=$(jq -r '.' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
-        python3 src/database/scripts/Network/createNetworkConfig.py "${networkParameter}"
-        networkConfigName="networkConfiguration.sh"
+    if [[ "${networkType}" == "iStream" ]]; then
+        networkContainerPort=$(jq -r '.port' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
+        if [[ "${iStreamNetworkManualConfig}" == "false" ]]; then
+            networkParameter=$(jq -r '.' src/database/users/${username}/Experiments/${experimentId}/networkConfig.json)
+        fi
+
+        python3 src/database/scripts/Network/setupNetworkConfigs.py "${networkContainerPort}" "${iStreamNetworkManualConfig}" "${networkParameter}" "${networkConfigName}"
     fi
     sh src/database/scripts/Common/run.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${networkConfigName}" "${iStreamNetworkManualConfig}"
 fi

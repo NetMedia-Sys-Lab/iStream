@@ -303,7 +303,7 @@ export default class NetworkCard extends Component {
                   </div>
                </div>
                <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Bandwidth Limit (Mbit):</label>
+                  <label className="col-6 col-form-label">Bandwidth Limit (Kbps):</label>
                   <div className="col-6">
                      <input
                         className="form-control"
@@ -401,7 +401,7 @@ export default class NetworkCard extends Component {
                {this.state.networkConfig.corruptPacket}%
                <br />
                <strong> Bandwidth: </strong>
-               {this.state.networkConfig.bandwidth === 0 ? "Without limit" : this.state.networkConfig.bandwidth + "Mbit"}
+               {this.state.networkConfig.bandwidth === 0 ? "Without limit" : this.state.networkConfig.bandwidth + "Kbps"}
             </div>
          );
       else

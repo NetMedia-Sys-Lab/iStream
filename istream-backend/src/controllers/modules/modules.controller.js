@@ -241,6 +241,7 @@ module.exports.saveModuleData = (req, res) => {
       jsonData[componentName].type = selectedModuleType;
       if (componentName == "Network") {
          jsonData[componentName].manualConfig = iStreamNetworkManualConfig.toString();
+         if (iStreamNetworkManualConfig == false) jsonData[componentName].config = "";
       }
 
       stringifyData = JSON.stringify(jsonData);

@@ -1,1 +1,1 @@
-{"port":11000,"delay":0,"packetLoss":0,"corruptPacket":0,"bandwidth":0}
+{"port":8000,"delay":10,"packetLoss":2,"corruptPacket":2,"bandwidth":2000}

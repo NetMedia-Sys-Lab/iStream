@@ -10,9 +10,5 @@ if [[ "${serverName}" == "" ]]; then
     echo "No server module selected. Please select a module first."
     exit
 else
-    if [[ "${serverType}" == "iStream" && "${serverName}" == "Nginx Dash" ]]; then
-        serverContainerPort=$(jq -r '.port' src/database/users/${username}/Experiments/${experimentId}/serverConfig.json)
-        python3 src/database/scripts/Server/setupServer.py "${serverContainerPort}"
-    fi
     sh src/database/scripts/Common/build.sh "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}"
 fi
