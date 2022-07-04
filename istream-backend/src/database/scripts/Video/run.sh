@@ -43,7 +43,7 @@ if [[ "${serverType}" == "iStream" ]]; then
         serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/Run/Videos/${videosName[$i]}"
         if [[ "${extensions[$i]}" == "zip" ]]; then
             unzipDestination="${mainDir}/src/database/supportedModules/Server/${serverName}/Run/Videos/"
-            unzip -q -d "${unzipDestination}" "${videoPath}"
+            unzip -o -q -d "${unzipDestination}" "${videoPath}"
         else
             cp "${videoPath}" "${serverPath}"
         fi
@@ -56,7 +56,7 @@ elif [[ "${serverType}" == "Custom" ]]; then
         serverPath="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Run/Videos/${videosName[$i]}"
         if [[ "${extensions[$i]}" == "zip" ]]; then
             unzipDestination="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Run/Videos/"
-            unzip -q -d "${unzipDestination}" "${videoPath}"
+            unzip -o -q -d "${unzipDestination}" "${videoPath}"
         else
             cp "${videoPath}" "${serverPath}"
         fi

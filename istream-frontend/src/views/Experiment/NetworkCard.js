@@ -388,7 +388,7 @@ export default class NetworkCard extends Component {
 
       if (this.state.selectedModuleType === "iStream" && !this.state.iStreamNetworkManualConfig)
          return (
-            <div>
+            <div >
                {baseTemplate}
                {portTemplate}
                <strong> Delay: </strong>
@@ -401,12 +401,14 @@ export default class NetworkCard extends Component {
                {this.state.networkConfig.corruptPacket}%
                <br />
                <strong> Bandwidth: </strong>
-               {this.state.networkConfig.bandwidth === 0 ? "Without limit" : this.state.networkConfig.bandwidth + "Kbps"}
+               {this.state.networkConfig.bandwidth === 0 || this.state.networkConfig.bandwidth === "0"
+                  ? "Without limit"
+                  : this.state.networkConfig.bandwidth + "Kbps"}
             </div>
          );
       else
          return (
-            <div>
+            <div style={{ whiteSpace: "nowrap" }}>
                {baseTemplate}
                {portTemplate}
                <strong>Config: </strong>
@@ -432,7 +434,7 @@ export default class NetworkCard extends Component {
       saveExperimentModuleData(data).then((res) => {
          toast.success(res);
       });
-      // console.log(this.state.networkConfig.packetLoss);
+
       if (this.state.selectedModuleType === "iStream" && this.state.selectedModule === "Default Network") {
          const networkData = {
             userId: this.state.user.userId,

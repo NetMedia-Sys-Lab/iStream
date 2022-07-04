@@ -1,5 +1,7 @@
 const fs = require("fs");
 const decompress = require("decompress");
+const writeToFile = require("../../utils/fileUtils");
+const modulesConfigModel = require("../../models/modulesConfig.model");
 
 module.exports.getDefaultModules = (req, res) => {
    const componentName = req.query.componentName;
@@ -288,6 +290,11 @@ module.exports.getNetworkConfiguration = (req, res) => {
    const experimentId = req.query.experimentId;
    const networkConfigFile = `src/database/users/${username}/Experiments/${experimentId}/networkConfig.json`;
 
+   if (!fs.existsSync(networkConfigFile)) {
+      const stringifyNetworkConfigData = JSON.stringify(modulesConfigModel.networkConfigJSONData);
+      writeToFile(networkConfigFile, stringifyNetworkConfigData, "setNetworkConfiguration");
+   }
+
    fs.readFile(networkConfigFile, "utf8", function (err, data) {
       if (err) {
          let errorMessage = "Something went wrong in getNetworkConfiguration: Couldn't read networkConfig file.";
@@ -303,6 +310,11 @@ module.exports.getNetworkConfiguration = (req, res) => {
 module.exports.setNetworkConfiguration = (req, res) => {
    const { userId, username, experimentId, port, delay, packetLoss, corruptPacket, bandwidth } = req.body;
    const networkConfigFile = `src/database/users/${username}/Experiments/${experimentId}/networkConfig.json`;
+
+   if (!fs.existsSync(networkConfigFile)) {
+      const stringifyNetworkConfigData = JSON.stringify(modulesConfigModel.networkConfigJSONData);
+      writeToFile(networkConfigFile, stringifyNetworkConfigData, "setNetworkConfiguration");
+   }
 
    const networkConfigData = {
       port: port,
@@ -330,6 +342,11 @@ module.exports.getServerConfiguration = (req, res) => {
    const experimentId = req.query.experimentId;
    const serverConfigFile = `src/database/users/${username}/Experiments/${experimentId}/serverConfig.json`;
 
+   if (!fs.existsSync(serverConfigFile)) {
+      const stringifyServerConfigData = JSON.stringify(modulesConfigModel.serverConfigJSONData);
+      writeToFile(serverConfigFile, stringifyServerConfigData, "setServerConfiguration");
+   }
+
    fs.readFile(serverConfigFile, "utf8", function (err, data) {
       if (err) {
          let errorMessage = "Something went wrong in getServerConfiguration: Couldn't read serverConfig file.";
@@ -345,6 +362,11 @@ module.exports.getServerConfiguration = (req, res) => {
 module.exports.setServerConfiguration = (req, res) => {
    const { userId, username, experimentId, serverPort } = req.body;
    const serverConfigFile = `src/database/users/${username}/Experiments/${experimentId}/serverConfig.json`;
+
+   if (!fs.existsSync(serverConfigFile)) {
+      const stringifyServerConfigData = JSON.stringify(modulesConfigModel.serverConfigJSONData);
+      writeToFile(serverConfigFile, stringifyServerConfigData, "setServerConfiguration");
+   }
 
    const serverConfigData = {
       port: serverPort,
@@ -460,4 +482,54 @@ module.exports.updateConfigFileData = (req, res) => {
       }
       res.status(200).send("Config File Saved Successfully");
    });
+};
+
+module.exports.getHeadlessPlayerConfiguration = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+   const headlessPlayerConfigFile = `src/database/users/${username}/Experiments/${experimentId}/headlessPlayerConfig.json`;
+
+   if (!fs.existsSync(headlessPlayerConfigFile)) {
+      const stringifyHeadlessPlayerConfigData = JSON.stringify(modulesConfigModel.headlessPlayerJSONData);
+      writeToFile(headlessPlayerConfigFile, stringifyHeadlessPlayerConfigData, "setHeadlessPlayerConfiguration");
+   }
+
+   fs.readFile(headlessPlayerConfigFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getHeadlessPlayerConfiguration: Couldn't read headlessPlayerConfigFile file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      res.status(200).send(jsonData);
+   });
+};
+
+module.exports.setHeadlessPlayerConfiguration = (req, res) => {
+   const { userId, username, experimentId, adaptationAlgorithm, mpdFileName, connectingPort } = req.body;
+   const headlessPlayerConfigFile = `src/database/users/${username}/Experiments/${experimentId}/headlessPlayerConfig.json`;
+
+   if (!fs.existsSync(headlessPlayerConfigFile)) {
+      const stringifyHeadlessPlayerConfigData = JSON.stringify(modulesConfigModel.headlessPlayerJSONData);
+      writeToFile(headlessPlayerConfigFile, stringifyHeadlessPlayerConfigData, "setHeadlessPlayerConfiguration");
+   }
+
+   const headlessPlayerConfigData = {
+      adaptationAlgorithm: adaptationAlgorithm,
+      mpdFileName: mpdFileName,
+      connectingPort: connectingPort,
+   };
+
+   const stringifyHeadlessPlayerConfig = JSON.stringify(headlessPlayerConfigData);
+
+   fs.writeFile(headlessPlayerConfigFile, stringifyHeadlessPlayerConfig, function (err) {
+      if (err) {
+         let errorMessage = "Something went wrong in setHeadlessPlayerConfiguration: Couldn't write in HeadlessPlayerConfig file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+   });
+
+   res.status(200).send("Successfully saved HeadlessPlayer configuration");
 };

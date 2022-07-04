@@ -11,5 +11,8 @@ if [[ "${clientName}" == "" ]]; then
     echo "No client module selected. Please select a module first."
     exit
 else
-    sh src/database/scripts/Common/run.sh "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${clientConfigName}"
+    if [[ "${clientType}" == "iStream" && "${clientName}" == "Headless Player ABR" ]]; then
+        python3 src/database/scripts/Client/setupHeadlessPlayer.py "${username}" "${experimentId}"
+    fi
+    # sh src/database/scripts/Common/run.sh "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${clientConfigName}"
 fi

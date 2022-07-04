@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import EditConfig from "src/views/Experiment/Common/EditConfig";
-import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
+import { Dropdown, DropdownButton, OverlayTrigger, Popover } from "react-bootstrap";
+import {
+   getDefaultModules,
+   getUserModules,
+   getConfigFiles,
+   getModuleData,
+   saveExperimentModuleData,
+   setHeadlessPlayerConfiguration,
+   getHeadlessPlayerConfiguration,
+} from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class ClientCard extends Component {
@@ -23,11 +31,29 @@ export default class ClientCard extends Component {
       displayEditConfigModal: false,
       selectedEditFile: "",
       machineID: "",
+      headlessPlayerConfig: {
+         adaptationAlgorithmOptions: ["Buffer-based ABR", "Bandwidth-based ABR", "Hybrid ABR"],
+         selectedAdaptationAlgorithm: "Bandwidth-based ABR",
+         mpdFileName: "output.mpd",
+         connectingPort: 8080,
+      },
    };
 
    constructor(props) {
       super(props);
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         if (data.type === "iStream" && data.name === "Headless Player ABR") {
+            getHeadlessPlayerConfiguration(this.state.user, this.props.experimentId).then((data) => {
+               this.setState({
+                  headlessPlayerConfig: {
+                     adaptationAlgorithmOptions: this.state.headlessPlayerConfig.adaptationAlgorithmOptions,
+                     selectedAdaptationAlgorithm: data.adaptationAlgorithm,
+                     mpdFileName: data.mpdFileName,
+                     connectingPort: data.connectingPort,
+                  },
+               });
+            });
+         }
          if (data.name !== "") {
             this.setState({
                selectedModuleType: data.type,
@@ -96,9 +122,22 @@ export default class ClientCard extends Component {
                         this.getOneModuleConfigFiles(item);
                      } else if (type === "Config") {
                         this.setState({ selectedConfigFile: item });
+                     } else if (type === "headlessPlayer") {
+                        this.setState({
+                           headlessPlayerConfig: {
+                              ...this.state.headlessPlayerConfig,
+                              selectedAdaptationAlgorithm: item,
+                           },
+                        });
                      }
                   }}
-                  checked={type === "Module" ? this.state.selectedModule === item : this.state.selectedConfigFile === item}
+                  checked={
+                     type === "Module"
+                        ? this.state.selectedModule === item
+                        : type === "Config"
+                        ? this.state.selectedConfigFile === item
+                        : this.state.headlessPlayerConfig.selectedAdaptationAlgorithm === item
+                  }
                />
                <label className="form-check-label">{item}</label>
                {type === "Config" && item !== "No Config" ? (
@@ -196,10 +235,84 @@ export default class ClientCard extends Component {
       );
    };
 
+   onHeadlessPlayerConfigChange = (e) => {
+      this.setState({
+         networkConfig: {
+            ...this.state.networkConfig,
+            [e.target.id]: e.target.value,
+         },
+      });
+   };
+
+   headlessPlayerModuleConfig = () => {
+      if (this.state.selectedModuleType !== "iStream" || this.state.selectedModule !== "Headless Player ABR") return null;
+      const popoverHover = (
+         <Popover id="popover-trigger-hover" title="Popover bottom">
+            If you set your own Network or Server Modules provide the port that Headless Player should connect to.
+         </Popover>
+      );
+      return (
+         <div>
+            <h5>Config</h5>
+            <div className="form-group row">
+               <label className="col-6 col-form-label">MPD Name:</label>
+               <div className="col-6">
+                  <input
+                     className="form-control"
+                     value={this.state.headlessPlayerConfig.mpdFileName}
+                     id="headlessPlayerMPDname"
+                     onChange={(e) => {
+                        this.setState({
+                           headlessPlayerConfig: {
+                              ...this.state.headlessPlayerConfig,
+                              mpdFileName: e.target.value,
+                           },
+                        });
+                     }}
+                     required
+                  />
+               </div>
+            </div>
+            <div className="row">
+               <p className="col-6 center">Adaptation Algorithm Method:</p>
+               <div className="col-6">
+                  {this.radioButtonOptions(this.state.headlessPlayerConfig.adaptationAlgorithmOptions, "headlessPlayer")}
+               </div>
+            </div>
+            <div className="form-group row">
+               <label className="col-6 col-form-label">
+                  Server/Network Port:
+                  <OverlayTrigger trigger={["hover"]} placement="bottom" overlay={popoverHover}>
+                     <button type="button" class="btn btn-info btn-rounded btn-icon">
+                        <i className="fa fa-info" aria-hidden="true"></i>
+                     </button>
+                  </OverlayTrigger>
+               </label>
+               <div className="col-6">
+                  <input
+                     className="form-control"
+                     value={this.state.headlessPlayerConfig.connectingPort}
+                     id="headlessPlayerPort"
+                     onChange={(e) => {
+                        this.setState({
+                           headlessPlayerConfig: {
+                              ...this.state.headlessPlayerConfig,
+                              connectingPort: e.target.value,
+                           },
+                        });
+                     }}
+                     required
+                  />
+               </div>
+            </div>
+         </div>
+      );
+   };
+
    showModuleConfig = () => {
       if (this.state.showModuleConfiguration !== true) return;
 
-      return (
+      let baseTemplate = (
          <div>
             <hr />
             <strong>Type: </strong>
@@ -207,19 +320,41 @@ export default class ClientCard extends Component {
             <br />
             <strong>Name: </strong>
             {this.state.selectedModule}
-            <br />
-            {this.state.selectedConfigFile !== "" ? (
-               <div>
-                  <strong>Config: </strong>
-                  {this.state.selectedConfigFile}
-               </div>
-            ) : (
-               ""
-            )}
             {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
                   {this.state.machineID}
+               </div>
+            ) : (
+               ""
+            )}
+         </div>
+      );
+
+      let headlessPlayerConfig = "";
+      if (this.state.selectedModuleType === "iStream" && this.state.selectedModule === "Headless Player ABR") {
+         headlessPlayerConfig = (
+            <div>
+               <strong>MPD file: </strong>
+               {this.state.headlessPlayerConfig.mpdFileName}
+               <br />
+               <strong>Adaptation Algorithm: </strong>
+               {this.state.headlessPlayerConfig.selectedAdaptationAlgorithm}
+               <br />
+               <strong>Server/Network Port: </strong>
+            </div>
+         );
+      }
+
+      return (
+         <div style={{ whiteSpace: "nowrap" }}>
+            {baseTemplate}
+            <hr />
+            {headlessPlayerConfig}
+            {this.state.selectedConfigFile !== "" ? (
+               <div>
+                  <strong>Config: </strong>
+                  {this.state.selectedConfigFile}
                </div>
             ) : (
                ""
@@ -244,6 +379,18 @@ export default class ClientCard extends Component {
       saveExperimentModuleData(data).then((res) => {
          toast.success(res);
       });
+
+      if (this.state.selectedModuleType === "iStream" && this.state.selectedModule === "Headless Player ABR") {
+         const headlessPlayerData = {
+            userId: this.state.user.userId,
+            username: this.state.user.username,
+            experimentId: this.props.experimentId,
+            adaptationAlgorithm: this.state.headlessPlayerConfig.selectedAdaptationAlgorithm,
+            mpdFileName: this.state.headlessPlayerConfig.mpdFileName,
+            connectingPort: this.state.headlessPlayerConfig.connectingPort,
+         };
+         setHeadlessPlayerConfiguration(headlessPlayerData).then((res) => {});
+      }
    };
 
    render() {
@@ -265,7 +412,7 @@ export default class ClientCard extends Component {
                display={this.state.displayModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), this.userModuleConfig()]}
+               steps={[this.moduleType(), [this.headlessPlayerModuleConfig(), this.userModuleConfig()]]}
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                isUserModule={this.state.selectedModuleType === "Custom" ? true : false}
@@ -274,6 +421,12 @@ export default class ClientCard extends Component {
                updateConfigFiles={this.getOneModuleConfigFiles}
                selectedModule={this.state.selectedModule}
                experimentId={this.props.experimentId}
+               hideAddNewConfig={
+                  !(
+                     this.state.selectedModuleType === "Custom" ||
+                     (this.state.selectedModuleType === "iStream" && this.state.selectedModule !== "Headless Player ABR")
+                  )
+               }
             />
             {this.state.displayEditConfigModal ? (
                <EditConfig

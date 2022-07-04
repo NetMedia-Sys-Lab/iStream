@@ -114,7 +114,7 @@ export default class VideoCard extends Component {
       if (this.state.showModuleConfiguration !== true) return;
 
       return (
-         <div>
+         <div style={{ whiteSpace: "nowrap" }}>
             <hr />
             <b>Selected videos:</b>
             {this.state.selectedVideos.map((video, index) => {

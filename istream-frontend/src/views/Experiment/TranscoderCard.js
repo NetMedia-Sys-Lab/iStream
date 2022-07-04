@@ -197,7 +197,7 @@ export default class TranscoderCard extends Component {
       if (this.state.showModuleConfiguration !== true) return;
 
       return (
-         <div>
+         <div style={{ whiteSpace: "nowrap" }}>
             <hr />
             <strong>Type: </strong>
             {this.state.selectedModuleType}

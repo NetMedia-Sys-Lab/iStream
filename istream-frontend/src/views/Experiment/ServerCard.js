@@ -202,6 +202,7 @@ export default class ServerCard extends Component {
       if (!this.props.transcoderComponentExistence)
          iStreamModuleConfigFiles = (
             <div>
+               <hr />
                <h5>Simple Transcoding Config</h5>
                {this.state.iStreamModuleConfigFiles.length === 0 ? (
                   <div>No Config files found. Please add a new config file to proceed.</div>
@@ -255,7 +256,7 @@ export default class ServerCard extends Component {
       }
 
       return (
-         <div>
+         <div style={{ whiteSpace: "nowrap" }}>
             <hr />
             <strong>Type: </strong>
             {this.state.selectedModuleType}

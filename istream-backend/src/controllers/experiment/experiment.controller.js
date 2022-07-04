@@ -51,25 +51,14 @@ module.exports.createNewExperiment = (req, res) => {
    //Create the new experiment folder in the users Experiment folder
    const ExperimentDirectoryName = `src/database/users/${username}/Experiments/${experimentId}`;
    const dependencyFilePath = `${ExperimentDirectoryName}/dependency.json`;
-   const networkConfigFilePath = `${ExperimentDirectoryName}/networkConfig.json`;
-   const serverConfigFilePath = `${ExperimentDirectoryName}/serverConfig.json`;
    const experimentConfigFilePath = `${ExperimentDirectoryName}/experimentConfig.json`;
 
    fs.mkdirSync(ExperimentDirectoryName);
-   // //Make folders for the various module configuration files. The config file for a module goes inside these folders.
-   // const folderList = ["Transcoder", "Network", "Server", "Client"];
-   // for (let i = 0; i < folderList.length; i++) {
-   //    fs.mkdirSync(`${ExperimentDirectoryName}/${folderList[i]}`);
-   // }
 
    const stringifyExperimentData = JSON.stringify(experimentModel.experimentJSONData);
-   const stringifyNetworkConfigData = JSON.stringify(experimentModel.networkConfigJSONData);
-   const stringifyServerConfigData = JSON.stringify(experimentModel.serverConfigJSONData);
    const stringifyExperimentConfigData = JSON.stringify(experimentModel.experimentConfigJSONData);
 
    writeToFile(dependencyFilePath, stringifyExperimentData, "createNewExperiment");
-   writeToFile(networkConfigFilePath, stringifyNetworkConfigData, "createNewExperiment");
-   writeToFile(serverConfigFilePath, stringifyServerConfigData, "createNewExperiment");
    writeToFile(experimentConfigFilePath, stringifyExperimentConfigData, "createNewExperiment");
 
    res.status(200).send("New Experiment Created Successfully");

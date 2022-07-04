@@ -77,3 +77,34 @@ input {
 .selectedRow {
     background: #b9b9b9;
 }
+
+.information-button{
+	border:1px solid #5CC0DE;
+	background-color: #5CC0DE;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 8px;
+	margin: 2px 2px;
+	border-radius:80%;
+	-webkit-border-radius:80%;
+	-moz-border-radius:80%;
+	-ms-border-radius:80%;
+	-o-border-radius:80%;
+}
+
+.btn.btn-rounded {
+    border-radius: 50%;
+    color: white;
+    font-size: 8px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 2px 2px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}  

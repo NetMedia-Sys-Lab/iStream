@@ -247,3 +247,32 @@ export const updateConfigFileData = (data) => {
       }
    );
 };
+
+
+
+export const getHeadlessPlayerConfiguration = (user, experimentId) => {
+   return API.get("/modules/getHeadlessPlayerConfiguration", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const setHeadlessPlayerConfiguration = (data) => {
+   return API.post("/modules/setHeadlessPlayerConfiguration", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

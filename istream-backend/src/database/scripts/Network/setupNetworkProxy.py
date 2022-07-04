@@ -1,10 +1,14 @@
 import sys
+import socket
 
 serverMachineIp = sys.argv[1]
 serverContainerPort = sys.argv[2]
 
 if serverMachineIp == "0" or serverMachineIp == "":
-    serverMachineIp = "localhost"
+    socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    socket .connect(("8.8.8.8", 80))
+    serverMachineIp = socket.getsockname()[0]
+    socket.close()
 
 with open("src/database/supportedModulesTemplates/Network/Default Network/nginx.conf", "rt") as fileToChange:
     filedata = fileToChange.read()

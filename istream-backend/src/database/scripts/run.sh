@@ -10,7 +10,7 @@ networkComponentExistence=$(jq '.networkComponentExistence' <<<${experimentsList
 
 # Video Component
 echo "------ Video component Running started ------"
-sh src/database/scripts/Video/run.sh "${username}" "${experimentId}" 2>&1
+# sh src/database/scripts/Video/run.sh "${username}" "${experimentId}" 2>&1
 echo "------ Video component Running Finished ------"
 
 for i in $(seq 1 $numberOfRepetition); do
@@ -22,7 +22,7 @@ for i in $(seq 1 $numberOfRepetition); do
     # Transcoder Component
     if [ ${transcoderComponentExistence} = true ]; then
         echo "------ Transcoder component running started ------"
-        # sh src/database/scripts/Transcoder/run.sh "${username}" "${experimentId}" 2>&1
+        sh src/database/scripts/Transcoder/run.sh "${username}" "${experimentId}" 2>&1
         echo "------ Transcoder component running Finished ------"
     fi
 
@@ -35,7 +35,7 @@ for i in $(seq 1 $numberOfRepetition); do
 
     # Client Component
     echo "------ Client component running started ------"
-    # sh src/database/scripts/Client/run.sh "${username}" "${experimentId}" 2>&1
+    sh src/database/scripts/Client/run.sh "${username}" "${experimentId}" 2>&1
     echo "------ Client component running Finished ------"
 done
 
