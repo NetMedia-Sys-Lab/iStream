@@ -339,8 +339,24 @@ module.exports.build = (endpoint, socket) => {
 
 module.exports.run = (endpoint, socket) => {
    socket.on("subscribeToRunExperiment", (userInfo) => {
+      const experimentConfig = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
+
+      const experimentConfigData = {
+         repetition: userInfo.numberOfRepetition,
+      };
+
+      const stringifyExperimentConfig = JSON.stringify(experimentConfigData);
+
+      fs.writeFile(experimentConfig, stringifyExperimentConfig, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in setServerConfiguration: Couldn't write in ServerConfig file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+
       const spawn = require("child_process").spawn;
-      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId, userInfo.numberOfRepetition]);
+      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
 
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (data) => {

@@ -32,10 +32,6 @@ const experimentJSONData = {
 
 const experimentConfigJSONData = {
    repetition: 1,
-   serverCPU: 1,
-   serverMemoryLimit: 0,
-   clientCPU: 1,
-   clientMemoryLimit: 0,
 };
 
 exports.experimentJSONData = experimentJSONData;

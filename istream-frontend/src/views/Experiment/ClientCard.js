@@ -342,6 +342,7 @@ export default class ClientCard extends Component {
                {this.state.headlessPlayerConfig.selectedAdaptationAlgorithm}
                <br />
                <strong>Server/Network Port: </strong>
+               {this.state.headlessPlayerConfig.connectingPort}
             </div>
          );
       }

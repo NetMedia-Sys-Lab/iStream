@@ -373,6 +373,7 @@ export default class NetworkCard extends Component {
             ) : (
                ""
             )}
+            <hr />
          </div>
       );
 

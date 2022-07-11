@@ -264,14 +264,6 @@ export default class ServerCard extends Component {
             <strong>Name: </strong>
             {this.state.selectedModule}
             <br />
-            {this.state.selectedConfigFile !== "" ? (
-               <div>
-                  <strong>Config: </strong>
-                  {this.state.selectedConfigFile}
-               </div>
-            ) : (
-               ""
-            )}
             {this.state.machineID !== "" && this.state.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
@@ -280,6 +272,16 @@ export default class ServerCard extends Component {
             ) : (
                ""
             )}
+            <hr />
+            {this.state.selectedConfigFile !== "" ? (
+               <div>
+                  <strong>Config: </strong>
+                  {this.state.selectedConfigFile}
+               </div>
+            ) : (
+               ""
+            )}
+
             {portTemplate}
          </div>
       );

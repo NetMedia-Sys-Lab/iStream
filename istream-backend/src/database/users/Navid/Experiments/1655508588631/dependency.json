@@ -1,1 +1,31 @@
-{"Video":{"id":["1656610390827"],"machineID":"0"},"Server":{"name":"Nginx Dash","config":"No Config","type":"iStream","machineID":"0"},"Transcoder":{"name":"","config":"","type":"","machineID":""},"Network":{"name":"Default Network","config":"","type":"iStream","manualConfig":"false","machineID":"0"},"Client":{"name":"Headless Player ABR","config":"","type":"iStream","machineID":"0"}}
+{
+    "Video": {
+        "id": ["1654719010294"],
+        "machineID": "0"
+    },
+    "Server": {
+        "name": "Nginx Dash",
+        "config": "Simple Ffmpeg.sh",
+        "type": "iStream",
+        "machineID": "1653513318384"
+    },
+    "Transcoder": {
+        "name": "",
+        "config": "",
+        "type": "",
+        "machineID": ""
+    },
+    "Network": {
+        "name": "Default Network",
+        "config": "",
+        "type": "iStream",
+        "manualConfig": "false",
+        "machineID": "1653513318384"
+    },
+    "Client": {
+        "name": "Dash.js",
+        "config": "",
+        "type": "iStream",
+        "machineID": "0"
+    }
+}

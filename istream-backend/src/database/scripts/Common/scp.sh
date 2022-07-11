@@ -10,7 +10,7 @@ if [[ "${scpKind}" == "build" ]]; then
     buildFileName=$7
 elif [[ "${scpKind}" == "run" ]]; then
     componentName=$6
-    buildFileName=$7
+    runFileName=$7
 elif [[ "${scpKind}" == "video" ]]; then
     videoName=$6
 elif [[ "${scpKind}" == "config" ]]; then
@@ -23,7 +23,7 @@ if [[ "${scpKind}" == "build" ]]; then
     scp -i "${privateKeyPath}" "${filePath}/${buildFileName}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}'"
 elif [[ "${scpKind}" == "run" ]]; then
     scp -r -i "${privateKeyPath}" "${filePath}/Run" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}'"
-    scp -i "${privateKeyPath}" "${filePath}/${buildFileName}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}'"
+    scp -i "${privateKeyPath}" "${filePath}/${runFileName}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}'"
 elif [[ "${scpKind}" == "config" ]]; then
     scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"'/home/${sshUsername}/${componentName}/Config/config.${configFileExtention}'"
 elif [[ "${scpKind}" == "video" ]]; then

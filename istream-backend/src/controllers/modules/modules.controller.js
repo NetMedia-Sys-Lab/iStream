@@ -246,6 +246,10 @@ module.exports.saveModuleData = (req, res) => {
          if (iStreamNetworkManualConfig == false) jsonData[componentName].config = "";
       }
 
+      if (componentName == "Client" && selectedModule == "Dash.js") {
+         jsonData[componentName].machineID = "0";
+      }
+
       stringifyData = JSON.stringify(jsonData);
 
       fs.writeFile(dependencyFile, stringifyData, function (err) {
