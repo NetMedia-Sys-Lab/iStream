@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import EditConfig from "src/views/Experiment/Common/EditConfig";
-import { Dropdown, DropdownButton, OverlayTrigger, Popover } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import {
    getDefaultModules,
    getUserModules,
@@ -11,6 +11,7 @@ import {
    setHeadlessPlayerConfiguration,
    getHeadlessPlayerConfiguration,
 } from "src/api/ModulesAPI";
+import InformationButton from "src/views/Common/InformationButton";
 import { toast } from "react-toastify";
 
 export default class ClientCard extends Component {
@@ -246,11 +247,7 @@ export default class ClientCard extends Component {
 
    headlessPlayerModuleConfig = () => {
       if (this.state.selectedModuleType !== "iStream" || this.state.selectedModule !== "Headless Player ABR") return null;
-      const popoverHover = (
-         <Popover id="popover-trigger-hover" title="Popover bottom">
-            If you set your own Network or Server Modules provide the port that Headless Player should connect to.
-         </Popover>
-      );
+
       return (
          <div>
             <h5>Config</h5>
@@ -280,14 +277,12 @@ export default class ClientCard extends Component {
                </div>
             </div>
             <div className="form-group row">
-               <label className="col-6 col-form-label">
-                  Server/Network Port:
-                  <OverlayTrigger trigger={["hover"]} placement="bottom" overlay={popoverHover}>
-                     <button type="button" class="btn btn-info btn-rounded btn-icon">
-                        <i className="fa fa-info" aria-hidden="true"></i>
-                     </button>
-                  </OverlayTrigger>
-               </label>
+               <div className="col-6">
+                  <label className="col-form-label">
+                     Server/Network Port:
+                     <InformationButton message="If you set your own Network or Server Modules provide the port that Headless Player should connect to." />
+                  </label>
+               </div>
                <div className="col-6">
                   <input
                      className="form-control"

@@ -1,13 +1,13 @@
 {
     "Video": {
-        "id": ["1654719010294"],
+        "id": [],
         "machineID": "0"
     },
     "Server": {
         "name": "Nginx Dash",
         "config": "Simple Ffmpeg.sh",
         "type": "iStream",
-        "machineID": "1653513318384"
+        "machineID": ""
     },
     "Transcoder": {
         "name": "",
@@ -20,10 +20,10 @@
         "config": "",
         "type": "iStream",
         "manualConfig": "false",
-        "machineID": "1653513318384"
+        "machineID": ""
     },
     "Client": {
-        "name": "Dash.js",
+        "name": "Headless Player ABR",
         "config": "",
         "type": "iStream",
         "machineID": "0"

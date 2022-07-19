@@ -248,8 +248,6 @@ export const updateConfigFileData = (data) => {
    );
 };
 
-
-
 export const getHeadlessPlayerConfiguration = (user, experimentId) => {
    return API.get("/modules/getHeadlessPlayerConfiguration", {
       params: {
@@ -268,6 +266,39 @@ export const getHeadlessPlayerConfiguration = (user, experimentId) => {
 
 export const setHeadlessPlayerConfiguration = (data) => {
    return API.post("/modules/setHeadlessPlayerConfiguration", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const deleteUserModule = (user, componentName, moduleName) => {
+   return API.delete("/modules/userModule", {
+      params: {
+         user,
+         componentName,
+         moduleName,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const deleteUserVideo = (user, videoID) => {
+   return API.delete("/modules/userVideo", {
+      params: {
+         user,
+         videoID,
+      },
+   }).then(
       (response) => {
          return response.data;
       },

@@ -21,11 +21,11 @@ export default class Header extends Component {
                            Home
                         </a>
                      </li>
-                     {/* <li className="nav-item">
-                        <a className="nav-link" href="/temp">
+                     <li className="nav-item">
+                        <a className="nav-link" href="/setting">
                            Setting
                         </a>
-                     </li> */}
+                     </li>
                      <li className="nav-item">
                         <a className="nav-link" href="/login" onClick={this.logout}>
                            Logout

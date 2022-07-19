@@ -23,4 +23,8 @@ router.post("/setHeadlessPlayerConfiguration", controller.setHeadlessPlayerConfi
 router.post("/saveVideoModuleData", controller.saveVideoModuleData);
 router.post("/updateConfigFileData", controller.updateConfigFileData);
 
+router.delete("/userModule", controller.deleteUserModule);
+router.delete("/userVideo", controller.deleteUserVideo);
+
+
 module.exports = router;

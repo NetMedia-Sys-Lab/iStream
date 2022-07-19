@@ -1,1 +1,31 @@
-{"Video":{"id":[],"machineID":"1653513318384"},"Server":{"name":"Nginx Dash","config":"No Config","type":"iStream","machineID":"1653510431408"},"Transcoder":{"name":"Sonali Transcoder","config":"tileConfigKube.py","type":"Custom","machineID":""},"Network":{"name":"","config":"","type":"","manualConfig":"","machineID":""},"Client":{"name":"GPAC","config":"","type":"iStream","machineID":"1653590718603"}}
+{
+    "Video": {
+        "id": [],
+        "machineID": "1653513318384"
+    },
+    "Server": {
+        "name": "Nginx Dash",
+        "config": "No Config",
+        "type": "iStream",
+        "machineID": "1653510431408"
+    },
+    "Transcoder": {
+        "name": "Sonali Transcoder",
+        "config": "tileConfigKube.py",
+        "type": "Custom",
+        "machineID": ""
+    },
+    "Network": {
+        "name": "",
+        "config": "",
+        "type": "",
+        "manualConfig": "",
+        "machineID": ""
+    },
+    "Client": {
+        "name": "GPAC",
+        "config": "",
+        "type": "iStream",
+        "machineID": "1653590718603"
+    }
+}

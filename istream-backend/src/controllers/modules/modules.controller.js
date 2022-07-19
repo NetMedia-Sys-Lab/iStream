@@ -2,6 +2,7 @@ const fs = require("fs");
 const decompress = require("decompress");
 const writeToFile = require("../../utils/fileUtils");
 const modulesConfigModel = require("../../models/modulesConfig.model");
+const experimentModel = require("../../models/experiment.model");
 
 module.exports.getDefaultModules = (req, res) => {
    const componentName = req.query.componentName;
@@ -114,7 +115,7 @@ module.exports.addNewVideo = (req, res) => {
    const file = req.files.video;
    const videoName = file.name;
    const videoID = Date.now().toString();
-   const videoPath = `src/database/users/${username}/Videos/${videoID}.${videoName.split(".")[1]}`;
+   const videoPath = `src/database/users/${username}/Videos/${videoID}`;
 
    const videosListFilePath = `src/database/users/${username}/Videos/videos_list.json`;
 
@@ -165,7 +166,7 @@ module.exports.addNewVideoDataset = (req, res) => {
    const dataset = req.files.dataset;
    const name = dataset.name;
    const datasetID = Date.now().toString();
-   const datasetPath = `src/database/users/${username}/Videos/${datasetID}.${name.split(".")[1]}`;
+   const datasetPath = `src/database/users/${username}/Videos/${datasetID}`;
 
    const videosListFilePath = `src/database/users/${username}/Videos/videos_list.json`;
 
@@ -536,4 +537,92 @@ module.exports.setHeadlessPlayerConfiguration = (req, res) => {
    });
 
    res.status(200).send("Successfully saved HeadlessPlayer configuration");
+};
+
+module.exports.deleteUserModule = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const componentName = req.query.componentName;
+   const moduleName = req.query.moduleName;
+
+   const userExperimentsPath = `src/database/users/${username}/Experiments`;
+
+   let allExperiments = fs.readdirSync(userExperimentsPath);
+   allExperiments.forEach((experimentID) => {
+      const experimentDependencyFilePath = userExperimentsPath + `/${experimentID}/dependency.json`;
+      if (fs.existsSync(experimentDependencyFilePath)) {
+         let dependencyFile = JSON.parse(fs.readFileSync(experimentDependencyFilePath, "utf8"));
+
+         if (dependencyFile[componentName]["name"] === moduleName) {
+            dependencyFile[componentName] = experimentModel.experimentJSONData[componentName];
+            const stringifyDependencyFile = JSON.stringify(dependencyFile);
+            fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
+         }
+      }
+   });
+
+   const modulePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}`;
+
+   fs.rm(modulePath, { recursive: true }, function (err) {
+      if (err) {
+         let errorMessage = "Something went wrong in deleteUserModule: Couldn't delete in modulePath directory.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      res.status(200).send("Successfully delete user's module");
+   });
+};
+
+module.exports.deleteUserVideo = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const videoID = req.query.videoID;
+
+   const userExperimentsPath = `src/database/users/${username}/Experiments`;
+
+   let allExperiments = fs.readdirSync(userExperimentsPath);
+   allExperiments.forEach((experimentID) => {
+      const experimentDependencyFilePath = userExperimentsPath + `/${experimentID}/dependency.json`;
+      if (fs.existsSync(experimentDependencyFilePath)) {
+         let dependencyFile = JSON.parse(fs.readFileSync(experimentDependencyFilePath, "utf8"));
+
+         if (dependencyFile["Video"]["id"].includes(videoID)) {
+            dependencyFile["Video"]["id"] = dependencyFile["Video"]["id"].filter((id) => {
+               return id != videoID;
+            });
+            const stringifyDependencyFile = JSON.stringify(dependencyFile);
+            fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
+         }
+      }
+   });
+
+   const videosListPath = `src/database/users/${username}/Videos/videos_list.json`;
+   const videoPath = `src/database/users/${username}/Videos/${videoID}`;
+
+   fs.rmSync(videoPath);
+
+   fs.readFile(videosListPath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in deleteUserVideo: Couldn't read videosListPath file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      let videosList = JSON.parse(data);
+
+      videosList = videosList.filter((obj) => {
+         return obj.id != videoID.toString();
+      });
+
+      const stringifyVideosList = JSON.stringify(videosList);
+
+      fs.writeFile(videosListPath, stringifyVideosList, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in deleteUserVideo: Couldn't write in videosListPath file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+
+      res.status(200).send("Successfully delete user's video.");
+   });
 };

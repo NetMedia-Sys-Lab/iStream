@@ -26,7 +26,7 @@ if [[ "${videoMachineId}" != "" ]] && [[ "${videoMachineId}" != "0" ]]; then
 
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) to the designated machine"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${extensions[$i]}"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}"
         sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${videoPath}" "video" "${videosName[$i]}"
         if [[ "${extensions[$i]}" == "zip" ]]; then
             commandToUnzipInCluster="cd Videos && unzip -q ${videosName[$i]}"
@@ -39,7 +39,7 @@ if [[ "${serverType}" == "iStream" ]]; then
     mkdir -p "${mainDir}/src/database/supportedModules/Server/${serverName}/Run/Videos"
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) beside server component"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${extensions[$i]}"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}"
         serverPath="${mainDir}/src/database/supportedModules/Server/${serverName}/Run/Videos/${videosName[$i]}"
         if [[ "${extensions[$i]}" == "zip" ]]; then
             unzipDestination="${mainDir}/src/database/supportedModules/Server/${serverName}/Run/Videos/"
@@ -52,7 +52,7 @@ elif [[ "${serverType}" == "Custom" ]]; then
     mkdir -p "${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Run/Videos"
     for i in "${!videoId[@]}"; do
         echo "Move video number $(($i + 1)) beside server component"
-        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}.${extensions[$i]}"
+        videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId[$i]}"
         serverPath="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Run/Videos/${videosName[$i]}"
         if [[ "${extensions[$i]}" == "zip" ]]; then
             unzipDestination="${mainDir}/src/database/users/${username}/Modules/Server/${serverName}/Run/Videos/"

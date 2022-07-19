@@ -164,3 +164,19 @@ export function downloadExperimentResult(username, experimentId) {
       }
    );
 }
+
+export function deleteUserMachine(user, machineID) {
+   return API.delete("/experiment/userMachine", {
+      params: {
+         user,
+         machineID,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}

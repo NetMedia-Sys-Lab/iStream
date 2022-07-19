@@ -391,3 +391,58 @@ module.exports.downloadExperimentResult = async (req, res) => {
 
    res.send(file);
 };
+
+module.exports.deleteUserMachine = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const machineID = req.query.machineID;
+
+   const userExperimentsPath = `src/database/users/${username}/Experiments`;
+
+   let allExperiments = fs.readdirSync(userExperimentsPath);
+   allExperiments.forEach((experimentID) => {
+      const experimentDependencyFilePath = userExperimentsPath + `/${experimentID}/dependency.json`;
+      if (fs.existsSync(experimentDependencyFilePath)) {
+         let dependencyFile = JSON.parse(fs.readFileSync(experimentDependencyFilePath, "utf8"));
+         let components = ["Video", "Server", "Transcoder", "Network", "Client"];
+
+         components.forEach((componentName) => {
+            if (dependencyFile[componentName]["machineID"] === machineID) {
+               dependencyFile[componentName] = experimentModel.experimentJSONData[componentName];
+               const stringifyDependencyFile = JSON.stringify(dependencyFile);
+               fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
+            }
+         });
+      }
+   });
+
+   const machineListPath = `src/database/users/${username}/machine_list.json`;
+   const sshKeyPath = `src/database/users/${username}/SSHKeys/${machineID}`;
+
+   fs.rmSync(sshKeyPath);
+
+   fs.readFile(machineListPath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in deleteUserMachine: Couldn't read machineListPath file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      let machineList = JSON.parse(data);
+
+      machineList = machineList.filter((obj) => {
+         return obj.machineID != machineID.toString();
+      });
+
+      const stringifyMachineList = JSON.stringify(machineList);
+
+      fs.writeFile(machineListPath, stringifyMachineList, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in deleteUserMachine: Couldn't write in machineListPath file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+
+      res.status(200).send("Successfully delete user's machine.");
+   });
+};
