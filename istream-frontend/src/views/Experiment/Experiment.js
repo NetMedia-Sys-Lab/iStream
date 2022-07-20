@@ -16,7 +16,7 @@ import b64ToBlob from "b64-to-blob";
 import fileSaver from "file-saver";
 import { getVideosList } from "src/api/ModulesAPI";
 import { useParams } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { experimentJSONData } from "src/models/Experiment";
 import "./Experiment.css";
 
@@ -36,7 +36,9 @@ class Experiment extends Component {
       displayRunState: false,
       fullscreenRunModal: false,
       buildOutput: [],
+      buildSpinner: false,
       runOutput: [],
+      runSpinner: false,
       dependencyData: experimentJSONData,
       videosList: [],
       numberOfRepetition: 1,
@@ -156,6 +158,11 @@ class Experiment extends Component {
                   <hr />
                   <div className="mt-3">
                      <Button variant="success" className="float-end" onClick={this.buildExperiment}>
+                        {this.state.buildSpinner ? (
+                           <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
+                        ) : (
+                           ""
+                        )}
                         Start
                      </Button>
                   </div>
@@ -217,6 +224,11 @@ class Experiment extends Component {
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>
                      <Button variant="success" className="float-end" onClick={this.runExperiment}>
+                        {this.state.runSpinner ? (
+                           <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
+                        ) : (
+                           ""
+                        )}
                         Start
                      </Button>
                   </div>
@@ -239,6 +251,12 @@ class Experiment extends Component {
          experimentId: this.state.experimentId,
       };
       subscribeToBuildExperiment(data, (err, output) => {
+         if (output === "SOCKET_CLOSED") {
+            this.setState({ buildSpinner: false });
+            return;
+         }
+         this.setState({ buildSpinner: true });
+         
          output = output.filter((str) => str !== "");
          let out = "";
          output.forEach((element) => (out += element + "\n"));
@@ -255,6 +273,12 @@ class Experiment extends Component {
          numberOfRepetition: this.state.numberOfRepetition,
       };
       subscribeToRunExperiment(data, (err, output) => {
+         if (output === "SOCKET_CLOSED") {
+            this.setState({ runSpinner: false });
+            return;
+         }
+         this.setState({ runSpinner: true });
+
          output = output.filter((str) => str !== "");
          let out = "";
          output.forEach((element) => (out += element + "\n"));

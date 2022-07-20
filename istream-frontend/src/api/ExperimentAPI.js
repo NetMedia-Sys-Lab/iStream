@@ -139,7 +139,9 @@ export function getComponentSelectedMachine(user, componentName, experimentId) {
 
 export function subscribeToBuildExperiment(userInfo, cb) {
    const SOCKET = openSocket(DOMAIN + "build");
-   SOCKET.on("getExperiment‌BuildInfo", (data) => cb(null, data));
+   SOCKET.on("getExperiment‌BuildInfo", (data) => {
+      cb(null, data);
+   });
    SOCKET.emit("subscribeToBuildExperiment", userInfo);
 }
 

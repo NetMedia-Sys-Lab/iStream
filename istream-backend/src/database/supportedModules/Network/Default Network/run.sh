@@ -7,7 +7,7 @@ docker ps -a -q --filter "name=network_container" | grep -q . &&
 
 docker run --cap-add NET_ADMIN --name network_container -p 9090:8080 -d network_image
 
-docker exec network_container tcset eth0 --delay 20ms   
+docker exec network_container tcset eth0  --rate 2048Kbps  
 #docker cp "${DIR}/Config/config.sh" network_container:/
 #docker exec network_container chmod 777 ./config.sh
 #docker exec network_container ./config.sh

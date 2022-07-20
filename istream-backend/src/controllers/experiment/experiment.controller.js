@@ -332,6 +332,7 @@ module.exports.build = (endpoint, socket) => {
       });
 
       child.on("close", function (code) {
+         endpoint.emit("getExperiment‌BuildInfo", "SOCKET_CLOSED");
          socket.disconnect();
       });
    });
@@ -376,6 +377,7 @@ module.exports.run = (endpoint, socket) => {
       });
 
       child.on("close", function (code) {
+         endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
          socket.disconnect();
       });
    });
