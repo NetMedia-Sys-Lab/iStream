@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Header from "src/views/Common/Header";
 import VideoCard from "src/views/Experiment/VideoCard";
 import NetworkCard from "src/views/Experiment/NetworkCard";
+import NewNetworkCard from "src/views/Experiment/NewNeworkCard";
 import ClientCard from "src/views/Experiment/ClientCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
@@ -158,12 +159,12 @@ class Experiment extends Component {
                   <hr />
                   <div className="mt-3">
                      <Button variant="success" className="float-end" onClick={this.buildExperiment}>
+                        Start
                         {this.state.buildSpinner ? (
                            <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
                         ) : (
                            ""
                         )}
-                        Start
                      </Button>
                   </div>
                </Modal.Body>
@@ -224,12 +225,12 @@ class Experiment extends Component {
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>
                      <Button variant="success" className="float-end" onClick={this.runExperiment}>
+                        Start
                         {this.state.runSpinner ? (
                            <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
                         ) : (
                            ""
                         )}
-                        Start
                      </Button>
                   </div>
                </Modal.Body>
@@ -256,7 +257,7 @@ class Experiment extends Component {
             return;
          }
          this.setState({ buildSpinner: true });
-         
+
          output = output.filter((str) => str !== "");
          let out = "";
          output.forEach((element) => (out += element + "\n"));
@@ -312,7 +313,7 @@ class Experiment extends Component {
                   <div className="row mt-4">
                      <h2>Config Experiment</h2>
                   </div>
-                  <div className="row row-cols-3">
+                  <div className="row row-cols-2">
                      <div className="col-sm">
                         <VideoCard experimentId={this.state.experimentId} />
                      </div>
@@ -339,6 +340,10 @@ class Experiment extends Component {
                      <div className="col-sm">
                         <ClientCard experimentId={this.state.experimentId} />
                      </div>
+
+                     {/* <div className="col-sm">
+                        <NewNetworkCard experimentId={this.state.experimentId} />
+                     </div> */}
                      {/* <div className="col-md-2">
                         <ExperimentSettingCard experimentId={this.state.experimentId} />
                      </div> */}

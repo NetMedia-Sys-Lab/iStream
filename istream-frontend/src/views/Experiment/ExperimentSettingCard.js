@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getConfigFiles, saveExperimentModuleData } from "src/api/ModulesAPI";
+import { getModuleScripts, saveExperimentModuleData } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class ExperimentSettingCard extends Component {
@@ -34,7 +34,7 @@ export default class ExperimentSettingCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName).then((res) => {
+      getModuleScripts(this.state.user, this.state.componentName, moduleName).then((res) => {
          res.unshift("No Config");
          this.setState({ userModuleConfigFiles: res });
       });

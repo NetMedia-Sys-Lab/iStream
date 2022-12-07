@@ -5,7 +5,7 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 import {
    getDefaultModules,
    getUserModules,
-   getConfigFiles,
+   getModuleScripts,
    getModuleData,
    saveExperimentModuleData,
    setServerConfiguration,
@@ -82,7 +82,7 @@ export default class ServerCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
+      getModuleScripts(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
          (res) => {
             res.unshift("No Config");
 

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import EditConfig from "src/views/Experiment/Common/EditConfig";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getDefaultModules, getUserModules, getConfigFiles, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
+import { getDefaultModules, getUserModules, getModuleScripts, getModuleData, saveExperimentModuleData } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class TranscoderCard extends Component {
@@ -62,7 +62,7 @@ export default class TranscoderCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
+      getModuleScripts(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
          (res) => {
             res.unshift("No Config");
 

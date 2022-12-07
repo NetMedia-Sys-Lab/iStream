@@ -28,7 +28,7 @@ fi
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
 
-    commandToRunInClusterBeforeBuild="rm -rf '${componentName}' && mkdir -p '${componentName}/Build'"
+    commandToRunInClusterBeforeBuild="rm -rf '${componentName}' && mkdir -p '${componentName}'/Build"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterBeforeBuild}"
 
     echo "Move build files to the designated server"

@@ -4,7 +4,7 @@ import EditConfig from "src/views/Experiment/Common/EditConfig";
 import {
    getDefaultModules,
    getUserModules,
-   getConfigFiles,
+   getModuleScripts,
    saveExperimentModuleData,
    getModuleData,
    getNetworkConfiguration,
@@ -93,7 +93,7 @@ export default class NetworkCard extends Component {
    };
 
    getOneModuleConfigFiles = (moduleName) => {
-      getConfigFiles(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
+      getModuleScripts(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
          (res) => {
             res.unshift("No Config");
 

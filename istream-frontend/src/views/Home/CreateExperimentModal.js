@@ -99,7 +99,7 @@ export default class CreateExperimentModal extends Component {
                      <div className="mt-3">
                         <Button
                            type="submit"
-                           className="me-2"
+                           className="float-end me-2"
                            style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
                         >
                            Create

@@ -17,11 +17,11 @@ RUN cd /tmp/build \
 	&& make -s && make -s install
 
 
-RUN git clone https://github.com/gpac/gpac.git gpac \
-	&& cd gpac && ./configure --disable-opengl --use-js=no --use-ft=no --use-jpeg=no --use-png=no --use-faad=no --use-mad=no --use-xvid=no --use-ffmpeg=no --use-ogg=no --use-vorbis=no --use-theora=no --use-openjpeg=no \
-	&& make -s && make -s install \
-	&& cp bin/gcc/libgpac.so /usr/local/lib \
-	&& cd .. && rm -rf gpac
+# RUN git clone https://github.com/gpac/gpac.git gpac \
+# 	&& cd gpac && ./configure --disable-opengl --use-js=no --use-ft=no --use-jpeg=no --use-png=no --use-faad=no --use-mad=no --use-xvid=no --use-ffmpeg=no --use-ogg=no --use-vorbis=no --use-theora=no --use-openjpeg=no \
+# 	&& make -s && make -s install \
+# 	&& cp bin/gcc/libgpac.so /usr/local/lib \
+# 	&& cd .. && rm -rf gpac
 
 RUN cd /usr/local/nginx/conf && \
 	rm nginx.conf

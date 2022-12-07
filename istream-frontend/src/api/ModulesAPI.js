@@ -42,8 +42,8 @@ export const createNewModule = (request) => {
    );
 };
 
-export const addNewConfig = (request) => {
-   return API.post("/modules/addNewConfig", request).then(
+export const addNewScript = (request) => {
+   return API.post("/modules/addNewScript", request).then(
       (response) => {
          return response.data;
       },
@@ -53,8 +53,26 @@ export const addNewConfig = (request) => {
    );
 };
 
-export const getConfigFiles = (user, componentName, moduleName, isUserModule) => {
-   return API.get("/modules/getConfigFiles", {
+export const getModuleScripts = (user, componentName, moduleName, isUserModule) => {
+   return API.get("/modules/getModuleScripts", {
+      params: {
+         user,
+         componentName,
+         moduleName,
+         isUserModule,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getModuleParameters = (user, componentName, moduleName, isUserModule) => {
+   return API.get("/modules/getModuleParameters", {
       params: {
          user,
          componentName,

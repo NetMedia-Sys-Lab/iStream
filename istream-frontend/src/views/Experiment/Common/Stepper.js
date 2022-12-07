@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ProgressBar from "src/views/Common/ProgressBar";
 import AddModule from "src/views/Experiment/Common/AddModule";
-import AddConfig from "src/views/Experiment/Common/AddConfig";
+import AddScript from "src/views/Experiment/Common/AddScript";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
 import MachineConfig from "src/views/Experiment/Common/MachineConfig";
 
@@ -195,7 +195,7 @@ export default class Stepper extends Component {
                }}
                updateData={this.props.updateData}
             />
-            <AddConfig
+            <AddScript
                display={this.state.displayAddModuleConfig}
                componentName={this.props.componentName}
                toggleDisplay={() => {

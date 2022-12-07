@@ -1,1 +1,16 @@
-[{"machineID":"1653510431408","sshUsername":"sonali","machineIp":"london.cs.ucalgary.ca","privateKeyName":"london.key"},{"machineID":"1653590718603","sshUsername":"ubuntu","machineIp":"162.246.156.61","privateKeyName":"kubernetes-master.pem"},{"machineID":"1658172204750","sshUsername":"ubuntu","machineIp":"10.1.6.221","privateKeyName":"istream.pem"}]
+[{
+   "machineID": "1665683811479",
+   "sshUsername": "ubuntu",
+   "machineIp": "10.1.6.187",
+   "privateKeyName": "istream.pem"
+}, {
+   "machineID": "1665698850905",
+   "sshUsername": "sonali",
+   "machineIp": "136.159.7.151",
+   "privateKeyName": "london.key"
+}, {
+   "machineID": "1667317154093",
+   "sshUsername": "ubuntu",
+   "machineIp": "162.246.156.61",
+   "privateKeyName": "kubernetes-master.pem"
+}]

@@ -3,7 +3,8 @@ const controller = require("../controllers/modules/modules.controller");
 
 router.get("/getDefaultModules", controller.getDefaultModules);
 router.get("/getUserModules", controller.getUserModules);
-router.get("/getConfigFiles", controller.getConfigFiles);
+router.get("/getModuleScripts", controller.getModuleScripts); //This need to be deleted once the changes ended
+router.get("/getModuleParameters", controller.getModuleParameters);
 router.get("/getVideosList", controller.getVideosList);
 router.get("/getModuleData", controller.getModuleData);
 router.get("/getNetworkConfiguration", controller.getNetworkConfiguration);
@@ -13,7 +14,7 @@ router.get("/getVideoModuleData", controller.getVideoModuleData);
 router.get("/getConfigFileData", controller.getConfigFileData);
 
 router.post("/create", controller.create);
-router.post("/addNewConfig", controller.addNewConfig);
+router.post("/addNewScript", controller.addNewScript);
 router.post("/addNewVideo", controller.addNewVideo);
 router.post("/addNewVideoDataset", controller.addNewVideoDataset);
 router.post("/saveModuleData", controller.saveModuleData);

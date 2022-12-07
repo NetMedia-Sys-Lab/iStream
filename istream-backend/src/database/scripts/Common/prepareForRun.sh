@@ -12,16 +12,15 @@ configFileExtention=${componentConfigName##*.}
 mainDir=$(pwd)
 
 if [[ "${componentType}" == "iStream" ]]; then
-    configFilePath="${mainDir}/src/database/users/${username}/CustomModuleConfigs/${component}/${componentName}/${componentConfigName}"
-    resultsPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Results"
-    configPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Config"
     componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
-
+    configFilePath="${mainDir}/src/database/users/${username}/iStreamModulesScripts/${component}/${componentName}/${componentConfigName}"
+    resultsPath="${componentPath}/Results"
+    configPath="${componentPath}/Config"
 elif [[ "${componentType}" == "Custom" ]]; then
-    configFilePath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Configs/${componentConfigName}"
-    configPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Config"
-    resultsPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Results"
     componentPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}"
+    configFilePath="${componentPath}/Configs/${componentConfigName}"
+    configPath="${componentPath}/Config"
+    resultsPath="${componentPath}/Results"
 fi
 
 runFileName=$(ls -p "${componentPath}" | grep -v / | grep "run")

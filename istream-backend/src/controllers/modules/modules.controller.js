@@ -38,7 +38,7 @@ module.exports.create = (req, res) => {
    const file = req.files.moduleFile;
    const zipFilePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}.zip`;
    const destinationFilePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}`;
-   const configFileDirectory = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs`;
+   const scriptsFileDirectory = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Scripts`;
 
    file.mv(zipFilePath, (err) => {
       if (err) {
@@ -52,7 +52,7 @@ module.exports.create = (req, res) => {
       decompress(zipFilePath, destinationFilePath).then((err) => {
          try {
             fs.unlinkSync(zipFilePath);
-            fs.mkdirSync(configFileDirectory);
+            fs.mkdirSync(scriptsFileDirectory);
             res.status(200).send("New Module Added Successfully");
          } catch {
             let errorMessage = "Something went wrong in Create new Module: couldn't unzip the file";
@@ -63,51 +63,83 @@ module.exports.create = (req, res) => {
    });
 };
 
-module.exports.addNewConfig = (req, res) => {
-   const { userId, username, isUserModule, componentName, moduleName, configName } = req.body;
-   const file = req.files.configFile;
+module.exports.addNewScript = (req, res) => {
+   const { userId, username, isUserModule, componentName, moduleName, scriptName } = req.body;
+   const file = req.files.scriptFile;
+   console.log("heree");
    let filePath = "";
    if (isUserModule === "true") {
-      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}.${file.name.split(".")[1]}`;
+      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Scripts/${scriptName}.${file.name.split(".")[1]}`;
    } else {
-      const configFileDirectory = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}`;
-      fs.mkdirSync(configFileDirectory, { recursive: true });
-      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configName}.${
+      const scriptsFileDirectory = `src/database/users/${username}/iStreamModulesScripts/${componentName}/${moduleName}`;
+      fs.mkdirSync(scriptsFileDirectory, { recursive: true });
+      filePath = `src/database/users/${username}/iStreamModulesScripts/${componentName}/${moduleName}/${scriptName}.${
          file.name.split(".")[1]
       }`;
    }
 
    file.mv(filePath, (err) => {
       if (err) {
-         let errorMessage = "Something went wrong in add New Config: couldn't write file into server";
+         let errorMessage = "Something went wrong in add New Scripts: couldn't write file into server";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       } else {
-         res.status(200).send("New Config File Added Successfully");
+         res.status(200).send("New Script File Added Successfully");
       }
    });
 };
 
-module.exports.getConfigFiles = (req, res) => {
+module.exports.getModuleScripts = (req, res) => {
    const { username } = JSON.parse(req.query.user);
    const componentName = req.query.componentName;
    const moduleName = req.query.moduleName;
    const isUserModule = req.query.isUserModule;
-   let configFilesDirectoryPath = "";
+   let moduleScriptsDirectoryPath = "";
    if (isUserModule === "true") {
-      configFilesDirectoryPath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs`;
+      moduleScriptsDirectoryPath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Scripts`;
    } else {
-      configFilesDirectoryPath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}`;
+      moduleScriptsDirectoryPath = `src/database/users/${username}/iStreamModulesScripts/${componentName}/${moduleName}`;
    }
-   let configFilesList = [];
+   let moduleScriptsList = [];
    try {
-      if (fs.existsSync(configFilesDirectoryPath)) configFilesList = fs.readdirSync(configFilesDirectoryPath);
+      if (fs.existsSync(moduleScriptsDirectoryPath)) moduleScriptsList = fs.readdirSync(moduleScriptsDirectoryPath);
    } catch (e) {
-      let errorMessage = "Something went wrong in getUserModules";
+      let errorMessage = "Something went wrong in getModuleScripts";
       console.log(errorMessage);
       res.status(500).send(errorMessage);
    }
-   res.send(configFilesList);
+   res.send(moduleScriptsList);
+};
+
+module.exports.getModuleParameters = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const componentName = req.query.componentName;
+   const moduleName = req.query.moduleName;
+   const isUserModule = req.query.isUserModule;
+   let moduleParametersDirectoryPath = "";
+   if (isUserModule === "false") {
+      moduleParametersDirectoryPath = `src/database/supportedModules/${componentName}/${moduleName}/parameters.json`;
+   } else {
+      moduleParametersDirectoryPath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/parameters.json`;
+   }
+   try {
+      console.log(moduleParametersDirectoryPath);
+      if (!fs.existsSync(moduleParametersDirectoryPath)) res.status(404).send("There is no parameters for this module.");
+
+      fs.readFile(moduleParametersDirectoryPath, "utf8", function (err, data) {
+         if (err) {
+            let errorMessage = "Something went wrong in getModuleParameters: Couldn't read parameters file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+         const moduleParameters = JSON.parse(data);
+         res.status(200).send(moduleParameters);
+      });
+   } catch (e) {
+      let errorMessage = "Something went wrong in getModuleParameters";
+      console.log(errorMessage);
+      res.status(500).send(errorMessage);
+   }
 };
 
 module.exports.addNewVideo = (req, res) => {
@@ -454,7 +486,7 @@ module.exports.getConfigFileData = (req, res) => {
    if (isUserModule === "true") {
       filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
    } else {
-      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configFileName}`;
+      filePath = `src/database/users/${username}/iStreamModulesScripts/${componentName}/${moduleName}/${configFileName}`;
    }
 
    fs.readFile(filePath, "utf8", function (err, data) {
@@ -476,7 +508,7 @@ module.exports.updateConfigFileData = (req, res) => {
    if (isUserModule === true) {
       filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
    } else {
-      filePath = `src/database/users/${username}/CustomModuleConfigs/${componentName}/${moduleName}/${configName}`;
+      filePath = `src/database/users/${username}/iStreamModulesScripts/${componentName}/${moduleName}/${configName}`;
    }
 
    fs.writeFile(filePath, data, function (err) {
