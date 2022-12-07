@@ -56,11 +56,11 @@ export default class ModuleConfiguration extends Component {
                formData={this.props.selectedModule.configParametersValues}
                onSubmit={(values) => this.props.onSubmit(values.formData)}
             >
-               <div className="mt-3">
+               {/* <div className="mt-3">
                   <Button type="submit" className="float-end">
                      Submit
                   </Button>
-               </div>
+               </div> */}
             </Form>
          </div>
       );
@@ -109,9 +109,9 @@ export default class ModuleConfiguration extends Component {
             <h5>Manual Config</h5>
             <div>{configFiles}</div>
             <div className="mt-3">
-               <Button onClick={() => this.props.onSubmit()} className="float-end">
+               {/* <Button onClick={() => this.props.onSubmit()} className="float-end">
                   Submit
-               </Button>
+               </Button> */}
             </div>
          </div>
       );
@@ -184,7 +184,7 @@ export default class ModuleConfiguration extends Component {
          return (
             <Button
                variant="secondary"
-               className="float-end me-1"
+               // className="float-end me-1"
                onClick={() => {
                   this.setState({ displayAddModuleConfigFile: true });
                }}

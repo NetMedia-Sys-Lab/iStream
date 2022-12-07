@@ -72,6 +72,24 @@ export default class Stepper extends Component {
       );
    }
 
+   get submitButton() {
+      if (this.state.currentStep === this.props.totalNumberOfSteps || this.state.showSubmitButton === true) {
+         return (
+            <Button
+               className="float-end"
+               onClick={() => {
+                  this.props.onSubmit();
+                  this.props.toggleDisplay();
+                  this.setState({ currentStep: 1 });
+               }}
+            >
+               Submit
+            </Button>
+         );
+      }
+      return null;
+   }
+
    render() {
       return (
          <div>
@@ -88,10 +106,14 @@ export default class Stepper extends Component {
                         return <div key={index}></div>;
                      })}
                   </div>
+
                   <div className="mt-3">
                      {this.cancelButton}
                      {this.previousButton}
                      {this.nextButton}
+                     {this.submitButton}
+
+                     {this.props.componentName === "Video" ? this.props.addNewVideoButton : ""}
 
                      {/* {this.addNewVideoButton}
                         {this.sshButton}  */}

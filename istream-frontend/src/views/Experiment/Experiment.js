@@ -10,6 +10,7 @@ import VideoCard from "src/views/Experiment/VideoCard";
 import ServerCard from "src/views/Experiment/ServerCard";
 import TranscoderCard from "src/views/Experiment/TranscoderCard";
 import { experimentDataModel } from "src/models/Experiment";
+import { toast } from "react-toastify";
 
 function withParams(Component) {
    return (props) => <Component {...props} params={useParams()} />;
@@ -37,15 +38,19 @@ class Experiment extends Component {
    constructor(props) {
       super(props);
 
-      getExperimentConfig(this.state.user, this.state.experimentId).then((res) => {
-         this.setState({
-            experimentConfig: {
-               networkComponentExistence: res.networkComponentExistence,
-               transcoderComponentExistence: res.transcoderComponentExistence,
-               repetition: res.repetition,
-            },
+      getExperimentConfig(this.state.user, this.state.experimentId)
+         .then((res) => {
+            this.setState({
+               experimentConfig: {
+                  networkComponentExistence: res.networkComponentExistence,
+                  transcoderComponentExistence: res.transcoderComponentExistence,
+                  repetition: res.repetition,
+               },
+            });
+         })
+         .catch((e) => {
+            toast.warn(e.data);
          });
-      });
    }
 
    buildStateModal = () => {

@@ -266,6 +266,7 @@ export default class NetworkCard extends Component {
                // updateSelectedModule={this.updateSelectedModule}
                // isUserModule={this.state.selectedModule.type === "Custom"}
                componentName={this.state.componentName}
+               onSubmit={this.onModuleConfigurationSubmit}
                // updateData={this.fetchData}
                // updateConfigFiles={this.getOneModuleData}
                selectedModule={this.state.selectedModule}

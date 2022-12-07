@@ -163,17 +163,35 @@ module.exports.getExperimentConfig = (req, res) => {
    const { username } = JSON.parse(req.query.user);
    const experimentId = req.query.experimentId;
 
-   const experimentConfig = `src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json`;
+   const userExperimentsListPath = `src/database/users/${username}/experiments_list.json`;
 
-   fs.readFile(experimentConfig, "utf8", function (err, data) {
+   fs.readFile(userExperimentsListPath, "utf8", function (err, data) {
       if (err) {
          let errorMessage = "Something went wrong in getExperimentConfig: Couldn't read userExperimentsListFile file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
       const jsonData = JSON.parse(data);
+      let experimentData = jsonData.find((exp) => exp.experimentId == experimentId);
 
-      res.status(200).send(jsonData);
+      if (experimentData == undefined) {
+         res.status(400);
+         res.send("This experiment doesn't exist for the user");
+         return;
+      } else {
+         const experimentConfig = `src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json`;
+
+         fs.readFile(experimentConfig, "utf8", function (err, data) {
+            if (err) {
+               let errorMessage = "Something went wrong in getExperimentConfig: Couldn't read experimentConfig file.";
+               console.log(errorMessage);
+               res.status(500).send(errorMessage);
+            }
+            const jsonData = JSON.parse(data);
+
+            res.status(200).send(jsonData);
+         });
+      }
    });
 };
 

@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
-import { getVideosList, getDefaultVideosList } from "src/api/ModulesAPI";
+import { getUserVideosList, getDefaultVideosList, saveVideoModuleData, getVideoModuleData } from "src/api/ModulesAPI";
 import { Button } from "react-bootstrap";
-
-import "src/css/style.css";
 import { toast } from "react-toastify";
+import "src/css/style.css";
 
 export default class VideoCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       componentName: "Video",
-      videosList: [],
+      userVideosList: [],
       defaultVideosList: [],
       selectedVideos: [],
       displayModal: false,
@@ -23,18 +22,22 @@ export default class VideoCard extends Component {
 
    componentDidMount() {
       this.fetchData();
+
+      getDefaultVideosList().then((res) => {
+         res.map((element) => (element["isDefault"] = "Yes"));
+         this.setState({ defaultVideosList: res });
+      });
    }
 
    fetchData = () => {
-      getDefaultVideosList().then((res) => {
-         this.setState({ defaultVideosList: res });
+      getUserVideosList(this.state.user).then((res) => {
+         res.map((element) => (element["isDefault"] = "No"));
+         this.setState({ userVideosList: res });
       });
-      getVideosList(this.state.user).then((res) => {
-         this.setState({ videosList: res });
+
+      getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
+         if (res.id.length > 0) this.setState({ selectedVideos: res.id, showModuleConfiguration: true, machineID: res.machineID });
       });
-      // getVideoModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((res) => {
-      //    if (res.id.length > 0) this.setState({ selectedVideos: res.id, showModuleConfiguration: true, machineID: res.machineID });
-      // });
    };
 
    onVideoClick = (videoId, type) => {
@@ -49,38 +52,14 @@ export default class VideoCard extends Component {
       }
    };
 
-   tableRow = (list, isDataset) => {
-      return list.map((video) => {
+   createTable = (type) => {
+      let allVideos = [...this.state.defaultVideosList, ...this.state.userVideosList];
+
+      let videoTableData = allVideos.map((video) => {
          let isSelected = false;
          if (this.state.selectedVideos.some((element) => video.id === element)) {
             isSelected = true;
          }
-
-         if (video.isDataset === isDataset) {
-            return (
-               <tr
-                  key={video.id}
-                  onClick={() => this.onVideoClick(video.id)}
-                  className={isSelected ? "selectedRow" : ""}
-                  style={{ cursor: "pointer" }}
-               >
-                  <td>{video.name}</td>
-                  <td>{video.resolution}</td>
-                  <td>{video.frameRate}</td>
-                  <td>{video.bitRate}</td>
-               </tr>
-            );
-         } else return "";
-      });
-   };
-
-   videoSelectionTable = () => {
-      let videoTableData = this.state.defaultVideosList.map((video) => {
-         let isSelected = false;
-         if (this.state.selectedVideos.some((element) => video.id === element)) {
-            isSelected = true;
-         }
-
          if (!video.isDataset) {
             return (
                <tr
@@ -93,35 +72,13 @@ export default class VideoCard extends Component {
                   <td>{video.resolution}</td>
                   <td>{video.frameRate}</td>
                   <td>{video.bitRate}</td>
+                  <td>{video.isDefault}</td>
                </tr>
             );
          } else return "";
       });
 
-      videoTableData += this.state.videosList.map((video) => {
-         let isSelected = false;
-         if (this.state.selectedVideos.some((element) => video.id === element)) {
-            isSelected = true;
-         }
-
-         if (!video.isDataset) {
-            return (
-               <tr
-                  key={video.id}
-                  onClick={() => this.onVideoClick(video.id)}
-                  className={isSelected ? "selectedRow" : ""}
-                  style={{ cursor: "pointer" }}
-               >
-                  <td>{video.name}</td>
-                  <td>{video.resolution}</td>
-                  <td>{video.frameRate}</td>
-                  <td>{video.bitRate}</td>
-               </tr>
-            );
-         } else return "";
-      });
-
-      const datasetTableData = this.state.videosList.map((video) => {
+      let datasetTableData = allVideos.map((video) => {
          let isSelected = false;
          if (this.state.selectedVideos.some((element) => video.id === element)) {
             isSelected = true;
@@ -136,21 +93,31 @@ export default class VideoCard extends Component {
                   style={{ cursor: "pointer" }}
                >
                   <td>{video.name}</td>
+                  <td>{video.isDefault}</td>
                </tr>
             );
          } else return "";
       });
 
+      return [videoTableData, datasetTableData];
+   };
+
+   videoSelectionTable = () => {
+      const [videoTableData, datasetTableData] = this.createTable("videos");
+
       return (
          <div>
-            <h4>Videos</h4>
+            <div>
+               <h4 style={{ display: "inline" }}>Videos</h4>
+            </div>
             <table className="table table-hover p-5">
                <thead className="thead-dark">
                   <tr>
-                     <th scope="col">Video Name</th>
+                     <th scope="col">Name</th>
                      <th scope="col">Resolution</th>
                      <th scope="col">Frame Rate</th>
                      <th scope="col">Bit Rate</th>
+                     <th scope="col">Default</th>
                   </tr>
                </thead>
                <tbody>{videoTableData}</tbody>
@@ -160,12 +127,11 @@ export default class VideoCard extends Component {
                <thead className="thead-dark">
                   <tr>
                      <th scope="col">Dataset Name</th>
+                     <th scope="col">Default</th>
                   </tr>
                </thead>
                <tbody>{datasetTableData}</tbody>
             </table>
-
-            {this.addNewVideoButton}
          </div>
       );
    };
@@ -173,12 +139,14 @@ export default class VideoCard extends Component {
    showModuleConfig = () => {
       if (this.state.showModuleConfiguration !== true) return;
 
+      let allVideos = [...this.state.defaultVideosList, ...this.state.userVideosList];
+
       return (
          <div style={{ whiteSpace: "nowrap" }}>
             <hr />
             <b>Selected videos:</b>
             {this.state.selectedVideos.map((video, index) => {
-               let videoData = this.state.videosList.find((element) => element.id === video);
+               let videoData = allVideos.find((element) => element.id === video);
 
                return (
                   <div key={index}>
@@ -209,22 +177,22 @@ export default class VideoCard extends Component {
          videoList: this.state.selectedVideos,
       };
 
-      // saveVideoModuleData(data).then((res) => {
-      //    toast.success(res);
-      // });
+      saveVideoModuleData(data).then((res) => {
+         toast.success(res);
+      });
    };
 
    get addNewVideoButton() {
       return (
          <Button
             variant="secondary"
+            // className="float-end"
             className="float-end me-1"
             onClick={() => {
-               // this.props.toggleDisplay();
-               this.setState({ displayAddNewVideo: true });
+               this.setState({ displayAddNewVideo: true, displayModal: false });
             }}
          >
-            Add New
+            Add Video
          </Button>
       );
    }
@@ -244,13 +212,24 @@ export default class VideoCard extends Component {
                </h4>
                {this.showModuleConfig()}
             </div>
+
             <Stepper
                display={this.state.displayModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
                steps={[this.videoSelectionTable()]}
-               // onSubmit={this.onSubmit}
+               onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                componentName={this.state.componentName}
+               addNewVideoButton={this.addNewVideoButton}
+            />
+
+            <AddVideo
+               display={this.state.displayAddNewVideo}
+               toggleDisplay={() => {
+                  this.setState({ displayAddNewVideo: false, displayModal: true });
+               }}
+               componentName={this.state.componentName}
+               updateData={this.fetchData}
             />
          </div>
       );

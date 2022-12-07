@@ -48,11 +48,11 @@ export default class DockerConfiguration extends Component {
                   formData={this.props.dockerConfig.values}
                   onSubmit={(values) => this.props.onSubmit(values.formData)}
                >
-                  <div className="mt-3 ms-2">
+                  {/* <div className="mt-3 ms-2">
                      <Button variant="success" type="submit" className="float-end">
                         Submit
                      </Button>
-                  </div>
+                  </div> */}
                </Form>
             </div>
          </div>

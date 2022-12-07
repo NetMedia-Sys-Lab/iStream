@@ -101,8 +101,8 @@ export const addNewConfig = (request) => {
    );
 };
 
-export const getVideosList = (user) => {
-   return API.get("/modules/getVideosList", {
+export const getUserVideosList = (user) => {
+   return API.get("/modules/getUserVideosList", {
       params: {
          user,
       },
@@ -129,6 +129,23 @@ export const getDefaultVideosList = () => {
 
 export const saveVideoModuleData = (data) => {
    return API.post("/modules/saveVideoModuleData", data).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};
+
+export const getVideoModuleData = (user, componentName, experimentId) => {
+   return API.get("/modules/getVideoModuleData", {
+      params: {
+         user,
+         componentName,
+         experimentId,
+      },
+   }).then(
       (response) => {
          return response.data;
       },

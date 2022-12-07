@@ -243,12 +243,12 @@ module.exports.addNewConfigFile = (req, res) => {
    });
 };
 
-module.exports.getVideosList = (req, res) => {
+module.exports.getUserVideosList = (req, res) => {
    const { username } = JSON.parse(req.query.user);
    const videosListPath = `src/database/users/${username}/Videos/videos_list.json`;
    fs.readFile(videosListPath, "utf8", function (err, data) {
       if (err) {
-         let errorMessage = "Something went wrong in getVideosList: Couldn't read videosList file.";
+         let errorMessage = "Something went wrong in getUserVideosList: Couldn't read videosList file.";
          console.log(errorMessage);
          res.status(500).send(errorMessage);
       }
@@ -365,6 +365,59 @@ module.exports.getDefaultVideosList = (req, res) => {
       }
 
       res.send(data);
+   });
+};
+
+module.exports.saveVideoModuleData = (req, res) => {
+   const { userId, username, componentName, experimentId, videoList } = req.body;
+   const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+   fs.readFile(dependencyFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in saveVideoModuleData: Couldn't read in dependency file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+      //Convert the dependencies data into json object
+      const jsonData = JSON.parse(data);
+      jsonData[componentName].id = videoList;
+      stringifyData = JSON.stringify(jsonData);
+
+      fs.writeFile(dependencyFile, stringifyData, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in saveVideoModuleData: Couldn't write in dependency file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+         res.status(200).send("Video Data Saved Successfully");
+      });
+   });
+};
+
+module.exports.getVideoModuleData = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const componentName = req.query.componentName;
+   const experimentId = req.query.experimentId;
+
+   const userMachinesListPath = `src/database/users/${username}/machine_list.json`;
+   const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
+
+   let machineList = JSON.parse(fs.readFileSync(userMachinesListPath, "utf8"));
+
+   fs.readFile(dependencyFile, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in getVideoModuleData: Couldn't read dependency file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      const jsonData = JSON.parse(data);
+      const videosData = jsonData[componentName];
+
+      if (videosData.machineID !== "" && videosData.machineID !== "0") {
+         videosData.machineID = machineList.find((machine) => machine.machineID === videosData.machineID)["machineIp"];
+      }
+
+      res.status(200).send(videosData);
    });
 };
 

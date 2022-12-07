@@ -1,6 +1,5 @@
 import { API, DOMAIN } from "./API";
 
-
 import openSocket from "socket.io-client";
 
 export function getExperimentConfig(user, experimentId) {
@@ -14,7 +13,7 @@ export function getExperimentConfig(user, experimentId) {
          return response.data;
       },
       (error) => {
-         return error.response;
+         throw error.response;
       }
    );
 }
@@ -30,7 +29,7 @@ export function getExperimentDependency(user, experimentId) {
          return response.data;
       },
       (error) => {
-         return error.response;
+         throw error.response;
       }
    );
 }
