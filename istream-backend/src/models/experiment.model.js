@@ -1,38 +1,43 @@
-const experimentJSONData = {
+const experimentDataModel = {
    Video: {
       id: "",
       machineID: "",
    },
    Server: {
-      name: "",
-      config: "",
       type: "",
+      name: "",
+      customConfig: "",
+      configName: "",
       machineID: "",
    },
    Transcoder: {
-      name: "",
-      config: "",
       type: "",
+      name: "",
+      customConfig: "",
+      configName: "",
       machineID: "",
    },
    Network: {
-      name: "",
-      config: "",
       type: "",
-      manualConfig: "",
+      name: "",
+      customConfig: "",
+      configName: "",
       machineID: "",
    },
    Client: {
-      name: "",
-      config: "",
       type: "",
+      name: "",
+      customConfig: "",
+      configName: "",
       machineID: "",
    },
 };
 
 const experimentConfigJSONData = {
+   transcoderComponentExistence: false,
+   networkComponentExistence: false,
    repetition: 1,
 };
 
-exports.experimentJSONData = experimentJSONData;
+exports.experimentDataModel = experimentDataModel;
 exports.experimentConfigJSONData = experimentConfigJSONData;

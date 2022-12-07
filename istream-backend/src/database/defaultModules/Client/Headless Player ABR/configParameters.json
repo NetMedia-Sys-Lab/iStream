@@ -1,0 +1,29 @@
+{
+    "customConfig": false,
+    "defaultConfig": true,
+    "parameters": {
+        "type": "object",
+        "title": "Headless Player's Config",
+        "properties": {
+            "MPDName": {
+                "title": "MPD File Name",
+                "type": "string",
+                "default": "output.mpd"
+            },
+            "AdaptationAlgorithm": {
+                "title": "Adaptation Algorithm Method",
+                "type": "string",
+                "enum": ["Buffer-based ABR", "Bandwidth-based ABR", "Hybrid ABR"],
+                "default": "Hybrid ABR"
+            },
+            "Port:": {
+                "title": "Server/Network Port",
+                "type": "number",
+                "default": 8080,
+                "description": "If you set your own Network or Server Modules provide the port that Headless Player should connect to."
+            }
+        }
+    }
+}
+
+

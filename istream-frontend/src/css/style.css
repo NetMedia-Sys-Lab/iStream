@@ -16,8 +16,8 @@ code {
 
 main {
 	background-color: #f6f6f6;
-	text-align: right;
-	text-align: justify;
+	text-align: left;
+	/* text-align: justify; */
 }
   
 .main-height {
@@ -70,7 +70,7 @@ input {
 
 .modal-size{
 	width: 35vw;
-    max-width: 35vw;
+   max-width: 35vw;
 	max-height: 50vh;
 }
 
@@ -110,3 +110,29 @@ input {
 	-o-border-radius: 50% !important;
 }  
 
+.module-card {
+	border-radius: 10px;
+	padding: 20px;
+	cursor: pointer;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+}
+
+.module-icon {
+	color: #244D5B;
+}
+
+.blur {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+th {
+	border-bottom: 2px solid black;
+}

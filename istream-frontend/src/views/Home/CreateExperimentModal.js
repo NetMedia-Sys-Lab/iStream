@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { createNewExperiment } from "src/api/ExperimentAPI";
+import { createNewExperiment } from "src/api/HomeAPI";
 import { toast } from "react-toastify";
 
 export default class CreateExperimentModal extends Component {

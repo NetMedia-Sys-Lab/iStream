@@ -1,31 +1,20 @@
 const router = require("express").Router();
-const controller = require("../controllers/modules/modules.controller");
+const controller = require("../controllers/modules.controller");
 
 router.get("/getDefaultModules", controller.getDefaultModules);
 router.get("/getUserModules", controller.getUserModules);
-router.get("/getModuleScripts", controller.getModuleScripts); //This need to be deleted once the changes ended
-router.get("/getModuleParameters", controller.getModuleParameters);
-router.get("/getVideosList", controller.getVideosList);
-router.get("/getModuleData", controller.getModuleData);
-router.get("/getNetworkConfiguration", controller.getNetworkConfiguration);
-router.get("/getServerConfiguration", controller.getServerConfiguration);
-router.get("/getHeadlessPlayerConfiguration", controller.getHeadlessPlayerConfiguration);
-router.get("/getVideoModuleData", controller.getVideoModuleData);
+router.get("/getModuleConfigsAndParameters", controller.getModuleConfigsAndParameters);
 router.get("/getConfigFileData", controller.getConfigFileData);
+router.get("/getVideosList", controller.getVideosList);
+router.get("/getDefaultVideosList", controller.getDefaultVideosList);
+router.get("/getModuleData", controller.getModuleData);
+router.get("/getModuleDockerConfig", controller.getModuleDockerConfig);
 
 router.post("/create", controller.create);
-router.post("/addNewScript", controller.addNewScript);
+router.post("/updateConfigFileData", controller.updateConfigFileData);
+router.post("/addNewConfigFile", controller.addNewConfigFile);
 router.post("/addNewVideo", controller.addNewVideo);
 router.post("/addNewVideoDataset", controller.addNewVideoDataset);
 router.post("/saveModuleData", controller.saveModuleData);
-router.post("/setNetworkConfiguration", controller.setNetworkConfiguration);
-router.post("/setServerConfiguration", controller.setServerConfiguration);
-router.post("/setHeadlessPlayerConfiguration", controller.setHeadlessPlayerConfiguration);
-router.post("/saveVideoModuleData", controller.saveVideoModuleData);
-router.post("/updateConfigFileData", controller.updateConfigFileData);
-
-router.delete("/userModule", controller.deleteUserModule);
-router.delete("/userVideo", controller.deleteUserVideo);
-
 
 module.exports = router;

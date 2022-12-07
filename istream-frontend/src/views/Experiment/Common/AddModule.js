@@ -33,7 +33,7 @@ export default class AddModule extends Component {
    render() {
       return (
          <div>
-            <Modal dialogClassName="modal-size" show={this.props.display}>
+            <Modal dialogClassName="modal-size" show={this.props.display} className="blur">
                <Modal.Header>
                   <Modal.Title>Add New {this.props.componentName} Module</Modal.Title>
                </Modal.Header>

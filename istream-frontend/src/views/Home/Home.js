@@ -18,10 +18,7 @@ export default class Home extends Component {
                <div className="container">
                   <div className="row justify-content-end mt-4">
                      <h2 className="col-md-10">My Experiments</h2>
-                     <Button
-                        className="col-md-2"
-                        onClick={() => this.setState({ displayCreateExperimentModal: true })}
-                     >
+                     <Button className="col-md-2" onClick={() => this.setState({ displayCreateExperimentModal: true })}>
                         Create New Experiment
                      </Button>
                   </div>

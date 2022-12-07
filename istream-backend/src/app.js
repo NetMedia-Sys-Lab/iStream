@@ -9,7 +9,7 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 
 //CONSTANTS
-const PORT = process.env.PORT || 7070;
+const PORT = process.env.PORT || 8888;
 
 //MIDDLEWARES
 app.use(express.json()); //to return files as json
@@ -37,7 +37,7 @@ const io = new Server(server, {
    },
 });
 
-let experimentController = require("./controllers/experiment/experiment.controller");
+let experimentController = require("./controllers/experiment.controller");
 
 let build = io.of("/build").on("connection", (socket) => {
    experimentController.build(build, socket);

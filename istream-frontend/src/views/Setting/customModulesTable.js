@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getUserModules, deleteUserModule } from "src/api/ModulesAPI";
+// import { getUserModules, deleteUserModule } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
 export default class CustomModulesTable extends Component {
@@ -14,16 +14,16 @@ export default class CustomModulesTable extends Component {
    }
 
    fetchData = () => {
-      getUserModules(this.state.user, this.props.componentName).then((res) => {
-         this.setState({ userModules: res });
-      });
+      // getUserModules(this.state.user, this.props.componentName).then((res) => {
+      //    this.setState({ userModules: res });
+      // });
    };
 
    deleteUserModule = (moduleName) => {
-      deleteUserModule(this.state.user, this.props.componentName, moduleName).then((res) => {
-         this.fetchData();
-         toast.success(res);
-      });
+      // deleteUserModule(this.state.user, this.props.componentName, moduleName).then((res) => {
+      //    this.fetchData();
+      //    toast.success(res);
+      // });
    };
 
    userModulesTable = () => {

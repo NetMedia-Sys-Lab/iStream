@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
-import {
-   getUserExperimentsList,
-   deleteExperiment,
-   duplicateExperiment,
-} from "src/api/ExperimentAPI";
+import { getUserExperimentsList, deleteExperiment, duplicateExperiment } from "src/api/HomeAPI";
 
 export default class ExperimentsList extends Component {
    state = {
@@ -129,10 +125,6 @@ export default class ExperimentsList extends Component {
    };
 
    render() {
-      return (
-         <div>
-            {this.state.userExperimentsList.length === 0 ? this.emptyTable() : this.showTable()}
-         </div>
-      );
+      return <div>{this.state.userExperimentsList.length === 0 ? this.emptyTable() : this.showTable()}</div>;
    }
 }

@@ -1,0 +1,34 @@
+{
+   "Video": {
+      "id": "",
+      "machineID": ""
+   },
+   "Server": {
+      "type": "",
+      "name": "",
+      "customConfig": "",
+      "config": "",
+      "machineID": ""
+   },
+   "Transcoder": {
+      "type": "",
+      "name": "",
+      "customConfig": "",
+      "config": "",
+      "machineID": ""
+   },
+   "Network": {
+      "type": "",
+      "name": "",
+      "customConfig": "",
+      "config": "",
+      "machineID": ""
+   },
+   "Client": {
+      "type": "",
+      "name": "",
+      "customConfig": "",
+      "config": "",
+      "machineID": ""
+   }
+}

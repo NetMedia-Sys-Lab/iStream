@@ -1,357 +1,178 @@
 import React, { Component } from "react";
+
 import Stepper from "src/views/Experiment/Common/Stepper";
-import EditConfig from "src/views/Experiment/Common/EditConfig";
 import {
    getDefaultModules,
    getUserModules,
-   getModuleScripts,
-   saveExperimentModuleData,
+   getModuleConfigsAndParameters,
+   saveModuleData,
    getModuleData,
-   getNetworkConfiguration,
-   setNetworkConfiguration,
+   getModuleDockerConfig,
 } from "src/api/ModulesAPI";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import ModuleSelection from "src/views/Experiment/Common/ModuleSelection";
+import ModuleConfiguration from "src/views/Experiment/Common/ModuleConfiguration";
+import DockerConfiguration from "src/views/Experiment/Common/DockerConfiguration";
 import { toast } from "react-toastify";
 
 export default class NetworkCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
-      componentName: "Network",
+      totalNumberOfSteps: 3,
+      componentName: this.props.componentName,
       displayStepperModal: false,
-      totalNumberOfSteps: 2,
-      moduleTypes: ["iStream", "Custom"],
-      iStreamModuleOptions: [],
-      userModuleOptions: [],
-      userModuleConfigFiles: ["No Config"],
-      iStreamModuleConfigFiles: ["No Config"],
-      iStreamNetworkManualConfig: false,
-      selectedModuleType: "",
-      selectedModule: "",
-      selectedConfigFile: "",
-      networkConfig: {
-         port: 9090,
-         delay: 0,
-         packetLoss: 0,
-         corruptPacket: 0,
-         bandwidth: 0,
-      },
+      stateUpdated: false,
       showModuleConfiguration: false,
-      displayEditConfigModal: false,
-      selectedEditFile: "",
-      machineID: "",
+      modules: {
+         types: ["iStream", "Custom"],
+         names: {
+            iStream: [],
+            custom: [],
+         },
+      },
+      selectedModule: {
+         type: "",
+         name: "",
+         customConfiguration: false,
+         machineID: "",
+         selectedConfigFile: "",
+         customConfigFiles: [],
+         configParameters: {},
+      },
+      savedModule: {
+         type: "",
+         name: "",
+         customConfiguration: false,
+         machineID: "",
+         selectedConfigFile: "",
+         configParametersValues: {},
+         configParameters: {},
+      },
+      dockerConfig: {
+         parameters: {},
+         values: {},
+      },
    };
 
    constructor(props) {
       super(props);
-      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         if (data.type === "iStream" && data.name === "Default Network") {
-            getNetworkConfiguration(this.state.user, this.props.experimentId).then((data) => {
-               this.setState({
-                  networkConfig: {
-                     port: data.port,
-                     delay: data.delay,
-                     packetLoss: data.packetLoss,
-                     corruptPacket: data.corruptPacket,
-                     bandwidth: data.bandwidth,
-                  },
-               });
-            });
-         }
 
-         if (data.name !== "") {
-            this.setState({
-               selectedModuleType: data.type,
-               selectedModule: data.name,
-               selectedConfigFile: data.config,
-               showModuleConfiguration: true,
-               machineID: data.machineID,
-               iStreamNetworkManualConfig: data.manualConfig === "true",
-            });
-            this.getOneModuleConfigFiles(data.name);
-         }
+      getDefaultModules(this.state.componentName).then((res) => {
+         let tempState = this.state.modules;
+         tempState.names.iStream = res;
+         this.setState({ modules: tempState });
       });
+
+      getModuleDockerConfig(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         this.setState({ dockerConfig: { parameters: data.parameters, values: data.values } });
+      });
+
       this.fetchData();
+      this.getUserModuleData();
    }
 
    fetchData = () => {
-      getDefaultModules(this.state.componentName).then((res) => {
-         this.setState({ iStreamModuleOptions: res });
-      });
-
-      getUserModules(this.state.user, this.state.componentName).then((res) => {
-         this.setState({ userModuleOptions: res });
-      });
-
       getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
          if (data.name !== "") {
-            this.setState({
-               showModuleConfiguration: true,
-               machineID: data.machineID,
-            });
+            getModuleConfigsAndParameters(this.state.user, this.state.componentName, data.name, data.type === "Custom" ? true : false).then(
+               (res) => {
+                  this.setState({
+                     savedModule: {
+                        type: data.type,
+                        name: data.name,
+                        customConfiguration: data.customConfig,
+                        machineID: data.machineID,
+                        selectedConfigFile: data.configName,
+                        configParametersValues: data.defaultConfigParameters,
+                        configParameters: res.parameters,
+                     },
+                     showModuleConfiguration: true,
+                  });
+               }
+            );
          }
       });
    };
 
-   getOneModuleConfigFiles = (moduleName) => {
-      getModuleScripts(this.state.user, this.state.componentName, moduleName, this.state.selectedModuleType === "Custom" ? true : false).then(
-         (res) => {
-            res.unshift("No Config");
+   getUserModuleData = () => {
+      getUserModules(this.state.user, this.state.componentName).then((res) => {
+         let tempState = this.state.modules;
+         tempState.names.custom = res;
+         this.setState({ modules: tempState });
+      });
+   };
 
-            if (this.state.selectedModuleType === "Custom") {
-               this.setState({ userModuleConfigFiles: res });
-            } else {
-               this.setState({ iStreamModuleConfigFiles: res });
+   getOneModuleInfo = () => {
+      getModuleConfigsAndParameters(
+         this.state.user,
+         this.state.componentName,
+         this.state.selectedModule.name,
+         this.state.selectedModule.type === "Custom" ? true : false
+      )
+         .then((res) => {
+            res.allConfigs.unshift("No Config");
+            let tempState = this.state.selectedModule;
+            tempState.customConfigFiles = res.allConfigs;
+            tempState.configParameters = res.parameters;
+            if (
+               Object.keys(res.parameters).length === 0 ||
+               (res.parameters["customConfig"] === true && res.parameters["defaultConfig"] === false)
+            ) {
+               tempState.customConfiguration = true;
+            } else if (res.parameters["customConfig"] === false && res.parameters["defaultConfig"] === true) {
+               tempState.customConfiguration = false;
             }
-         }
-      );
+            this.setState({ selectedModule: tempState });
+         })
+         .catch((e) => {
+            toast.warn(e.data);
+         });
    };
 
-   onNetworkConfigChange = (e) => {
-      this.setState({
-         networkConfig: {
-            ...this.state.networkConfig,
-            [e.target.id]: e.target.value,
-         },
+   updateSelectedModule = (mode, updatedState) => {
+      if (mode === "type") {
+         let tempState = this.state.selectedModule;
+         tempState.type = updatedState;
+         this.setState({ selectedModule: tempState });
+      } else if (mode === "name") {
+         let tempState = this.state.selectedModule;
+         tempState.name = updatedState;
+         this.setState({ selectedModule: tempState });
+      } else if (mode === "customConfiguration") {
+         let tempState = this.state.selectedModule;
+         tempState.customConfiguration = updatedState;
+         this.setState({ selectedModule: tempState });
+      } else if (mode === "selectedConfigFile") {
+         let tempState = this.state.selectedModule;
+         tempState.selectedConfigFile = updatedState;
+         this.setState({ selectedModule: tempState });
+      }
+   };
+
+   onModuleConfigurationSubmit = (values) => {
+      let data = {
+         userId: this.state.user.userId,
+         username: this.state.user.username,
+         componentName: this.state.componentName,
+         experimentId: this.props.experimentId,
+         selectedModuleType: this.state.selectedModule.type,
+         selectedModule: this.state.selectedModule.name,
+         customConfig: this.state.selectedModule.customConfiguration,
+      };
+      if (this.state.selectedModule.customConfiguration) {
+         data["selectedConfigFileName"] = this.state.selectedModule.selectedConfigFile;
+      } else {
+         data["defaultConfigParameters"] = values;
+      }
+
+      saveModuleData(data).then((res) => {
+         this.fetchData();
+         this.setState({ showModuleConfiguration: true, displayStepperModal: !this.state.displayStepperModal });
+         toast.success(res);
       });
    };
 
-   radioButtonOptions = (list, type) => {
-      return list.map((item) => {
-         return (
-            <div className="form-check" key={item}>
-               <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
-                  onChange={() => {
-                     if (type === "Module") {
-                        this.setState({
-                           selectedConfigFile: "",
-                           selectedModule: item,
-                        });
-                        this.getOneModuleConfigFiles(item);
-                     } else if (type === "Config") {
-                        this.setState({ selectedConfigFile: item });
-                     }
-                  }}
-                  checked={type === "Module" ? this.state.selectedModule === item : this.state.selectedConfigFile === item}
-               />
-               <label className="form-check-label">{item}</label>
-               {type === "Config" && item !== "No Config" ? (
-                  <button
-                     type="button"
-                     className="btn btn-link p-0 m-0 center"
-                     onClick={() => this.setState({ selectedEditFile: item, displayEditConfigModal: true, displayStepperModal: false })}
-                  >
-                     Edit
-                  </button>
-               ) : (
-                  ""
-               )}
-            </div>
-         );
-      });
-   };
-
-   moduleType = () => {
-      const moduleTypeOptions = (
-         <DropdownButton
-            id="dropdown-basic-button"
-            title={this.state.selectedModuleType === "" ? "Select Module Type" : this.state.selectedModuleType}
-            variant="secondary"
-         >
-            {this.state.moduleTypes.map((moduleType) => (
-               <Dropdown.Item key={moduleType}>
-                  <div
-                     onClick={() =>
-                        this.setState({
-                           selectedModuleType: moduleType,
-                           selectedModule: "",
-                           selectedConfigFile: "",
-                           showModuleConfiguration: false,
-                        })
-                     }
-                  >
-                     {moduleType}
-                  </div>
-               </Dropdown.Item>
-            ))}
-         </DropdownButton>
-      );
-      const iStreamModuleOptions = this.radioButtonOptions(this.state.iStreamModuleOptions, "Module");
-      const userModuleOptions =
-         this.state.userModuleOptions.length === 0 ? (
-            <div>No Modules found. Please add a module to proceed.</div>
-         ) : (
-            this.radioButtonOptions(this.state.userModuleOptions, "Module")
-         );
-
-      return (
-         <div className="row mb-2">
-            <div className="col-6">
-               <h5>Select Module Type</h5>
-               <div>{moduleTypeOptions}</div>
-            </div>
-            <div className="col-6">
-               <div>{this.state.selectedModuleType !== "" ? <h5>Select Module</h5> : ""}</div>
-               <div>
-                  {this.state.selectedModuleType !== ""
-                     ? this.state.selectedModuleType === "iStream"
-                        ? iStreamModuleOptions
-                        : userModuleOptions
-                     : ""}
-               </div>
-            </div>
-         </div>
-      );
-   };
-
-   iStreamModuleConfig = () => {
-      if (this.state.selectedModuleType !== "iStream") return null;
-
-      return (
-         <div>
-            <div className="form-check">
-               <input
-                  className="form-check-input"
-                  type="radio"
-                  name="DefaultConfig"
-                  id="DefaultConfig"
-                  onChange={() => {
-                     this.setState({ iStreamNetworkManualConfig: false });
-                  }}
-                  checked={!this.state.iStreamNetworkManualConfig}
-               />
-               <label className="form-check-label">Default Config</label>
-            </div>
-            <div className="form-check">
-               <input
-                  className="form-check-input"
-                  type="radio"
-                  name="CustomConfig"
-                  id="CustomConfig"
-                  onChange={() => {
-                     this.setState({ iStreamNetworkManualConfig: true });
-                  }}
-                  checked={this.state.iStreamNetworkManualConfig}
-               />
-               <label className="form-check-label">Custom Config</label>
-            </div>
-            <hr />
-            <div className="form-group row">
-               <label className="col-6 col-form-label">Network Port:</label>
-               <div className="col-6">
-                  <input
-                     className="form-control"
-                     type="number"
-                     value={this.state.networkConfig.port}
-                     id="port"
-                     onChange={this.onNetworkConfigChange}
-                     required
-                  />
-               </div>
-            </div>
-            <hr />
-            {this.state.iStreamNetworkManualConfig ? this.iStreamNetworkCustomConfig() : this.iStreamNetworkDefaultConfig()}
-         </div>
-      );
-   };
-
-   iStreamNetworkDefaultConfig = () => {
-      return (
-         <div>
-            <h5>Network's Config</h5>
-            <div>
-               <div className="form-group row">
-                  <label className="col-6 col-form-label">Delay (ms):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="number"
-                        value={this.state.networkConfig.delay}
-                        id="delay"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Packet Loss (%):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="number"
-                        value={this.state.networkConfig.packetLoss}
-                        id="packetLoss"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Corrupt Packet (%):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="number"
-                        value={this.state.networkConfig.corruptPacket}
-                        id="corruptPacket"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-               <div className="form-group row mt-1">
-                  <label className="col-6 col-form-label">Bandwidth Limit (Kbps):</label>
-                  <div className="col-6">
-                     <input
-                        className="form-control"
-                        type="number"
-                        placeholder="Without Limit"
-                        value={this.state.networkConfig.bandwidth === 0 ? "" : this.state.networkConfig.bandwidth}
-                        id="bandwidth"
-                        onChange={this.onNetworkConfigChange}
-                        required
-                     />
-                  </div>
-               </div>
-            </div>
-         </div>
-      );
-   };
-
-   iStreamNetworkCustomConfig = () => {
-      const iStreamModuleConfigFiles =
-         this.state.iStreamModuleConfigFiles.length === 0 ? (
-            <div>No Config files found. Please add a new config file to proceed.</div>
-         ) : (
-            this.radioButtonOptions(this.state.iStreamModuleConfigFiles, "Config")
-         );
-
-      return (
-         <div>
-            <h5>Manual Config</h5>
-            <div>{iStreamModuleConfigFiles}</div>
-         </div>
-      );
-   };
-
-   userModuleConfig = () => {
-      if (this.state.selectedModuleType !== "Custom") return null;
-      const userModuleConfigFiles =
-         this.state.userModuleConfigFiles.length === 0 ? (
-            <div>No Config files found. Please add a new config file to proceed.</div>
-         ) : (
-            this.radioButtonOptions(this.state.userModuleConfigFiles, "Config")
-         );
-
-      return (
-         <div>
-            <h5>Config Module</h5>
-            <div>{userModuleConfigFiles}</div>
-         </div>
-      );
+   onDockerConfigurationSubmit = (values) => {
+      console.log(values);
    };
 
    showModuleConfig = () => {
@@ -359,16 +180,16 @@ export default class NetworkCard extends Component {
       let baseTemplate = (
          <div>
             <hr />
-            <strong>Type: </strong>
-            {this.state.selectedModuleType}
-            <br />
             <strong>Name: </strong>
-            {this.state.selectedModule}
+            {this.state.savedModule.name}
             <br />
-            {this.state.machineID !== "" && this.state.machineID !== "0" ? (
+            <strong>Type: </strong>
+            {this.state.savedModule.type}
+            <br />
+            {this.state.savedModule.machineID !== "" && this.state.savedModule.machineID !== "0" ? (
                <div>
                   <strong>Machine IP: </strong>
-                  {this.state.machineID}
+                  {this.state.savedModule.machineID}
                </div>
             ) : (
                ""
@@ -376,127 +197,80 @@ export default class NetworkCard extends Component {
             <hr />
          </div>
       );
-
-      let portTemplate = "";
-      if (this.state.selectedModuleType === "iStream") {
-         portTemplate = (
+      let configTemplate = "";
+      if (this.state.savedModule.customConfiguration === true) {
+         configTemplate = (
             <div>
-               <strong>Port: </strong>
-               {this.state.networkConfig.port}
-            </div>
-         );
-      }
-
-      if (this.state.selectedModuleType === "iStream" && !this.state.iStreamNetworkManualConfig)
-         return (
-            <div >
-               {baseTemplate}
-               {portTemplate}
-               <strong> Delay: </strong>
-               {this.state.networkConfig.delay}s
-               <br />
-               <strong> Packet Loss: </strong>
-               {this.state.networkConfig.packetLoss}%
-               <br />
-               <strong> Corrupt Packet: </strong>
-               {this.state.networkConfig.corruptPacket}%
-               <br />
-               <strong> Bandwidth: </strong>
-               {this.state.networkConfig.bandwidth === 0 || this.state.networkConfig.bandwidth === "0"
-                  ? "Without limit"
-                  : this.state.networkConfig.bandwidth + "Kbps"}
-            </div>
-         );
-      else
-         return (
-            <div style={{ whiteSpace: "nowrap" }}>
-               {baseTemplate}
-               {portTemplate}
                <strong>Config: </strong>
-               {this.state.selectedConfigFile}
+               {this.state.savedModule.selectedConfigFile}
             </div>
          );
-   };
-
-   onSubmit = () => {
-      this.setState({ showModuleConfiguration: true });
-
-      const data = {
-         userId: this.state.user.userId,
-         username: this.state.user.username,
-         componentName: this.state.componentName,
-         experimentId: this.props.experimentId,
-         selectedModuleType: this.state.selectedModuleType,
-         selectedModule: this.state.selectedModule,
-         selectedConfigFile: this.state.selectedConfigFile,
-         iStreamNetworkManualConfig: this.state.iStreamNetworkManualConfig,
-      };
-
-      saveExperimentModuleData(data).then((res) => {
-         toast.success(res);
-      });
-
-      if (this.state.selectedModuleType === "iStream" && this.state.selectedModule === "Default Network") {
-         const networkData = {
-            userId: this.state.user.userId,
-            username: this.state.user.username,
-            experimentId: this.props.experimentId,
-            port: Number(this.state.networkConfig.port),
-            delay: Number(this.state.networkConfig.delay),
-            packetLoss: Number(this.state.networkConfig.packetLoss),
-            corruptPacket: Number(this.state.networkConfig.corruptPacket),
-            bandwidth: Number(this.state.networkConfig.bandwidth),
-         };
-         setNetworkConfiguration(networkData).then((res) => {});
+      } else {
+         configTemplate = Object.keys(this.state.savedModule.configParametersValues).map((key, index) => {
+            return (
+               <div key={index}>
+                  <strong> {this.state.savedModule.configParameters["parameters"]["properties"][key]["title"]}: </strong>
+                  {key === "bandwidth" && this.state.savedModule.configParametersValues[key] === 0
+                     ? "Without limit"
+                     : this.state.savedModule.configParametersValues[key]}
+               </div>
+            );
+         });
       }
+      return (
+         <div>
+            <div>{baseTemplate}</div>
+            <div>{configTemplate}</div>
+         </div>
+      );
    };
 
    render() {
       return (
          <div className="row justify-content-center mx-1">
-            <div
-               className="center-container"
-               style={{ borderRadius: "10px", padding: "20px", cursor: "pointer" }}
-               onClick={() => this.setState({ displayStepperModal: true })}
-            >
+            <div className="center-container module-card" onClick={() => this.setState({ displayStepperModal: true })}>
                <h4 className="text-center">
-                  <i className="fa fa-wifi" style={{ color: "#244D5B" }}></i>
+                  <i className="fa fa-wifi module-icon"></i>
                   <br />
                   {this.state.componentName}
                </h4>
                {this.showModuleConfig()}
             </div>
+
             <Stepper
                display={this.state.displayStepperModal}
                totalNumberOfSteps={this.state.totalNumberOfSteps}
-               validNextStep={this.state.selectedModule !== "" ? true : false}
-               steps={[this.moduleType(), [this.iStreamModuleConfig(), this.userModuleConfig()]]}
-               onSubmit={this.onSubmit}
+               steps={[
+                  <ModuleSelection
+                     modules={this.state.modules}
+                     selectedModule={this.state.selectedModule}
+                     updateSelectedModule={this.updateSelectedModule}
+                     componentName={this.state.componentName}
+                     updateData={this.getUserModuleData}
+                  />,
+                  <DockerConfiguration
+                     componentName={this.state.componentName}
+                     dockerConfig={this.state.dockerConfig}
+                     onSubmit={this.onDockerConfigurationSubmit}
+                  />,
+                  <ModuleConfiguration
+                     componentName={this.state.componentName}
+                     selectedModule={this.state.selectedModule}
+                     updateSelectedModule={this.updateSelectedModule}
+                     getOneModuleInfo={this.getOneModuleInfo}
+                     onSubmit={this.onModuleConfigurationSubmit}
+                  />,
+               ]}
+               getOneModuleInfo={this.getOneModuleInfo}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
-               isUserModule={this.state.selectedModuleType === "Custom"}
+               // updateSelectedModule={this.updateSelectedModule}
+               // isUserModule={this.state.selectedModule.type === "Custom"}
                componentName={this.state.componentName}
-               updateData={this.fetchData}
-               updateConfigFiles={this.getOneModuleConfigFiles}
+               // updateData={this.fetchData}
+               // updateConfigFiles={this.getOneModuleData}
                selectedModule={this.state.selectedModule}
-               experimentId={this.props.experimentId}
-               hideAddNewConfig={
-                  !(
-                     this.state.selectedModuleType === "Custom" ||
-                     (this.state.selectedModuleType === "iStream" && this.state.iStreamNetworkManualConfig)
-                  )
-               }
+               // experimentId={this.props.experimentId}
             />
-            {this.state.displayEditConfigModal ? (
-               <EditConfig
-                  display={this.state.displayEditConfigModal}
-                  configName={this.state.selectedEditFile}
-                  moduleName={this.state.selectedModule}
-                  componentName={this.state.componentName}
-                  detached={() => this.setState({ displayEditConfigModal: false, displayStepperModal: true })}
-               />
-            ) : (
-               ""
-            )}
          </div>
       );
    }

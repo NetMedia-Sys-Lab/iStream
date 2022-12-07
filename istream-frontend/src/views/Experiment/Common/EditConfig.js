@@ -53,7 +53,12 @@ export default class EditConfig extends Component {
    render() {
       return (
          <div>
-            <Modal show={this.props.display} dialogClassName={this.state.fullscreen ? "" : "modal-size"} fullscreen={this.state.fullscreen}>
+            <Modal
+               show={this.props.display}
+               dialogClassName={this.state.fullscreen ? "" : "modal-size"}
+               fullscreen={this.state.fullscreen}
+               className="blur"
+            >
                <Modal.Header>
                   <Modal.Title>Edit Config {this.props.configName}</Modal.Title>
                   <Button

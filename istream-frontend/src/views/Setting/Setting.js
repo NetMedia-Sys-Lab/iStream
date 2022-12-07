@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Header from "src/views/Common/Header";
 import CustomModulesTable from "src/views/Setting/customModulesTable";
-import { getUserMachineList, deleteUserMachine } from "src/api/ExperimentAPI";
-import { getVideosList, deleteUserVideo } from "src/api/ModulesAPI";
+// import { getUserMachineList, deleteUserMachine } from "src/api/ExperimentAPI";
+// import { getVideosList, deleteUserVideo } from "src/api/ModulesAPI";
 import InformationButton from "src/views/Common/InformationButton";
 import { toast } from "react-toastify";
 
@@ -20,26 +20,26 @@ export default class Setting extends Component {
    }
 
    fetchData = () => {
-      getUserMachineList(this.state.user).then((res) => {
-         this.setState({ machineList: res });
-      });
-      getVideosList(this.state.user).then((res) => {
-         this.setState({ videosList: res });
-      });
+      // getUserMachineList(this.state.user).then((res) => {
+      //    this.setState({ machineList: res });
+      // });
+      // getVideosList(this.state.user).then((res) => {
+      //    this.setState({ videosList: res });
+      // });
    };
 
    deleteUserMachine = (machineID) => {
-      deleteUserMachine(this.state.user, machineID).then((res) => {
-         this.fetchData();
-         toast.success(res);
-      });
+      // deleteUserMachine(this.state.user, machineID).then((res) => {
+      //    this.fetchData();
+      //    toast.success(res);
+      // });
    };
 
    deleteUserVideo = (videoID) => {
-      deleteUserVideo(this.state.user, videoID).then((res) => {
-         this.fetchData();
-         toast.success(res);
-      });
+      // deleteUserVideo(this.state.user, videoID).then((res) => {
+      //    this.fetchData();
+      //    toast.success(res);
+      // });
    };
 
    machinesTable = () => {

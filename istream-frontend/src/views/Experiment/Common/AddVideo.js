@@ -22,7 +22,6 @@ export default class AddVideo extends Component {
       var newVideoData = new FormData();
       newVideoData.append("userId", this.state.user.userId);
       newVideoData.append("username", this.state.user.username);
-      newVideoData.append("componentName", this.props.componentName);
       newVideoData.append("resolution", this.state.resolution);
       newVideoData.append("frameRate", this.state.frameRate);
       newVideoData.append("codec", this.state.codec);
@@ -42,7 +41,6 @@ export default class AddVideo extends Component {
       const newModuleData = new FormData();
       newModuleData.append("userId", this.state.user.userId);
       newModuleData.append("username", this.state.user.username);
-      newModuleData.append("componentName", this.props.componentName);
       newModuleData.append("datasetName", this.state.datasetName);
       newModuleData.append("dataset", this.state.dataset);
 
@@ -179,7 +177,7 @@ export default class AddVideo extends Component {
 
       return (
          <div>
-            <Modal show={this.props.display}>
+            <Modal show={this.props.display} className="blur">
                <Modal.Header>
                   <Modal.Title>Upload New Video/Dataset</Modal.Title>
                </Modal.Header>
