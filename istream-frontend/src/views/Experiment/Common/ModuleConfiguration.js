@@ -108,7 +108,13 @@ export default class ModuleConfiguration extends Component {
          );
       return (
          <div>
-            <h5>Advance Configuration File</h5>
+            <div>
+               <h5 style={{ display: "inline" }}>Advance Configuration File</h5>
+               {this.addModuleConfigButton}
+               
+            </div>
+            <br />
+
             <div>{configFiles}</div>
          </div>
       );
@@ -161,36 +167,15 @@ export default class ModuleConfiguration extends Component {
          );
       }
 
-      // if (
-      //    this.props.selectedModule.configParameters["customConfig"] === true &&
-      //    this.props.selectedModule.configParameters["defaultConfig"] === true
-      // ) {
-      //    configurationForm = (
-      //       <div>
-      //          {this.configTypeSelection()}
-      //          {this.props.selectedModule.customConfiguration ? this.customConfig() : this.defaultConfig()}
-      //       </div>
-      //    );
-      // } else if (
-      //    this.props.selectedModule.configParameters["customConfig"] === true &&
-      //    this.props.selectedModule.configParameters["defaultConfig"] === false
-      // ) {
-      //    configurationForm = <div>{this.customConfig()}</div>;
-      // } else if (
-      //    this.props.selectedModule.configParameters["customConfig"] === false &&
-      //    this.props.selectedModule.configParameters["defaultConfig"] === true
-      // ) {
-      //    configurationForm = <div>{this.defaultConfig()}</div>;
-      // }
       return configurationForm;
    };
 
    get addModuleConfigButton() {
-      if (Object.keys(this.props.selectedModule.configParameters).length === 0 || this.props.selectedModule.advanceConfiguration) {
+      if (this.props.selectedModule.advanceConfiguration) {
          return (
             <Button
                variant="secondary"
-               // className="float-end me-1"
+               className="float-end me-1"
                onClick={() => {
                   this.setState({ displayAddModuleConfigFile: true });
                }}
@@ -221,7 +206,7 @@ export default class ModuleConfiguration extends Component {
                />
             ) : (
                ""
-            )}
+            )} */}
 
             <AddConfigFile
                display={this.state.displayAddModuleConfigFile}
@@ -230,8 +215,6 @@ export default class ModuleConfiguration extends Component {
                updateData={this.props.getOneModuleInfo}
                selectedModule={this.props.selectedModule}
             />
-
-            {this.addModuleConfigButton} */}
          </div>
       );
    }

@@ -94,18 +94,13 @@ module.exports.addNewConfigFile = (req, res) => {
    const { userId, username, isUserModule, componentName, moduleName, configFileName } = req.body;
    const file = req.files.configFile;
 
-   let filePath = "";
-   if (isUserModule === "true") {
-      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}.${
-         file.name.split(".")[1]
-      }`;
-   } else {
-      const scriptsFileDirectory = `src/database/users/${username}/iStreamModulesConfigs/${componentName}/${moduleName}`;
-      fs.mkdirSync(scriptsFileDirectory, { recursive: true });
-      filePath = `src/database/users/${username}/iStreamModulesConfigs/${componentName}/${moduleName}/${configFileName}.${
-         file.name.split(".")[1]
-      }`;
-   }
+   let scriptFileDirectory = "";
+
+   if (isUserModule === "true") scriptFileDirectory = `src/database/users/${username}/ModulesConfigs/User/${componentName}/${moduleName}`;
+   else scriptFileDirectory = `src/database/users/${username}/ModulesConfigs/iStream/${componentName}/${moduleName}`;
+
+   fs.mkdirSync(scriptFileDirectory, { recursive: true });
+   let filePath = `${scriptFileDirectory}/${configFileName}.${file.name.split(".")[1]}`;
 
    file.mv(filePath, (err) => {
       if (err) {

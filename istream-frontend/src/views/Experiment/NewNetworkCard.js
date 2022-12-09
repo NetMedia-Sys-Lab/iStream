@@ -47,9 +47,6 @@ export default class NetworkCard extends Component {
    fetchData = () => {
       getComponentData(this.state.user, this.props.experimentId, this.state.componentName).then((data) => {
          if (data.name !== "") {
-            console.log(data);
-            let allModules = [...this.state.modules.data.iStream, ...this.state.modules.data.custom];
-            allModules.find((module) => console.log(module));
             this.setState({
                selectedModule: data,
                savedModule: cloneDeep(data),
