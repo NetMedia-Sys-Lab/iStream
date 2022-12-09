@@ -1,5 +1,6 @@
 const fs = require("fs");
 const writeToFile = require("../utils/fileUtils");
+const { userModulesInfoModel } = require("../models/module.model");
 
 //USER REGISTRATION CONTROLLER
 module.exports.userRegistration = (req, res) => {
@@ -39,11 +40,15 @@ module.exports.userRegistration = (req, res) => {
       const dirNameExperiments = `src/database/users/${username}/Experiments`;
       fs.mkdirSync(dirNameExperiments);
 
-      //create the experimentListFile for the new user. Initilize the file as an empty list
+      //create the experimentListFile for the new user. Initialize the file as an empty list
       const experimentListFile = `src/database/users/${username}/experiments_list.json`;
       writeToFile(experimentListFile, JSON.stringify([]), "userRegistration");
 
-      //create the machine List  for the new user. Initilize the file as an empty list. It will be a list of objects where each object is denotes a ssh dependencies
+      //create the modulesListFile for the new user. Initialize the file as an empty list
+      const modulesListFile = `src/database/users/${username}/modules_list.json`;
+      writeToFile(modulesListFile, JSON.stringify(userModulesInfoModel), "userRegistration");
+
+      //create the machine List  for the new user. Initialize the file as an empty list. It will be a list of objects where each object is denotes a ssh dependencies
       const sshMachinesListFile = `src/database/users/${username}/machine_list.json`;
       writeToFile(sshMachinesListFile, JSON.stringify([]), "userRegistration");
 
@@ -61,11 +66,11 @@ module.exports.userRegistration = (req, res) => {
       //create the modules folder for the new user
       const modulesDirName = `src/database/users/${username}/Modules`;
       fs.mkdirSync(modulesDirName);
-      fs.mkdirSync(`${modulesDirName}/Transcoder`);
+      // fs.mkdirSync(`${modulesDirName}/Transcoder`);
       fs.mkdirSync(`${modulesDirName}/Server`);
       fs.mkdirSync(`${modulesDirName}/Network`);
       fs.mkdirSync(`${modulesDirName}/Client`);
-    //   fs.mkdirSync(`${modulesDirName}/Videos`);
+      //   fs.mkdirSync(`${modulesDirName}/Videos`);
 
       res.status(200).send("New User Created Successfully");
    } catch (err) {

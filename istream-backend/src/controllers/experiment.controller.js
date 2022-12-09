@@ -2,6 +2,7 @@ const fs = require("fs");
 const fsExtra = require("fs-extra");
 
 const experimentModel = require("../models/experiment.model");
+const dockerModel = require("../models/dockerConfig.model");
 
 const writeToFile = require("../utils/fileUtils");
 
@@ -51,17 +52,22 @@ module.exports.createNewExperiment = (req, res) => {
    const ExperimentDirectoryName = `src/database/users/${username}/Experiments/${experimentId}`;
    const dependencyFilePath = `${ExperimentDirectoryName}/dependency.json`;
    const experimentConfigFilePath = `${ExperimentDirectoryName}/experimentConfig.json`;
+   const dockerConfigPath = `${ExperimentDirectoryName}/dockerConfig.json`;
 
    fs.mkdirSync(ExperimentDirectoryName);
 
    const stringifyExperimentData = JSON.stringify(experimentModel.experimentDataModel);
+
    let experimentConfigData = experimentModel.experimentConfigJSONData;
    experimentConfigData.networkComponentExistence = networkComponentExistence;
    experimentConfigData.transcoderComponentExistence = transcoderComponentExistence;
    const stringifyExperimentConfigData = JSON.stringify(experimentConfigData);
 
+   const stringifyExperimentDockerConfig = JSON.stringify(dockerModel.modulesDockerConfigModel);
+
    writeToFile(dependencyFilePath, stringifyExperimentData, "createNewExperiment");
    writeToFile(experimentConfigFilePath, stringifyExperimentConfigData, "createNewExperiment");
+   writeToFile(dockerConfigPath, stringifyExperimentDockerConfig, "createNewExperiment");
 
    res.status(200).send("New Experiment Created Successfully");
 };

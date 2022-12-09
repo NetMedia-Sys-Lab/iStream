@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { createNewModule } from "src/api/ModulesAPI";
+import { addNewModule } from "src/api/ComponentsAPI";
 import { toast } from "react-toastify";
 
 export default class AddModule extends Component {
@@ -22,12 +22,16 @@ export default class AddModule extends Component {
       newModuleData.append("moduleDescription", this.state.moduleDescription);
       newModuleData.append("moduleFile", this.state.moduleFile);
 
-      createNewModule(newModuleData).then((res) => {
-         this.props.updateData();
-         toast.success(res);
-         this.setState({ moduleName: "", moduleDescription: "" });
-         this.props.toggleDisplay();
-      });
+      addNewModule(newModuleData)
+         .then((res) => {
+            this.props.updateData();
+            toast.success(res);
+            this.setState({ moduleName: "", moduleDescription: "" });
+            this.props.toggleDisplay();
+         })
+         .catch((e) => {
+            toast.warn(e.data);
+         });
    };
 
    render() {
@@ -38,7 +42,9 @@ export default class AddModule extends Component {
                   <Modal.Title>Add New {this.props.componentName} Module</Modal.Title>
                </Modal.Header>
                <Modal.Body>
-                  <div><h5>Add your module's zip file:</h5></div>
+                  <div>
+                     <h5>Add your module's zip file:</h5>
+                  </div>
                   <form onSubmit={this.onSubmit}>
                      <div className="form-group row">
                         <label className="col-6 col-form-label">Module Name</label>

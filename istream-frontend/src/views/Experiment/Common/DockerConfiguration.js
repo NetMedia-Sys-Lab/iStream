@@ -45,14 +45,14 @@ export default class DockerConfiguration extends Component {
                <Form
                   schema={this.props.dockerConfig.parameters}
                   FieldTemplate={this.customFieldTemplate}
-                  formData={this.props.dockerConfig.values}
-                  onSubmit={(values) => this.props.onSubmit(values.formData)}
+                  formData={this.props.dockerConfig.newValues}
+                  onChange={(values) => {
+                     this.props.onChangeConfig(values.formData);
+                  }}
                >
-                  {/* <div className="mt-3 ms-2">
-                     <Button variant="success" type="submit" className="float-end">
-                        Submit
-                     </Button>
-                  </div> */}
+                  <div className="mt-3 ms-2">
+                     <Button style={{ display: "none" }} type="submit" />
+                  </div>
                </Form>
             </div>
          </div>

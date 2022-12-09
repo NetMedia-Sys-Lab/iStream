@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { AddNewVideo, AddNewVideoDataset } from "src/api/ModulesAPI";
+import { AddNewVideo, AddNewVideoDataset } from "src/api/VideoAPI";
 import { toast } from "react-toastify";
 
 export default class AddVideo extends Component {

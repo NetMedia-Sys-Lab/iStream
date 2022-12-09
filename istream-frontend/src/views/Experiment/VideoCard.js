@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
-import { getUserVideosList, getDefaultVideosList, saveVideoModuleData, getVideoModuleData } from "src/api/ModulesAPI";
+import { getUserVideosList, getDefaultVideosList, saveVideoModuleData, getVideoModuleData } from "src/api/VideoAPI";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import "src/css/style.css";
@@ -40,7 +40,7 @@ export default class VideoCard extends Component {
       });
    };
 
-   onVideoClick = (videoId, type) => {
+   onVideoClick = (videoId) => {
       if (this.state.selectedVideos.some((element) => videoId === element)) {
          this.setState({
             selectedVideos: this.state.selectedVideos.filter(function (element) {
@@ -52,7 +52,7 @@ export default class VideoCard extends Component {
       }
    };
 
-   createTable = (type) => {
+   createTable = () => {
       let allVideos = [...this.state.defaultVideosList, ...this.state.userVideosList];
 
       let videoTableData = allVideos.map((video) => {
@@ -103,12 +103,12 @@ export default class VideoCard extends Component {
    };
 
    videoSelectionTable = () => {
-      const [videoTableData, datasetTableData] = this.createTable("videos");
+      const [videoTableData, datasetTableData] = this.createTable();
 
       return (
          <div>
             <div>
-               <h4 style={{ display: "inline" }}>Videos</h4>
+               <h4>Videos</h4>
             </div>
             <table className="table table-hover p-5">
                <thead className="thead-dark">
@@ -186,7 +186,6 @@ export default class VideoCard extends Component {
       return (
          <Button
             variant="secondary"
-            // className="float-end"
             className="float-end me-1"
             onClick={() => {
                this.setState({ displayAddNewVideo: true, displayModal: false });

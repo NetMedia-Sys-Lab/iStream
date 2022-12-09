@@ -1,0 +1,34 @@
+{
+   "Video": {
+      "id": ["1665530639701"],
+      "machineID": ""
+   },
+   "Server": {
+      "type": "",
+      "name": "",
+      "advanceConfig": "",
+      "configName": "",
+      "machineID": ""
+   },
+   "Transcoder": {
+      "type": "",
+      "name": "",
+      "advanceConfig": "",
+      "configName": "",
+      "machineID": ""
+   },
+   "Network": {
+      "type": "Custom",
+      "name": "User Network",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": ""
+   },
+   "Client": {
+      "type": "iStream",
+      "name": "Headless Player ABR",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": ""
+   }
+}

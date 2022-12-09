@@ -28,7 +28,7 @@ export default class ModuleSelection extends Component {
       });
    };
 
-   moduleSelection = () => {
+   oldModuleSelection = () => {
       const moduleTypeOptions = (
          <DropdownButton
             id="dropdown-basic-button"
@@ -76,30 +76,87 @@ export default class ModuleSelection extends Component {
       );
    };
 
-   get addModuleButton() {
-      if (this.props.selectedModule.type === "Custom") {
+   onModuleClick = (moduleIndex) => {
+      this.setState({ selectedModuleID: moduleIndex });
+   };
+
+   moduleSelection = () => {
+      let allModules = [
+         ...this.props.modules.data.iStream.map((module) => {
+            module.type = "iStream";
+            return module;
+         }),
+         ...this.props.modules.data.custom.map((module) => {
+            module.type = "Custom";
+            return module;
+         }),
+      ];
+
+      let modulesRow = allModules.map((module) => {
+         let isSelected = false;
+         if ((this.props.selectedModule.id === module.id)) {
+            isSelected = true;
+         }
+
          return (
-            <div className="mt-3">
-               <Button
-                  variant="secondary"
-                  className="float-end ms-1"
-                  onClick={() => {
-                     this.setState({ displayAddModule: true });
-                  }}
-               >
-                  Add New Module
-               </Button>
-            </div>
+            <tr
+               key={module.name}
+               onClick={() => {
+                  this.onModuleClick(allModules.findIndex((element) => element.name === module.name));
+                  this.props.updateSelectedModule("type", module.type);
+                  this.props.updateSelectedModule("name", module.name);
+                  this.props.updateSelectedModule("id", module.id);
+               }}
+               className={isSelected ? "selectedRow" : ""}
+               style={{ cursor: "pointer" }}
+            >
+               <td>{module.name}</td>
+               <td>{module.description}</td>
+               <td>{module.type}</td>
+            </tr>
          );
-      }
-      return null;
+      });
+
+      return (
+         <div>
+            <div>
+               <h4 style={{ display: "inline" }}>Modules</h4>
+
+               {this.addModuleButton}
+            </div>
+            <table className="table table-hover p-5">
+               <thead className="thead-dark">
+                  <tr>
+                     <th scope="col">Name</th>
+                     <th scope="col">Description</th>
+                     <th scope="col">Type</th>
+                  </tr>
+               </thead>
+               <tbody>{modulesRow}</tbody>
+            </table>
+         </div>
+      );
+   };
+
+   get addModuleButton() {
+      return (
+         <Button
+            variant="secondary"
+            className="float-end ms-1"
+            onClick={() => {
+               this.setState({ displayAddModule: true });
+            }}
+         >
+            Add New Module
+         </Button>
+      );
    }
 
    render() {
       return (
          <div>
+            {/* {this.oldModuleSelection()} */}
             {this.moduleSelection()}
-            {this.addModuleButton}
             <AddModule
                display={this.state.displayAddModule}
                componentName={this.props.componentName}

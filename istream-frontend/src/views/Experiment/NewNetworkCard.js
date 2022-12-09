@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 
+import { getModules, getComponentData, getDockerConfig, saveComponentData } from "src/api/ComponentsAPI";
+import { getModuleConfigsAndParameters } from "src/api/ModulesAPI";
+
+import { ModuleInfo } from "src/models/Module";
+
+import ShowComponentConfig from "src/views/Experiment/Common/ShowComponentConfig";
 import Stepper from "src/views/Experiment/Common/Stepper";
-import { getModules, getComponentDockerConfig } from "src/api/ComponentsAPI";
-import { getModuleConfigsAndParameters, saveModuleData, getModuleData } from "src/api/ModulesAPI";
 import ModuleSelection from "src/views/Experiment/Common/ModuleSelection";
 import ModuleConfiguration from "src/views/Experiment/Common/ModuleConfiguration";
 import DockerConfiguration from "src/views/Experiment/Common/DockerConfiguration";
+
 import { toast } from "react-toastify";
+import cloneDeep from "lodash/cloneDeep";
 
 export default class NetworkCard extends Component {
    state = {
@@ -14,31 +20,20 @@ export default class NetworkCard extends Component {
       totalNumberOfSteps: 3,
       componentName: this.props.componentName,
       displayStepperModal: false,
-      showModuleConfiguration: false,
+      showComponentConfiguration: false,
       modules: {
          types: ["iStream", "Custom"],
-         names: {
+         data: {
             iStream: [],
             custom: [],
          },
       },
-      selectedModule: {
-         type: "",
-         name: "",
-         customConfiguration: false,
-         machineID: "",
-         advanceConfig: {
-            names: [],
-            selected: "",
-         },
-         simpleConfig: {
-            parameters: {},
-            values: {},
-         },
-      },
+      selectedModule: ModuleInfo,
+      savedModule: ModuleInfo,
       dockerConfig: {
          parameters: {},
-         values: {},
+         savedValues: {},
+         newValues: {},
       },
    };
 
@@ -46,48 +41,34 @@ export default class NetworkCard extends Component {
       super(props);
 
       this.getComponentModules();
-
-      getComponentDockerConfig(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         this.setState({ dockerConfig: { parameters: data.parameters, values: data.values } });
-      });
-
       this.fetchData();
    }
+
+   fetchData = () => {
+      getComponentData(this.state.user, this.props.experimentId, this.state.componentName).then((data) => {
+         if (data.name !== "") {
+            console.log(data);
+            let allModules = [...this.state.modules.data.iStream, ...this.state.modules.data.custom];
+            allModules.find((module) => console.log(module));
+            this.setState({
+               selectedModule: data,
+               savedModule: cloneDeep(data),
+               showComponentConfiguration: true,
+            });
+         }
+      });
+
+      getDockerConfig(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
+         this.setState({ dockerConfig: { parameters: data.parameters, savedValues: data.values, newValues: data.values } });
+      });
+   };
 
    getComponentModules = () => {
       getModules(this.state.user, this.state.componentName).then((res) => {
          let tempState = this.state.modules;
-         tempState.names.iStream = res;
+         tempState.data.iStream = res["iStream"];
+         tempState.data.custom = res["user"];
          this.setState({ modules: tempState });
-      });
-   };
-
-   fetchData = () => {
-      getModuleData(this.state.user, this.state.componentName, this.props.experimentId).then((data) => {
-         console.log(data);
-         if (data.name !== "") {
-            getModuleConfigsAndParameters(this.state.user, this.state.componentName, data.name, data.type === "Custom" ? true : false).then(
-               (res) => {
-                  console.log(res);
-                  this.setState({
-                     selectedModule: {
-                        type: data.type,
-                        name: data.name,
-                        customConfiguration: data.customConfig,
-                        machineID: data.machineID,
-                        advanceConfig: {
-                           selected: data.configName,
-                        },
-                        simpleConfig: {
-                           parameters: res.parameters,
-                           values: data.defaultConfigParameters,
-                        },
-                     },
-                     showModuleConfiguration: true,
-                  });
-               }
-            );
-         }
       });
    };
 
@@ -101,15 +82,10 @@ export default class NetworkCard extends Component {
          .then((res) => {
             res.allConfigs.unshift("No Config");
             let tempState = this.state.selectedModule;
-            tempState.customConfigFiles = res.allConfigs;
-            tempState.configParameters = res.parameters;
-            if (
-               Object.keys(res.parameters).length === 0 ||
-               (res.parameters["customConfig"] === true && res.parameters["defaultConfig"] === false)
-            ) {
-               tempState.customConfiguration = true;
-            } else if (res.parameters["customConfig"] === false && res.parameters["defaultConfig"] === true) {
-               tempState.customConfiguration = false;
+            tempState.advanceConfig.names = res.allConfigs;
+            tempState.simpleConfig.parameters = res.parameters;
+            if (Object.keys(res.parameters).length === 0) {
+               tempState.advanceConfiguration = true;
             }
             this.setState({ selectedModule: tempState });
          })
@@ -127,45 +103,50 @@ export default class NetworkCard extends Component {
          let tempState = this.state.selectedModule;
          tempState.name = updatedState;
          this.setState({ selectedModule: tempState });
-      } else if (mode === "customConfiguration") {
+      } else if (mode === "id") {
          let tempState = this.state.selectedModule;
-         tempState.customConfiguration = updatedState;
+         tempState.id = updatedState;
+         this.setState({ selectedModule: tempState });
+      } else if (mode === "advanceConfiguration") {
+         let tempState = this.state.selectedModule;
+         tempState.advanceConfiguration = updatedState;
          this.setState({ selectedModule: tempState });
       } else if (mode === "selectedConfigFile") {
          let tempState = this.state.selectedModule;
-         tempState.selectedConfigFile = updatedState;
+         tempState.advanceConfig.selected = updatedState;
          this.setState({ selectedModule: tempState });
       }
    };
 
-   onModuleConfigurationSubmit = (values) => {
+   onDockerConfigurationChange = (values) => {
+      let tempState = this.state.dockerConfig;
+      tempState.newValues = values;
+      this.setState({ dockerConfig: tempState });
+   };
+
+   onModuleSimpleConfigurationChange = (values) => {
+      let tempState = this.state.selectedModule;
+      tempState.simpleConfig.values = values;
+      this.setState({ selectedModule: tempState });
+   };
+
+   onSubmit = () => {
       let data = {
          userId: this.state.user.userId,
          username: this.state.user.username,
          componentName: this.state.componentName,
          experimentId: this.props.experimentId,
-         selectedModuleType: this.state.selectedModule.type,
-         selectedModule: this.state.selectedModule.name,
-         customConfig: this.state.selectedModule.customConfiguration,
+         selectedModuleData: this.state.selectedModule,
+         dockerConfig: this.state.dockerConfig,
       };
-      if (this.state.selectedModule.customConfiguration) {
-         data["selectedConfigFileName"] = this.state.selectedModule.selectedConfigFile;
-      } else {
-         data["defaultConfigParameters"] = values;
-      }
 
-      saveModuleData(data).then((res) => {
+      saveComponentData(data).then((res) => {
          this.fetchData();
-         this.setState({ showModuleConfiguration: true, displayStepperModal: !this.state.displayStepperModal });
+         this.setState({ showModuleConfiguration: true });
          toast.success(res);
       });
+      // this.fetchData();
    };
-
-   onDockerConfigurationChange = (values) => {
-      console.log(values);
-   };
-
-
 
    render() {
       return (
@@ -176,7 +157,11 @@ export default class NetworkCard extends Component {
                   <br />
                   {this.state.componentName}
                </h4>
-               {this.showModuleConfig()}
+               <ShowComponentConfig
+                  show={this.state.showComponentConfiguration}
+                  moduleData={this.state.savedModule}
+                  dockerConfig={this.state.dockerConfig.savedValues}
+               />
             </div>
 
             <Stepper
@@ -188,7 +173,7 @@ export default class NetworkCard extends Component {
                      selectedModule={this.state.selectedModule}
                      updateSelectedModule={this.updateSelectedModule}
                      componentName={this.state.componentName}
-                     updateData={this.getUserModuleData}
+                     updateData={this.getComponentModules}
                   />,
                   <DockerConfiguration
                      componentName={this.state.componentName}
@@ -200,15 +185,14 @@ export default class NetworkCard extends Component {
                      selectedModule={this.state.selectedModule}
                      updateSelectedModule={this.updateSelectedModule}
                      getOneModuleInfo={this.getOneModuleInfo}
-                     onSubmit={this.onModuleConfigurationSubmit}
+                     onSimpleConfigurationChange={this.onModuleSimpleConfigurationChange}
                   />,
                ]}
-               getOneModuleInfo={this.getOneModuleInfo}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
                // updateSelectedModule={this.updateSelectedModule}
                // isUserModule={this.state.selectedModule.type === "Custom"}
                componentName={this.state.componentName}
-               onSubmit={this.onModuleConfigurationSubmit}
+               onSubmit={this.onSubmit}
                // updateData={this.fetchData}
                // updateConfigFiles={this.getOneModuleData}
                selectedModule={this.state.selectedModule}

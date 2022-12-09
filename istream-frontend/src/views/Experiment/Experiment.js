@@ -4,11 +4,13 @@ import { Button, Modal, Spinner } from "react-bootstrap";
 
 import { getExperimentConfig, getExperimentDependency, subscribeToRunExperiment } from "src/api/ExperimentAPI";
 import Header from "src/views/Common/Header";
-import ClientCard from "src/views/Experiment/ClientCard";
-import NetworkCard from "src/views/Experiment/NetworkCard";
+// import ClientCard from "src/views/Experiment/ClientCard";
+// import NetworkCard from "src/views/Experiment/NetworkCard";
+import NewNetworkCard from "src/views/Experiment/NewNetworkCard";
+
 import VideoCard from "src/views/Experiment/VideoCard";
-import ServerCard from "src/views/Experiment/ServerCard";
-import TranscoderCard from "src/views/Experiment/TranscoderCard";
+// import ServerCard from "src/views/Experiment/ServerCard";
+// import TranscoderCard from "src/views/Experiment/TranscoderCard";
 import { experimentDataModel } from "src/models/Experiment";
 import { toast } from "react-toastify";
 
@@ -207,24 +209,28 @@ class Experiment extends Component {
                      </div>
 
                      <div className="col-lg p-0">
-                        <NetworkCard experimentId={this.state.experimentId} componentName="Server" />
+                        <NewNetworkCard experimentId={this.state.experimentId} componentName="Network" />
                      </div>
 
-                     {this.state.experimentConfig.transcoderComponentExistence && (
+                     <div className="col-lg p-0">
+                        <NewNetworkCard experimentId={this.state.experimentId} componentName="Client" />
+                     </div>
+
+                     {/* {this.state.experimentConfig.transcoderComponentExistence && (
                         <div className="col-lg p-0">
                            <NetworkCard experimentId={this.state.experimentId} componentName="Transcoder" />
                         </div>
-                     )}
+                     )} */}
 
-                     {this.state.experimentConfig.networkComponentExistence && (
+                     {/* {this.state.experimentConfig.networkComponentExistence && (
                         <div className="col-lg p-0">
                            <NetworkCard experimentId={this.state.experimentId} componentName="Network" />{" "}
                         </div>
-                     )}
+                     )} */}
 
-                     <div className="col-lg p-0">
+                     {/* <div className="col-lg p-0">
                         <NetworkCard experimentId={this.state.experimentId} componentName="Client" />{" "}
-                     </div>
+                     </div> */}
                   </div>
                   <div className="row space">
                      <div>

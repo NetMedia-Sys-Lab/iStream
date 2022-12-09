@@ -13,6 +13,12 @@ export default class ModuleConfiguration extends Component {
       selectedEditFile: "",
    };
 
+   constructor(props) {
+      super(props);
+
+      this.props.getOneModuleInfo();
+   }
+
    customFieldTemplate = (props) => {
       const { id, classNames, label, help, required, description, errors, children } = props;
       if (id === "root")
@@ -50,17 +56,13 @@ export default class ModuleConfiguration extends Component {
       return (
          <div>
             <Form
-               schema={this.props.selectedModule.configParameters["parameters"]}
+               schema={this.props.selectedModule.simpleConfig.parameters}
                FieldTemplate={this.customFieldTemplate}
-               uiSchema={this.props.selectedModule.parametersUISchema}
-               formData={this.props.selectedModule.configParametersValues}
-               onSubmit={(values) => this.props.onSubmit(values.formData)}
+               uiSchema={this.props.selectedModule.simpleConfig.uiSchema}
+               formData={this.props.selectedModule.simpleConfig.values}
+               onChange={(values) => this.props.onSimpleConfigurationChange(values.formData)}
             >
-               {/* <div className="mt-3">
-                  <Button type="submit" className="float-end">
-                     Submit
-                  </Button>
-               </div> */}
+               <Button style={{ display: "none" }} type="submit" />
             </Form>
          </div>
       );
@@ -78,7 +80,7 @@ export default class ModuleConfiguration extends Component {
                   onChange={() => {
                      this.props.updateSelectedModule("selectedConfigFile", item);
                   }}
-                  checked={this.props.selectedModule.selectedConfigFile === item}
+                  checked={this.props.selectedModule.advanceConfig.selected === item}
                />
                <label className="form-check-label">{item}</label>
                {item !== "No Config" ? (
@@ -97,22 +99,17 @@ export default class ModuleConfiguration extends Component {
       });
    };
 
-   customConfig = () => {
+   advanceConfig = () => {
       const configFiles =
-         this.props.selectedModule.customConfigFiles.length === 0 ? (
+         this.props.selectedModule.advanceConfig.names.length === 0 ? (
             <div>No Config files found. Please add a new config file to proceed.</div>
          ) : (
-            this.radioButtonOptions(this.props.selectedModule.customConfigFiles)
+            this.radioButtonOptions(this.props.selectedModule.advanceConfig.names)
          );
       return (
          <div>
-            <h5>Manual Config</h5>
+            <h5>Advance Configuration File</h5>
             <div>{configFiles}</div>
-            <div className="mt-3">
-               {/* <Button onClick={() => this.props.onSubmit()} className="float-end">
-                  Submit
-               </Button> */}
-            </div>
          </div>
       );
    };
@@ -127,9 +124,9 @@ export default class ModuleConfiguration extends Component {
                   name="DefaultConfig"
                   id="DefaultConfig"
                   onChange={() => {
-                     this.props.updateSelectedModule("customConfiguration", false);
+                     this.props.updateSelectedModule("advanceConfiguration", false);
                   }}
-                  checked={!this.props.selectedModule.customConfiguration}
+                  checked={!this.props.selectedModule.advanceConfiguration}
                />
                <label className="form-check-label">Default Config</label>
             </div>
@@ -137,14 +134,14 @@ export default class ModuleConfiguration extends Component {
                <input
                   className="form-check-input"
                   type="radio"
-                  name="CustomConfig"
-                  id="CustomConfig"
+                  name="advanceConfig"
+                  id="advanceConfig"
                   onChange={() => {
-                     this.props.updateSelectedModule("customConfiguration", true);
+                     this.props.updateSelectedModule("advanceConfiguration", true);
                   }}
-                  checked={this.props.selectedModule.customConfiguration}
+                  checked={this.props.selectedModule.advanceConfiguration}
                />
-               <label className="form-check-label">Custom Config</label>
+               <label className="form-check-label">Advance Config</label>
             </div>
             <hr />
          </div>
@@ -153,34 +150,43 @@ export default class ModuleConfiguration extends Component {
 
    createConfigSelectionForm = () => {
       let configurationForm;
-      if (Object.keys(this.props.selectedModule.configParameters).length === 0) {
-         configurationForm = <div>{this.customConfig()}</div>;
-      } else if (
-         this.props.selectedModule.configParameters["customConfig"] === true &&
-         this.props.selectedModule.configParameters["defaultConfig"] === true
-      ) {
+      if (Object.keys(this.props.selectedModule.simpleConfig.parameters).length === 0) {
+         configurationForm = <div>{this.advanceConfig()}</div>;
+      } else {
          configurationForm = (
             <div>
                {this.configTypeSelection()}
-               {this.props.selectedModule.customConfiguration ? this.customConfig() : this.defaultConfig()}
+               {this.props.selectedModule.advanceConfiguration ? this.advanceConfig() : this.defaultConfig()}
             </div>
          );
-      } else if (
-         this.props.selectedModule.configParameters["customConfig"] === true &&
-         this.props.selectedModule.configParameters["defaultConfig"] === false
-      ) {
-         configurationForm = <div>{this.customConfig()}</div>;
-      } else if (
-         this.props.selectedModule.configParameters["customConfig"] === false &&
-         this.props.selectedModule.configParameters["defaultConfig"] === true
-      ) {
-         configurationForm = <div>{this.defaultConfig()}</div>;
       }
+
+      // if (
+      //    this.props.selectedModule.configParameters["customConfig"] === true &&
+      //    this.props.selectedModule.configParameters["defaultConfig"] === true
+      // ) {
+      //    configurationForm = (
+      //       <div>
+      //          {this.configTypeSelection()}
+      //          {this.props.selectedModule.customConfiguration ? this.customConfig() : this.defaultConfig()}
+      //       </div>
+      //    );
+      // } else if (
+      //    this.props.selectedModule.configParameters["customConfig"] === true &&
+      //    this.props.selectedModule.configParameters["defaultConfig"] === false
+      // ) {
+      //    configurationForm = <div>{this.customConfig()}</div>;
+      // } else if (
+      //    this.props.selectedModule.configParameters["customConfig"] === false &&
+      //    this.props.selectedModule.configParameters["defaultConfig"] === true
+      // ) {
+      //    configurationForm = <div>{this.defaultConfig()}</div>;
+      // }
       return configurationForm;
    };
 
    get addModuleConfigButton() {
-      if (Object.keys(this.props.selectedModule.configParameters).length === 0 || this.props.selectedModule.customConfiguration) {
+      if (Object.keys(this.props.selectedModule.configParameters).length === 0 || this.props.selectedModule.advanceConfiguration) {
          return (
             <Button
                variant="secondary"
@@ -204,7 +210,7 @@ export default class ModuleConfiguration extends Component {
                {this.createConfigSelectionForm()}
             </div>
 
-            {this.state.displayEditConfigModal ? (
+            {/* {this.state.displayEditConfigModal ? (
                <EditConfig
                   display={this.state.displayEditConfigModal}
                   configName={this.state.selectedEditFile}
@@ -225,7 +231,7 @@ export default class ModuleConfiguration extends Component {
                selectedModule={this.props.selectedModule}
             />
 
-            {this.addModuleConfigButton}
+            {this.addModuleConfigButton} */}
          </div>
       );
    }

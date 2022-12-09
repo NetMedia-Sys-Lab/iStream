@@ -1,0 +1,17 @@
+{
+   "Server": [],
+   "Network": [{
+      "id": "1670523526524",
+      "name": "User Network",
+      "description": "test"
+   }, {
+      "id": "1670523139724",
+      "name": "temp",
+      "description": "test"
+   }],
+   "Client": [{
+      "id": "1670521539724",
+      "name": "User Player",
+      "description": "test"
+   }]
+}

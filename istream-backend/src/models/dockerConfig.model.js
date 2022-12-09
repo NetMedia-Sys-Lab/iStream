@@ -4,11 +4,6 @@ const modulesDockerConfigModel = {
       cpus: 0,
       memory: 0,
    },
-   Transcoder: {
-      port: 7070,
-      cpus: 0,
-      memory: 0,
-   },
    Network: {
       port: 8080,
       cpus: 0,

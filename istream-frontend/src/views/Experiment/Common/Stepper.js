@@ -32,7 +32,7 @@ export default class Stepper extends Component {
             <Button
                className="float-end me-1"
                onClick={() => {
-                  this.props.getOneModuleInfo();
+                  // this.props.getOneModuleInfo();
                   this.goToNextStep();
                }}
             >
@@ -62,11 +62,7 @@ export default class Stepper extends Component {
 
    get cancelButton() {
       return (
-         <Button
-            onClick={this.props.toggleDisplay}
-            // className="float-start"
-            variant="danger"
-         >
+         <Button onClick={this.props.toggleDisplay} variant="danger">
             Cancel
          </Button>
       );
@@ -100,6 +96,7 @@ export default class Stepper extends Component {
                <Modal.Body>
                   <ProgressBar value={this.state.currentStep} numberOfSteps={this.props.totalNumberOfSteps + 1} />
                   <br />
+
                   <div>
                      {this.props.steps.map((step, index) => {
                         if (index + 1 === this.state.currentStep) return <div key={index}>{step}</div>;
@@ -114,9 +111,6 @@ export default class Stepper extends Component {
                      {this.submitButton}
 
                      {this.props.componentName === "Video" ? this.props.addNewVideoButton : ""}
-
-                     {/* {this.addNewVideoButton}
-                        {this.sshButton}  */}
                   </div>
                </Modal.Body>
             </Modal>
