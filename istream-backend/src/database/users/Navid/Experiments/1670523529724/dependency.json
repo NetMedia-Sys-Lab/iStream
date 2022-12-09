@@ -4,11 +4,11 @@
       "machineID": ""
    },
    "Server": {
-      "type": "",
-      "name": "",
-      "advanceConfig": "",
-      "configName": "",
-      "machineID": ""
+      "type": "iStream",
+      "name": "Nginx Dash",
+      "advanceConfig": true,
+      "configName": "No Config",
+      "machineID": "1665683811479"
    },
    "Transcoder": {
       "type": "",
@@ -22,13 +22,13 @@
       "name": "User Network",
       "advanceConfig": false,
       "configName": "",
-      "machineID": ""
+      "machineID": "1670625499505"
    },
    "Client": {
       "type": "iStream",
       "name": "Headless Player ABR",
       "advanceConfig": false,
       "configName": "",
-      "machineID": ""
+      "machineID": "1665683811479"
    }
 }

@@ -22,6 +22,7 @@ app.use("/experiment", require("./api/experiment.route"));
 app.use("/modules", require("./api/modules.route"));
 app.use("/video", require("./api/video.route"));
 app.use("/components", require("./api/components.route"));
+app.use("/machines", require("./api/machines.route"));
 
 //SERVER PORT
 server.listen(PORT, () => {

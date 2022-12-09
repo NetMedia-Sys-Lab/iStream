@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Modal, Spinner } from "react-bootstrap";
 
-import { getExperimentConfig, getExperimentDependency, subscribeToRunExperiment } from "src/api/ExperimentAPI";
+import { getExperimentConfig, subscribeToRunExperiment } from "src/api/ExperimentAPI";
 import Header from "src/views/Common/Header";
 // import ClientCard from "src/views/Experiment/ClientCard";
 // import NetworkCard from "src/views/Experiment/NetworkCard";
@@ -11,7 +11,7 @@ import NewNetworkCard from "src/views/Experiment/NewNetworkCard";
 import VideoCard from "src/views/Experiment/VideoCard";
 // import ServerCard from "src/views/Experiment/ServerCard";
 // import TranscoderCard from "src/views/Experiment/TranscoderCard";
-import { experimentDataModel } from "src/models/Experiment";
+// import { experimentDataModel } from "src/models/Experiment";
 import { toast } from "react-toastify";
 
 function withParams(Component) {
@@ -206,6 +206,10 @@ class Experiment extends Component {
                   <div className="row">
                      <div className="col-lg p-0">
                         <VideoCard experimentId={this.state.experimentId} />
+                     </div>
+
+                     <div className="col-lg p-0">
+                        <NewNetworkCard experimentId={this.state.experimentId} componentName="Server" />
                      </div>
 
                      <div className="col-lg p-0">

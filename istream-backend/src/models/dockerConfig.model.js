@@ -18,7 +18,7 @@ const modulesDockerConfigModel = {
 
 const dockerConfigForm = {
    type: "object",
-   title: "Docker Config",
+   // title: "Docker Config",
    properties: {
       port: {
          title: "Port",

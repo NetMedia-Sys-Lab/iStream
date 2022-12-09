@@ -176,6 +176,8 @@ export default class NetworkCard extends Component {
                      componentName={this.state.componentName}
                      dockerConfig={this.state.dockerConfig}
                      onChangeConfig={this.onDockerConfigurationChange}
+                     experimentId={this.props.experimentId}
+                     updateData={this.fetchData}
                   />,
                   <ModuleConfiguration
                      componentName={this.state.componentName}

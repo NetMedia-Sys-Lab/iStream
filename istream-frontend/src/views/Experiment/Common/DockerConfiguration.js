@@ -3,8 +3,13 @@ import { Button } from "react-bootstrap";
 import Form from "@rjsf/core";
 
 import InformationButton from "src/views/Common/InformationButton";
+import MachineConfig from "src/views/Experiment/Common/MachineConfig";
 
 export default class DockerConfiguration extends Component {
+   state = {
+      displayMachineConfig: false,
+   };
+
    customFieldTemplate = (props) => {
       const { id, classNames, label, help, required, description, errors, children } = props;
       if (id === "root")
@@ -59,11 +64,42 @@ export default class DockerConfiguration extends Component {
       );
    };
 
+   get selectMachineButton() {
+      return (
+         <Button
+            variant="secondary"
+            className="float-end me-1"
+            onClick={() => {
+               this.setState({ displayMachineConfig: true });
+            }}
+         >
+            Select Machine
+         </Button>
+      );
+   }
+
    render() {
       return (
          <div>
             <div>
+               <h4 style={{ display: "inline" }}>Docker Configuration</h4>
+
+               {this.selectMachineButton}
+               <br />
+               <br />
+
                <div>{this.dockerConfigForm()}</div>
+            </div>
+            <div>
+               <MachineConfig
+                  display={this.state.displayMachineConfig}
+                  toggleDisplay={() => {
+                     this.setState({ displayMachineConfig: !this.state.displayMachineConfig });
+                  }}
+                  componentName={this.props.componentName}
+                  experimentId={this.props.experimentId}
+                  updateData={this.props.updateData}
+               />
             </div>
          </div>
       );

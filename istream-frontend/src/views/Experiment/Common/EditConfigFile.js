@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { getConfigFileData, updateConfigFileData } from "src/api/ModulesAPI";
 import { toast } from "react-toastify";
 
-export default class EditConfig extends Component {
+export default class EditConfigFile extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       textData: "",

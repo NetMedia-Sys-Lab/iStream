@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import Form from "@rjsf/core";
 
-import EditConfig from "src/views/Experiment/Common/EditConfig";
+import EditConfigFile from "src/views/Experiment/Common/EditConfigFile";
 import AddConfigFile from "src/views/Experiment/Common/AddConfigFile";
 import InformationButton from "src/views/Common/InformationButton";
 
@@ -111,7 +111,6 @@ export default class ModuleConfiguration extends Component {
             <div>
                <h5 style={{ display: "inline" }}>Advance Configuration File</h5>
                {this.addModuleConfigButton}
-               
             </div>
             <br />
 
@@ -133,8 +132,9 @@ export default class ModuleConfiguration extends Component {
                      this.props.updateSelectedModule("advanceConfiguration", false);
                   }}
                   checked={!this.props.selectedModule.advanceConfiguration}
+                  disabled={Object.keys(this.props.selectedModule.simpleConfig.parameters).length === 0}
                />
-               <label className="form-check-label">Default Config</label>
+               <label className="form-check-label">Simple Config</label>
             </div>
             <div className="form-check">
                <input
@@ -155,19 +155,12 @@ export default class ModuleConfiguration extends Component {
    };
 
    createConfigSelectionForm = () => {
-      let configurationForm;
-      if (Object.keys(this.props.selectedModule.simpleConfig.parameters).length === 0) {
-         configurationForm = <div>{this.advanceConfig()}</div>;
-      } else {
-         configurationForm = (
-            <div>
-               {this.configTypeSelection()}
-               {this.props.selectedModule.advanceConfiguration ? this.advanceConfig() : this.defaultConfig()}
-            </div>
-         );
-      }
-
-      return configurationForm;
+      return (
+         <div>
+            {this.configTypeSelection()}
+            {this.props.selectedModule.advanceConfiguration ? this.advanceConfig() : this.defaultConfig()}
+         </div>
+      );
    };
 
    get addModuleConfigButton() {
@@ -196,7 +189,7 @@ export default class ModuleConfiguration extends Component {
             </div>
 
             {this.state.displayEditConfigModal ? (
-               <EditConfig
+               <EditConfigFile
                   display={this.state.displayEditConfigModal}
                   configName={this.state.selectedEditFile}
                   moduleName={this.props.selectedModule.name}

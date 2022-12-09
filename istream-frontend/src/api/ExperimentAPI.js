@@ -34,60 +34,6 @@ export function getExperimentDependency(user, experimentId) {
    );
 }
 
-// export function addNewMachine(data) {
-//    return API.post("/experiment/addNewMachine", data).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          throw error.response;
-//       }
-//    );
-// }
-
-// export function getUserMachineList(user) {
-//    return API.get("/experiment/getUserMachineList", {
-//       params: {
-//          user,
-//       },
-//    }).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          return error.response;
-//       }
-//    );
-// }
-
-// export function saveComponentMachineInfo(data) {
-//    return API.post("/experiment/saveComponentMachineInfo", data).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          throw error.response;
-//       }
-//    );
-// }
-
-// export function getComponentSelectedMachine(user, componentName, experimentId) {
-//    return API.get("/experiment/getComponentSelectedMachine", {
-//       params: {
-//          user,
-//          componentName,
-//          experimentId,
-//       },
-//    }).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          return error.response;
-//       }
-//    );
-// }
-
 export function subscribeToBuildExperiment(userInfo, cb) {
    const SOCKET = openSocket(DOMAIN + "build");
    SOCKET.on("getExperiment‌BuildInfo", (data) => {

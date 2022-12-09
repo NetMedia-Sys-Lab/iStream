@@ -1,1 +1,1 @@
-[]
+[{"machineID":"1665683811479","sshUsername":"ubuntu","machineIp":"10.1.6.187","privateKeyName":"istream.pem"},{"machineID":"1670625499505","sshUsername":"test","machineIp":"10.10.10.10","privateKeyName":"kubernetes-master.pem"}]
