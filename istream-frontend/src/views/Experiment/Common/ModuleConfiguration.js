@@ -195,7 +195,7 @@ export default class ModuleConfiguration extends Component {
                {this.createConfigSelectionForm()}
             </div>
 
-            {/* {this.state.displayEditConfigModal ? (
+            {this.state.displayEditConfigModal ? (
                <EditConfig
                   display={this.state.displayEditConfigModal}
                   configName={this.state.selectedEditFile}
@@ -206,7 +206,7 @@ export default class ModuleConfiguration extends Component {
                />
             ) : (
                ""
-            )} */}
+            )}
 
             <AddConfigFile
                display={this.state.displayAddModuleConfigFile}

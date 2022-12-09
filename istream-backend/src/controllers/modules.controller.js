@@ -53,9 +53,9 @@ module.exports.getConfigFileData = (req, res) => {
 
    let filePath = "";
    if (isUserModule === "true") {
-      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configFileName}`;
+      filePath = `src/database/users/${username}/ModulesConfigs/User/${componentName}/${moduleName}/${configFileName}`;
    } else {
-      filePath = `src/database/users/${username}/iStreamModulesConfigs/${componentName}/${moduleName}/${configFileName}`;
+      filePath = `src/database/users/${username}/ModulesConfigs/iStream/${componentName}/${moduleName}/${configFileName}`;
    }
 
    fs.readFile(filePath, "utf8", function (err, data) {
@@ -75,9 +75,9 @@ module.exports.updateConfigFileData = (req, res) => {
 
    let filePath = "";
    if (isUserModule === true) {
-      filePath = `src/database/users/${username}/Modules/${componentName}/${moduleName}/Configs/${configName}`;
+      filePath = `src/database/users/${username}/ModulesConfigs/User/${componentName}/${moduleName}/${configName}`;
    } else {
-      filePath = `src/database/users/${username}/iStreamModulesConfigs/${componentName}/${moduleName}/${configName}`;
+      filePath = `src/database/users/${username}/ModulesConfigs/iStream/${componentName}/${moduleName}/${configName}`;
    }
 
    fs.writeFile(filePath, data, function (err) {
