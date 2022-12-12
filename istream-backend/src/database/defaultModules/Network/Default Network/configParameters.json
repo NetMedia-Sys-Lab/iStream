@@ -25,11 +25,6 @@
             "title": "Bandwidth Limit (Kbps)",
             "type": "number",
             "default": 0
-        },
-        "Test": {
-            "title": "test Limit (Kbps)",
-            "type": "number",
-            "default": 0
         }
     }
 }

@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const controller = require("../controllers/experiment.controller");
 
-
 router.get("/getUserExperimentsList", controller.getUserExperimentsList);
 router.get("/getExperimentConfig", controller.getExperimentConfig);
 router.get("/getExperimentData", controller.getExperimentData);

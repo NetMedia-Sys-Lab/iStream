@@ -1,0 +1,34 @@
+{
+   "Video": {
+      "id": ["1665530654334"],
+      "machineID": ""
+   },
+   "Server": {
+      "type": "iStream",
+      "name": "Nginx Dash",
+      "advanceConfig": true,
+      "configName": "No Config",
+      "machineID": ""
+   },
+   "Transcoder": {
+      "type": "",
+      "name": "",
+      "advanceConfig": "",
+      "configName": "",
+      "machineID": ""
+   },
+   "Network": {
+      "type": "iStream",
+      "name": "Default Network",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": ""
+   },
+   "Client": {
+      "type": "iStream",
+      "name": "Headless Player ABR",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": ""
+   }
+}

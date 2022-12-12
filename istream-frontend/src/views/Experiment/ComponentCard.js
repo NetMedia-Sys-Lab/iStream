@@ -15,7 +15,7 @@ import DockerConfiguration from "src/views/Experiment/Common/DockerConfiguration
 import { toast } from "react-toastify";
 import cloneDeep from "lodash/cloneDeep";
 
-export default class NetworkCard extends Component {
+export default class ComponentCard extends Component {
    state = {
       user: JSON.parse(localStorage.getItem("user")),
       totalNumberOfSteps: 3,
@@ -79,9 +79,11 @@ export default class NetworkCard extends Component {
       )
          .then((res) => {
             res.allConfigs.unshift("No Config");
+            console.log(res);
             let tempState = this.state.selectedModule;
             tempState.advanceConfig.names = res.allConfigs;
             tempState.simpleConfig.parameters = res.parameters;
+            tempState.simpleConfig.uiSchema = res.parametersUISchema;
             if (Object.keys(res.parameters).length === 0) {
                tempState.advanceConfiguration = true;
             }

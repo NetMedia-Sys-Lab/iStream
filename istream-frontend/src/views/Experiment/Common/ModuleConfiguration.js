@@ -53,6 +53,7 @@ export default class ModuleConfiguration extends Component {
    };
 
    defaultConfig = () => {
+      console.log(this.props.selectedModule.simpleConfig.uiSchema);
       return (
          <div>
             <Form

@@ -249,46 +249,36 @@ module.exports.build = (endpoint, socket) => {
 
 module.exports.run = (endpoint, socket) => {
    socket.on("subscribeToRunExperiment", (userInfo) => {
-      const experimentConfig = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
+      const experimentConfigPath = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
 
-      // const experimentConfigData = {
-      //    repetition: userInfo.numberOfRepetition,
-      // };
+      let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
+      experimentConfigData["repetition"] = Number(userInfo.numberOfRepetition);
+      fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
 
-      // const stringifyExperimentConfig = JSON.stringify(experimentConfigData);
+      // const spawn = require("child_process").spawn;
+      // const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
 
-      // fs.writeFile(experimentConfig, stringifyExperimentConfig, function (err) {
-      //    if (err) {
-      //       let errorMessage = "Something went wrong in setServerConfiguration: Couldn't write in ServerConfig file.";
-      //       console.log(errorMessage);
-      //       res.status(500).send(errorMessage);
+      // child.stdout.setEncoding("utf8");
+      // child.stdout.on("data", (data) => {
+      //    try {
+      //       endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
+      //    } catch (e) {
+      //       child.kill();
       //    }
       // });
 
-      const spawn = require("child_process").spawn;
-      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
+      // child.stderr.setEncoding("utf8");
+      // child.stderr.on("data", (data) => {
+      //    try {
+      //       console.log(data);
+      //    } catch (e) {
+      //       child.kill();
+      //    }
+      // });
 
-      child.stdout.setEncoding("utf8");
-      child.stdout.on("data", (data) => {
-         try {
-            endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
-         } catch (e) {
-            child.kill();
-         }
-      });
-
-      child.stderr.setEncoding("utf8");
-      child.stderr.on("data", (data) => {
-         try {
-            console.log(data);
-         } catch (e) {
-            child.kill();
-         }
-      });
-
-      child.on("close", function (code) {
-         endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
-         socket.disconnect();
-      });
+      // child.on("close", function (code) {
+      //    endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
+      //    socket.disconnect();
+      // });
    });
 };
