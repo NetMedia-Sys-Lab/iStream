@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Stepper from "src/views/Experiment/Common/Stepper";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
+import { ComponentsIcons } from "src/models/UserInterface";
 import { getUserVideosList, getDefaultVideosList, saveVideoModuleData, getVideoModuleData } from "src/api/VideoAPI";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -205,7 +206,7 @@ export default class VideoCard extends Component {
                onClick={() => this.setState({ displayModal: true })}
             >
                <h4 className="text-center">
-                  <i className="fa fa-play" style={{ color: "#244D5B" }}></i>
+                  <i className={`component-icon ${ComponentsIcons[this.state.componentName]}`}></i>
                   <br />
                   {this.state.componentName}
                </h4>

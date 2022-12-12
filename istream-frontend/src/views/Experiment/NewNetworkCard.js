@@ -4,6 +4,7 @@ import { getModules, getComponentData, getDockerConfig, saveComponentData } from
 import { getModuleConfigsAndParameters } from "src/api/ModulesAPI";
 
 import { ModuleInfo } from "src/models/Module";
+import { ComponentsIcons } from "src/models/UserInterface";
 
 import ShowComponentConfig from "src/views/Experiment/Common/ShowComponentConfig";
 import Stepper from "src/views/Experiment/Common/Stepper";
@@ -142,7 +143,6 @@ export default class NetworkCard extends Component {
          this.setState({ showModuleConfiguration: true });
          toast.success(res);
       });
-      // this.fetchData();
    };
 
    render() {
@@ -150,7 +150,7 @@ export default class NetworkCard extends Component {
          <div className="row justify-content-center mx-1">
             <div className="center-container module-card" onClick={() => this.setState({ displayStepperModal: true })}>
                <h4 className="text-center">
-                  <i className="fa fa-wifi module-icon"></i>
+                  <i className={`component-icon ${ComponentsIcons[this.state.componentName]}`}></i>
                   <br />
                   {this.state.componentName}
                </h4>
@@ -188,14 +188,9 @@ export default class NetworkCard extends Component {
                   />,
                ]}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
-               // updateSelectedModule={this.updateSelectedModule}
-               // isUserModule={this.state.selectedModule.type === "Custom"}
                componentName={this.state.componentName}
                onSubmit={this.onSubmit}
-               // updateData={this.fetchData}
-               // updateConfigFiles={this.getOneModuleData}
                selectedModule={this.state.selectedModule}
-               // experimentId={this.props.experimentId}
             />
          </div>
       );

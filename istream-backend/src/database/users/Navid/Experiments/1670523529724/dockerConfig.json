@@ -1,1 +1,1 @@
-{"Server":{"port":6060,"cpus":0,"memory":0},"Network":{"port":8080,"cpus":0,"memory":10},"Client":{"port":10,"cpus":10,"memory":20}}
+{"Server":{"port":6060,"cpus":0,"memory":10},"Network":{"port":8080,"cpus":0,"memory":10},"Client":{"port":10,"cpus":10,"memory":20}}
