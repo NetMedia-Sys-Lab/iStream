@@ -255,30 +255,30 @@ module.exports.run = (endpoint, socket) => {
       experimentConfigData["repetition"] = Number(userInfo.numberOfRepetition);
       fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
 
-      // const spawn = require("child_process").spawn;
-      // const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
+      const spawn = require("child_process").spawn;
+      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
 
-      // child.stdout.setEncoding("utf8");
-      // child.stdout.on("data", (data) => {
-      //    try {
-      //       endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
-      //    } catch (e) {
-      //       child.kill();
-      //    }
-      // });
+      child.stdout.setEncoding("utf8");
+      child.stdout.on("data", (data) => {
+         try {
+            endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
+         } catch (e) {
+            child.kill();
+         }
+      });
 
-      // child.stderr.setEncoding("utf8");
-      // child.stderr.on("data", (data) => {
-      //    try {
-      //       console.log(data);
-      //    } catch (e) {
-      //       child.kill();
-      //    }
-      // });
+      child.stderr.setEncoding("utf8");
+      child.stderr.on("data", (data) => {
+         try {
+            console.log(data);
+         } catch (e) {
+            child.kill();
+         }
+      });
 
-      // child.on("close", function (code) {
-      //    endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
-      //    socket.disconnect();
-      // });
+      child.on("close", function (code) {
+         endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
+         socket.disconnect();
+      });
    });
 };

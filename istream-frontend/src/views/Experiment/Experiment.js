@@ -30,16 +30,13 @@ class Experiment extends Component {
 
       getExperimentConfig(this.state.user, this.state.experimentId)
          .then((res) => {
-            this.setState(
-               {
-                  experimentConfig: {
-                     networkComponentExistence: res.networkComponentExistence,
-                     transcoderComponentExistence: res.transcoderComponentExistence,
-                     repetition: res.repetition,
-                  },
+            this.setState({
+               experimentConfig: {
+                  networkComponentExistence: res.networkComponentExistence,
+                  transcoderComponentExistence: res.transcoderComponentExistence,
+                  repetition: res.repetition,
                },
-               () => console.log(this.state.experimentConfig)
-            );
+            });
          })
          .catch((e) => {
             toast.warn(e.data);
@@ -57,28 +54,34 @@ class Experiment extends Component {
          <main>
             <div className="h-100 main-height">
                <Header />
-               <div className="container">
-                  <div className="row mt-4">
-                     <h2>Config Experiment</h2>
+               <div>
+                  <div className="container">
+                     <div className="row mt-4">
+                        <h2>Config Experiment</h2>
+                     </div>
+                     <div className="row">
+                        <div className="col-lg p-0">
+                           <VideoCard experimentId={this.state.experimentId} />
+                        </div>
+
+                        <div className="col-lg p-0">
+                           <ComponentCard experimentId={this.state.experimentId} componentName="Server" />
+                        </div>
+
+                        {this.state.experimentConfig.networkComponentExistence ? (
+                           <div className="col-lg p-0">
+                              <ComponentCard experimentId={this.state.experimentId} componentName="Network" />
+                           </div>
+                        ) : (
+                           ""
+                        )}
+
+                        <div className="col-lg p-0">
+                           <ComponentCard experimentId={this.state.experimentId} componentName="Client" />
+                        </div>
+                     </div>
                   </div>
-                  <div className="row">
-                     <div className="col-lg p-0">
-                        <VideoCard experimentId={this.state.experimentId} />
-                     </div>
-
-                     <div className="col-lg p-0">
-                        <ComponentCard experimentId={this.state.experimentId} componentName="Server" />
-                     </div>
-
-                     <div className="col-lg p-0">
-                        <ComponentCard experimentId={this.state.experimentId} componentName="Network" />
-                     </div>
-
-                     <div className="col-lg p-0">
-                        <ComponentCard experimentId={this.state.experimentId} componentName="Client" />
-                     </div>
-                  </div>
-                  <div className="row space">
+                  <div className="container">
                      <div>
                         <BuildExperiment experimentId={this.state.experimentId} />
                         <RunExperiment
@@ -86,8 +89,6 @@ class Experiment extends Component {
                            numberOfRepetition={this.state.experimentConfig.repetition}
                            updateState={this.updateState}
                         />
-
-                        {/* <Button variant="danger">Stop</Button> */}
                      </div>
                   </div>
                </div>

@@ -3,21 +3,24 @@
 username=$1
 experimentId=$2
 
-experimentsList=$(jq --arg experimentId ${experimentId} '.[] | select(.experimentId == $experimentId)' src/database/users/${username}/experiments_list.json)
-transcoderComponentExistence=$(jq '.transcoderComponentExistence' <<<${experimentsList})
-networkComponentExistence=$(jq '.networkComponentExistence' <<<${experimentsList})
+transcoderComponentExistence=$(jq -r '.transcoderComponentExistence' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+networkComponentExistence=$(jq -r '.networkComponentExistence' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+
+# experimentConfig=$(jq --arg experimentId ${experimentId} '.[] | select(.experimentId == $experimentId)' src/database/users/${username}/experiments_list.json)
+# # transcoderComponentExistence=$(jq '.transcoderComponentExistence' <<<${experimentsList})
+# networkComponentExistence=$(jq '.networkComponentExistence' <<<${experimentsList})
 
 # Server Component
 echo "------ Server component building started ------"
-# sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
+sh src/database/scripts/Server/build.sh "${username}" "${experimentId}" 2>&1
 echo "------ Server component building Finished ------"
 
 # Transcoder Component
-if [ ${transcoderComponentExistence} = true ]; then
-    echo "------ Transcoder component building started ------"
-    # sh src/database/scripts/Transcoder/build.sh "${username}" "${experimentId}" 2>&1
-    echo "------ Transcoder component building Finished ------"
-fi
+# if [ ${transcoderComponentExistence} = true ]; then
+#     echo "------ Transcoder component building started ------"
+#     sh src/database/scripts/Transcoder/build.sh "${username}" "${experimentId}" 2>&1
+#     echo "------ Transcoder component building Finished ------"
+# fi
 
 # Network Component
 if [ ${networkComponentExistence} = true ]; then

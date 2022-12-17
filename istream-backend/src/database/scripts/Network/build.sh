@@ -10,17 +10,21 @@ if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
     exit
 else
-    if [[ "${networkType}" == "iStream" && "${networkName}" == "Default Network" ]]; then
-        serverContainerPort=$(jq -r '.port' src/database/users/${username}/Experiments/${experimentId}/serverConfig.json)
-        serverMachineId=$(jq -r '.Server.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-        serverMachineIp=0
-        if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
-            read sshUsername serverMachineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${serverMachineId}")
-        fi
+    serverContainerPort=$(jq -r '.Server.port' src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json)
+    serverMachineId=$(jq -r '.Server.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-        python3 src/database/scripts/Network/setupNetworkProxy.py "${serverMachineIp}" "${serverContainerPort}"
+    serverMachineIP=0
+    if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
+        read sshUsername serverMachineIP privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${serverMachineId}")
+    else
+        serverMachineIP=$(python3 src/database/scripts/Network/retrieveHostIP.py 2>&1)
     fi
 
-    sh src/database/scripts/Common/build.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}"
+    arguments=$(jq -n \
+        --arg serverMachineIP "$serverMachineIP" \
+        --arg serverContainerPort "$serverContainerPort" \
+        '{serverMachineIP: $serverMachineIP, serverContainerPort: $serverContainerPort}')
+
+    sh src/database/scripts/Common/build.sh "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}"
 fi

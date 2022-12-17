@@ -147,7 +147,7 @@ export default class ModuleSelection extends Component {
                this.setState({ displayAddModule: true });
             }}
          >
-            Add New Module
+            +
          </Button>
       );
    }

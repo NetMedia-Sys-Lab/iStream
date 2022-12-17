@@ -5,11 +5,12 @@ component=$2
 componentName=$3
 componentType=$4
 componentMachineId=$5
+arguments=$6
 
 mainDir=$(pwd)
 
 if [[ "${componentType}" == "iStream" ]]; then
-    componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
+    componentPath="${mainDir}/src/database/defaultModules/${component}/${componentName}"
 elif [[ "${componentType}" == "Custom" ]]; then
     componentPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}"
 fi
@@ -18,11 +19,12 @@ buildFileName=$(ls -p "${componentPath}" | grep -v / | grep "build")
 buildFileExtention=${buildFileName##*.}
 
 if [[ ${buildFileExtention} = "py" ]]; then
-    commandToRunInClusterForBuild="cd '${componentName}' && python3 build.py"
-    commandToRunInLocal=(python3 "${componentPath}/build.py")
+    # Not tested
+    commandToRunInClusterForBuild="cd '${componentName}' && python3 build.py ${arguments}"
+    commandToRunInLocal=(python3 "${componentPath}/build.py" "${arguments}")
 elif [[ ${buildFileExtention} = "sh" ]]; then
-    commandToRunInClusterForBuild="cd '${componentName}' && bash build.sh"
-    commandToRunInLocal=(sh "${componentPath}/build.sh")
+    commandToRunInClusterForBuild="cd '${componentName}' && bash build.sh '${arguments}'"
+    commandToRunInLocal=(sh "${componentPath}/build.sh" "${arguments}")
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
