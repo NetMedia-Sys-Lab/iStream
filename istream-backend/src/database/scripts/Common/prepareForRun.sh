@@ -1,48 +1,56 @@
 #!/bin/bash
 
 username=$1
-component=$2
-componentName=$3
-componentType=$4
-componentMachineId=$5
-componentConfigName=$6
-
-configFileExtention=${componentConfigName##*.}
+experimentId=$2
+component=$3
+moduleName=$4
+moduleType=$5
+moduleMachineId=$6
+moduleAdvanceConfig=$7
+moduleConfigName=$8
 
 mainDir=$(pwd)
 
-if [[ "${componentType}" == "iStream" ]]; then
-    componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
-    configFilePath="${mainDir}/src/database/users/${username}/iStreamModulesScripts/${component}/${componentName}/${componentConfigName}"
-    resultsPath="${componentPath}/Results"
-    configPath="${componentPath}/Config"
-elif [[ "${componentType}" == "Custom" ]]; then
-    componentPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}"
-    configFilePath="${componentPath}/Configs/${componentConfigName}"
-    configPath="${componentPath}/Config"
-    resultsPath="${componentPath}/Results"
+if [[ "${moduleType}" == "iStream" ]]; then
+    modulePath="${mainDir}/src/database/defaultModules/${component}/${moduleName}"
+elif [[ "${moduleType}" == "Custom" ]]; then
+    modulePath="${mainDir}/src/database/users/${username}/Modules/${component}/${moduleName}"
 fi
 
-runFileName=$(ls -p "${componentPath}" | grep -v / | grep "run")
-runFileExtention=${runFileName##*.}
+if [[ "${moduleAdvanceConfig}" == false ]]; then
+    configFilePath="${mainDir}/src/database/users/${username}/Experiments/${experimentId}/${component}Config.json"
+    configFileExtention="json"
+else
+    if [[ "${moduleType}" == "iStream" ]]; then
+        configFilePath="${mainDir}/src/database/users/${username}/ModulesConfigs/iStream/${component}/${moduleName}/${moduleConfigName}"
+    elif [[ "${moduleType}" == "Custom" ]]; then
+        configFilePath="${mainDir}/src/database/users/${username}/ModulesConfigs/User/${component}/${moduleName}/${moduleConfigName}"
+    fi
+    configFileExtention=${moduleConfigName##*.}
+fi
 
-if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
-    commandToRunInClusterForConfigAndResult="cd '${componentName}' && mkdir -p Results && mkdir -p Config && mkdir -p Run && rm -rf Config/* Results/* Run/*"
+configPath="${modulePath}/Run"
+resultsPath="${modulePath}/Results"
+
+runFileName=$(ls -p "${modulePath}" | grep -v / | grep "run")
+
+if [[ "${moduleMachineId}" != "" ]] && [[ "${moduleMachineId}" != "0" ]]; then
+    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${moduleMachineId}")
+    commandToRunInClusterForConfigAndResult="cd '${moduleName}' && mkdir -p Results && mkdir -p Run && rm -rf Run/* && rm -rf Results/*"
     sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForConfigAndResult}"
 
     echo "Move run files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${componentPath}" "run" "${componentName}" "${runFileName}"
+    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${modulePath}" "run" "${moduleName}" "${runFileName}"
 
-    if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
+    if [[ ${moduleAdvanceConfig} == false || !("${moduleConfigName}" == "" ||  "${moduleConfigName}" == "No Config") ]]; then
         echo "Move config file to the designated server"
-        sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${componentName}" "${configFileExtention}"
+        sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${moduleName}" "${configFileExtention}"
     fi
 else
-    mkdir -p "${configPath}" "${resultsPath}"
-    rm -rf "${configPath}"/* "${resultsPath}"/*
+    mkdir -p "${resultsPath}"
+    rm -rf "${resultsPath}"/*
 
-    if [[ !("${componentConfigName}" == "" ||  "${componentConfigName}" == "No Config") ]]; then
+    if [[ ${moduleAdvanceConfig} == false || !("${moduleConfigName}" == "" ||  "${moduleConfigName}" == "No Config") ]]; then
         echo "Move Config file beside the component"
         cp "${configFilePath}" "${configPath}/config.${configFileExtention}"
     fi

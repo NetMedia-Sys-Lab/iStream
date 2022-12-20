@@ -20,7 +20,7 @@ buildFileExtention=${buildFileName##*.}
 
 if [[ ${buildFileExtention} = "py" ]]; then
     # Not tested
-    commandToRunInClusterForBuild="cd '${componentName}' && python3 build.py ${arguments}"
+    commandToRunInClusterForBuild="cd '${componentName}' && python3 build.py '${arguments}'"
     commandToRunInLocal=(python3 "${componentPath}/build.py" "${arguments}")
 elif [[ ${buildFileExtention} = "sh" ]]; then
     commandToRunInClusterForBuild="cd '${componentName}' && bash build.sh '${arguments}'"

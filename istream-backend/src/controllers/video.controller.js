@@ -155,10 +155,7 @@ module.exports.getVideoModuleData = (req, res) => {
    const componentName = req.query.componentName;
    const experimentId = req.query.experimentId;
 
-   const userMachinesListPath = `src/database/users/${username}/machine_list.json`;
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
-
-   let machineList = JSON.parse(fs.readFileSync(userMachinesListPath, "utf8"));
 
    fs.readFile(dependencyFile, "utf8", function (err, data) {
       if (err) {
@@ -169,10 +166,6 @@ module.exports.getVideoModuleData = (req, res) => {
 
       const jsonData = JSON.parse(data);
       const videosData = jsonData[componentName];
-
-      if (videosData.machineID !== "" && videosData.machineID !== "0") {
-         videosData.machineID = machineList.find((machine) => machine.machineID === videosData.machineID)["machineIp"];
-      }
 
       res.status(200).send(videosData);
    });

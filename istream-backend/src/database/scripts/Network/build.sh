@@ -18,7 +18,7 @@ else
     if [[ "${serverMachineId}" != "" ]] && [[ "${serverMachineId}" != "0" ]]; then
         read sshUsername serverMachineIP privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${serverMachineId}")
     else
-        serverMachineIP=$(python3 src/database/scripts/Network/retrieveHostIP.py 2>&1)
+        serverMachineIP=$(python3 src/database/scripts/Common/retrieveHostIP.py 2>&1)
     fi
 
     arguments=$(jq -n \

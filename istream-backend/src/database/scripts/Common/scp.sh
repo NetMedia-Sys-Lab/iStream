@@ -25,7 +25,7 @@ elif [[ "${scpKind}" == "run" ]]; then
     scp -r -i "${privateKeyPath}" "${filePath}/Run" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}"
     scp -i "${privateKeyPath}" "${filePath}/${runFileName}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}"
 elif [[ "${scpKind}" == "config" ]]; then
-    scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}/Config/config.${configFileExtention}"
+    scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}/Run/config.${configFileExtention}"
 elif [[ "${scpKind}" == "video" ]]; then
     scp -i "${privateKeyPath}" "${filePath}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/Videos/${videoName}"
 fi

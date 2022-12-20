@@ -1,13 +1,15 @@
 #!/bin/bash
+arguments=$1
 
 DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
+
+networkDockerPort=$(jq -r '.networkContainerPort' <<<${arguments})
 
 docker ps -a -q --filter "name=network_container" | grep -q . &&
     echo "Remove previous network docker container" && docker stop network_container && docker rm -fv network_container
 
-docker run --cap-add NET_ADMIN --name network_container -p 9090:8080 -d network_image
+python3 "${DIR}/Run/setupNetworkConfigs.py"
 
-docker exec network_container tcset eth0 --delay 10ms   
-#docker cp "${DIR}/Config/config.sh" network_container:/
-#docker exec network_container chmod 777 ./config.sh
-#docker exec network_container ./config.sh
+docker run --cap-add NET_ADMIN --name network_container -p ${networkDockerPort}:8080 -d network_image
+
+sh "${DIR}/Run/applyNetworksConfig.sh"

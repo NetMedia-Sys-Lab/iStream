@@ -1,20 +1,24 @@
 import sys
 import json
+import os
+import glob
 
-networkContainerPort = sys.argv[1]
-iStreamNetworkManualConfig = sys.argv[2]
+defaultConfigPath = "{}/config.json".format(
+    os.path.realpath(os.path.dirname(__file__)))
 
-if iStreamNetworkManualConfig == 'false':
-    networkConfig = json.loads(sys.argv[3])
-elif iStreamNetworkManualConfig == 'true':
-    networkConfigName = sys.argv[4]
+networkConfigTemplateScript = "{}/networksConfigTemplates.sh".format(
+    os.path.realpath(os.path.dirname(__file__)))
 
-with open("src/database/supportedModulesTemplates/Network/Default Network/run.sh", "rt") as fileToChange:
+applyNetworkConfigScript = "{}/applyNetworksConfig.sh".format(
+    os.path.realpath(os.path.dirname(__file__)))
+
+with open(networkConfigTemplateScript, "rt") as fileToChange:
     filedata = fileToChange.read()
-    filedata = filedata.replace(
-        '${networkContainerPort}', networkContainerPort)
 
-    if iStreamNetworkManualConfig == 'false':
+    if os.path.isfile(defaultConfigPath):
+        with open(defaultConfigPath, "rt") as configFile:
+            networkConfig = json.load(configFile)
+
         if networkConfig['delay'] != 0:
             filedata = filedata.replace(
                 '${delay}', '--delay ' + str(networkConfig['delay']) + 'ms')
@@ -47,17 +51,21 @@ with open("src/database/supportedModulesTemplates/Network/Default Network/run.sh
             '${defaultConfig}', '')
         filedata = filedata.replace(
             '${manualConfig}', '#')
-    elif iStreamNetworkManualConfig == 'true':
-        if networkConfigName == "" or networkConfigName == "No Config":
-            filedata = filedata.replace(
-                '${manualConfig}', '#')
-            filedata = filedata.replace(
-                '${defaultConfig}', '#')
-        else:
+    else:
+        if glob.glob("{}/config.*".format(
+                os.path.realpath(os.path.dirname(__file__)))):
             filedata = filedata.replace(
                 '${manualConfig}', '')
             filedata = filedata.replace(
                 '${defaultConfig}', '#')
+        else:
+            filedata = filedata.replace(
+                '${manualConfig}', '#')
+            filedata = filedata.replace(
+                '${defaultConfig}', '#')
 
-    with open('src/database/supportedModules/Network/Default Network/run.sh', 'w') as fileToWrite:
+    with open(applyNetworkConfigScript, 'w') as fileToWrite:
         fileToWrite.write(filedata)
+
+    # with open('src/database/supportedModules/Network/Default Network/run.sh', 'w') as fileToWrite:
+    #     fileToWrite.write(filedata)

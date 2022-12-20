@@ -1,7 +1,6 @@
 const experimentDataModel = {
    Video: {
       id: "",
-      machineID: "",
    },
    Server: {
       type: "",

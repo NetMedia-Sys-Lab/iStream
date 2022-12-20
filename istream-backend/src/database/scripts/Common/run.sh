@@ -5,15 +5,12 @@ component=$2
 componentName=$3
 componentType=$4
 componentMachineId=$5
-componentConfigName=$6
-
-configFileExtention=${componentConfigName##*.}
+arguments=$6
 
 mainDir=$(pwd)
 
 if [[ "${componentType}" == "iStream" ]]; then
-    componentPath="${mainDir}/src/database/supportedModules/${component}/${componentName}"
-
+    componentPath="${mainDir}/src/database/defaultModules/${component}/${componentName}"
 elif [[ "${componentType}" == "Custom" ]]; then
     componentPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}"
 fi
@@ -22,11 +19,11 @@ runFileName=$(ls -p "${componentPath}" | grep -v / | grep "run")
 runFileExtention=${runFileName##*.}
 
 if [[ ${runFileExtention} = "py" ]]; then
-    commandToRunInCluster="cd '${componentName}' && python3 run.py"
-    commandToRunInLocal=(python3 "${componentPath}/run.py")
+    commandToRunInCluster="cd '${componentName}' && python3 run.py '${arguments}'"
+    commandToRunInLocal=(python3 "${componentPath}/run.py" "${arguments}")
 elif [[ ${runFileExtention} = "sh" ]]; then
-    commandToRunInCluster="cd '${componentName}' && bash run.sh"
-    commandToRunInLocal=(sh "${componentPath}/run.sh")
+    commandToRunInCluster="cd '${componentName}' && bash run.sh '${arguments}'"
+    commandToRunInLocal=(sh "${componentPath}/run.sh" "${arguments}")
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then

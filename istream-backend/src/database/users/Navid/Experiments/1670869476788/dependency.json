@@ -1,1 +1,34 @@
-{"Video":{"id":["1665530654334"],"machineID":""},"Server":{"type":"iStream","name":"Nginx Dash","advanceConfig":true,"configName":"No Config","machineID":"1670887285766"},"Transcoder":{"type":"","name":"","advanceConfig":"","configName":"","machineID":""},"Network":{"type":"iStream","name":"Default Network","advanceConfig":false,"configName":"","machineID":"1670887285766"},"Client":{"type":"iStream","name":"Headless Player ABR","advanceConfig":false,"configName":"","machineID":""}}
+{
+   "Video": {
+      "id": ["1665530654334"],
+      "machineID": ""
+   },
+   "Server": {
+      "type": "iStream",
+      "name": "Nginx Dash",
+      "advanceConfig": true,
+      "configName": "No Config",
+      "machineID": "1670887285766"
+   },
+   "Transcoder": {
+      "type": "",
+      "name": "",
+      "advanceConfig": "",
+      "configName": "",
+      "machineID": ""
+   },
+   "Network": {
+      "type": "iStream",
+      "name": "Default Network",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": "1670887285766"
+   },
+   "Client": {
+      "type": "iStream",
+      "name": "Headless Player ABR",
+      "advanceConfig": false,
+      "configName": "",
+      "machineID": ""
+   }
+}
