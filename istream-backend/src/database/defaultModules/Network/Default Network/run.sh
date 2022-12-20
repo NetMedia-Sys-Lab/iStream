@@ -1,8 +1,8 @@
 #!/bin/bash
 arguments=$1
 
-DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
-
+# DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
+DIR="$(dirname -- "$0")"
 networkDockerPort=$(jq -r '.networkContainerPort' <<<${arguments})
 
 docker ps -a -q --filter "name=network_container" | grep -q . &&

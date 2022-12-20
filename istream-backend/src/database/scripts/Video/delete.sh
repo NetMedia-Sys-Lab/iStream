@@ -1,3 +1,4 @@
+#!/bin/bash
 username=$1
 experimentId=$2
 

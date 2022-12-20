@@ -28,7 +28,7 @@ elif [[ ${buildFileExtention} = "sh" ]]; then
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh "${mainDir}/src/database/scripts/Common/findMachine.sh" "${username}" "${componentMachineId}")
+    read sshUsername machineIp privateKeyPath <<<$(bash "${mainDir}/src/database/scripts/Common/findMachine.sh" "${username}" "${componentMachineId}")
 
     commandToRunInClusterBeforeBuild="rm -rf '${componentName}' && mkdir -p '${componentName}'/Build"
     bash "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterBeforeBuild}"
