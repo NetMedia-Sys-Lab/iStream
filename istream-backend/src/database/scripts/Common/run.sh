@@ -23,7 +23,7 @@ if [[ ${runFileExtention} = "py" ]]; then
     commandToRunInLocal=(python3 "${componentPath}/run.py" "${arguments}")
 elif [[ ${runFileExtention} = "sh" ]]; then
     commandToRunInCluster="cd '${componentName}' && bash run.sh '${arguments}'"
-    commandToRunInLocal=(sh "${componentPath}/run.sh" "${arguments}")
+    commandToRunInLocal=(bash "${componentPath}/run.sh" "${arguments}")
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then

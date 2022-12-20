@@ -3,6 +3,8 @@ username=$1
 experimentId=$2
 firstRun=$3
 
+mainDir=$(pwd)
+
 clientName=$(jq -r '.Client.name' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 clientConfigName=$(jq -r '.Client.configName' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 clientAdvanceConfig=$(jq -r '.Client.advanceConfig' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")

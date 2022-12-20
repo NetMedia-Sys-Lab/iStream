@@ -3,6 +3,8 @@ username=$1
 experimentId=$2
 firstRun=$3
 
+mainDir=$(pwd)
+
 networkName=$(jq -r '.Network.name' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 networkConfigName=$(jq -r '.Network.configName' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 networkAdvanceConfig=$(jq -r '.Network.advanceConfig' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
