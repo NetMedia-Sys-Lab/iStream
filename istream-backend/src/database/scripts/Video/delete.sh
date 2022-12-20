@@ -4,8 +4,8 @@ experimentId=$2
 
 mainDir=$(pwd)
 
-serverName=$(jq -r '.Server.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
-serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+serverName=$(jq -r '.Server.name' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
+serverType=$(jq -r '.Server.type' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 
 if [[ "${serverType}" == "iStream" ]]; then
     path="${mainDir}/src/database/defaultModules/Server/${serverName}/Run/Videos"

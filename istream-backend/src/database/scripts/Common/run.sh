@@ -27,10 +27,10 @@ elif [[ ${runFileExtention} = "sh" ]]; then
 fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
+    read sshUsername machineIp privateKeyPath <<<$(bash "${mainDir}/src/database/scripts/Common/findMachine.sh" "${username}" "${componentMachineId}")
 
     echo "Run run script"
-    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
+    bash "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInCluster}"
 else
     echo "Run run script"
     "${commandToRunInLocal[@]}"

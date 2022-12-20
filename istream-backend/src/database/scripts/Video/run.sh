@@ -4,10 +4,10 @@ experimentId=$2
 
 mainDir=$(pwd)
 
-selectedVideosId=($(jq -r '.Video.id[]' src/database/users/${username}/Experiments/${experimentId}/dependency.json))
+selectedVideosId=($(jq -r '.Video.id[]' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json"))
 
-userVideosList=$(jq -r '.' src/database/users/${username}/Videos/videos_list.json)
-defaultVideosList=$(jq -r '.' src/database/defaultVideos/default_videos_list.json)
+userVideosList=$(jq -r '.' "${mainDir}/src/database/users/${username}/Videos/videos_list.json")
+defaultVideosList=$(jq -r '.' "${mainDir}/src/database/defaultVideos/default_videos_list.json")
 
 userVideosName=()
 defaultVideosName=()
@@ -35,8 +35,8 @@ for i in "${!selectedVideosId[@]}"; do
     fi
 done
 
-serverName=$(jq -r '.Server.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
-serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+serverName=$(jq -r '.Server.name' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
+serverType=$(jq -r '.Server.type' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 
 if [[ "${serverType}" == "iStream" ]]; then
     serverVideosDirectoryPath="${mainDir}/src/database/defaultModules/Server/${serverName}/Run/Videos"
