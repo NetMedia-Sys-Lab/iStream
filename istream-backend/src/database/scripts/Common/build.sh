@@ -31,13 +31,13 @@ if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; 
     read sshUsername machineIp privateKeyPath <<<$(sh "${mainDir}/src/database/scripts/Common/findMachine.sh" "${username}" "${componentMachineId}")
 
     commandToRunInClusterBeforeBuild="rm -rf '${componentName}' && mkdir -p '${componentName}'/Build"
-    sh "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterBeforeBuild}"
+    bash "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterBeforeBuild}"
 
     echo "Move build files to the designated server"
-    sh "${mainDir}/src/database/scripts/Common/scp.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${componentPath}" "build" "${componentName}" "${buildFileName}"
+    bash "${mainDir}/src/database/scripts/Common/scp.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${componentPath}" "build" "${componentName}" "${buildFileName}"
 
     echo "Build script is running - This could take couple of minutes"
-    sh "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForBuild}"
+    bash "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForBuild}"
 else
     echo "Build script is running - This could take couple of minutes"
     "${commandToRunInLocal[@]}"

@@ -10,7 +10,7 @@ networkComponentExistence=$(jq -r '.networkComponentExistence' src/database/user
 
 # Server Component
 echo "------ Server component building started ------"
-sh "${mainDir}/src/database/scripts/Server/build.sh" "${username}" "${experimentId}" 2>&1
+bash "${mainDir}/src/database/scripts/Server/build.sh" "${username}" "${experimentId}" 2>&1
 echo "------ Server component building Finished ------"
 
 # Transcoder Component
@@ -23,13 +23,13 @@ echo "------ Server component building Finished ------"
 # Network Component
 if [ ${networkComponentExistence} = true ]; then
     echo "------ Network component building started ------"
-    sh "${mainDir}/src/database/scripts/Network/build.sh" "${username}" "${experimentId}" 2>&1
+    bash "${mainDir}/src/database/scripts/Network/build.sh" "${username}" "${experimentId}" 2>&1
     echo "------ Network component building Finished ------"
 fi
 
 # Client Component
 echo "------ Client component building started ------"
-sh "${mainDir}/src/database/scripts/Client/build.sh" "${username}" "${experimentId}" 2>&1
+bash "${mainDir}/src/database/scripts/Client/build.sh" "${username}" "${experimentId}" 2>&1
 echo "------ Client component building Finished ------"
 
 echo -n "Experiment has been built"

@@ -28,5 +28,5 @@ else
         --arg serverContainerPort "$serverContainerPort" \
         '{serverMachineIP: $serverMachineIP, serverContainerPort: $serverContainerPort}')
 
-    sh "${mainDir}/src/database/scripts/Common/build.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}"
+    bash "${mainDir}/src/database/scripts/Common/build.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}"
 fi
