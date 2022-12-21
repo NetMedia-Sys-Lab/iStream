@@ -10,18 +10,6 @@
       "description": "Linux Traffic Control"
    }],
    "Client": [{
-      "id": "3",
-      "name": "GPAC",
-      "description": "test"
-   }, {
-      "id": "4",
-      "name": "GPAC Sonali",
-      "description": "test"
-   }, {
-      "id": "5",
-      "name": "Headless Player",
-      "description": "test"
-   }, {
       "id": "6",
       "name": "Headless Player ABR",
       "description": "test"

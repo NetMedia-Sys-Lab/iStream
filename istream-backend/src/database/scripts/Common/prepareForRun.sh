@@ -35,16 +35,16 @@ resultsPath="${modulePath}/Results"
 runFileName=$(ls -p "${modulePath}" | grep -v / | grep "run")
 
 if [[ "${moduleMachineId}" != "" ]] && [[ "${moduleMachineId}" != "0" ]]; then
-    read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${moduleMachineId}")
+    read sshUsername machineIp privateKeyPath <<<$(bash "${mainDir}/src/database/scripts/Common/findMachine.sh" "${username}" "${moduleMachineId}")
     commandToRunInClusterForConfigAndResult="cd '${moduleName}' && mkdir -p Results && mkdir -p Run && rm -rf Run/* && rm -rf Results/*"
-    sh src/database/scripts/Common/ssh.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForConfigAndResult}"
+    bash "${mainDir}/src/database/scripts/Common/ssh.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${commandToRunInClusterForConfigAndResult}"
 
     echo "Move run files to the designated server"
-    sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${modulePath}" "run" "${moduleName}" "${runFileName}"
+    bash "${mainDir}/src/database/scripts/Common/scp.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${modulePath}" "run" "${moduleName}" "${runFileName}"
 
     if [[ ${moduleAdvanceConfig} == false || !("${moduleConfigName}" == "" ||  "${moduleConfigName}" == "No Config") ]]; then
         echo "Move config file to the designated server"
-        sh src/database/scripts/Common/scp.sh "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${moduleName}" "${configFileExtention}"
+        bash "${mainDir}/src/database/scripts/Common/scp.sh" "${sshUsername}" "${machineIp}" "${privateKeyPath}" "${configFilePath}" "config" "${moduleName}" "${configFileExtention}"
     fi
 else
     mkdir -p "${resultsPath}"
