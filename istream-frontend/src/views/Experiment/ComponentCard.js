@@ -48,6 +48,7 @@ export default class ComponentCard extends Component {
    fetchData = () => {
       getComponentData(this.state.user, this.props.experimentId, this.state.componentName).then((data) => {
          if (data.name !== "") {
+            console.log(data);
             this.setState({
                selectedModule: data,
                savedModule: cloneDeep(data),
@@ -83,6 +84,7 @@ export default class ComponentCard extends Component {
             let tempState = this.state.selectedModule;
             tempState.advanceConfig.names = res.allConfigs;
             tempState.simpleConfig.parameters = res.parameters;
+            tempState.advanceConfigurationExist = res.advanceConfigurationExist;
             tempState.simpleConfig.uiSchema = res.parametersUISchema;
             if (Object.keys(res.parameters).length === 0) {
                tempState.advanceConfiguration = true;

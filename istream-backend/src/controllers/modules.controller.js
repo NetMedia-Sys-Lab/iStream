@@ -21,6 +21,7 @@ module.exports.getModuleConfigsAndParameters = (req, res) => {
 
    let moduleConfigsList = [];
    let moduleParameters = {};
+   let advanceConfigurationExist = true;
    let parametersUISchema = {};
 
    try {
@@ -32,7 +33,11 @@ module.exports.getModuleConfigsAndParameters = (req, res) => {
    }
 
    try {
-      if (fs.existsSync(moduleParametersDirectoryPath)) moduleParameters = JSON.parse(fs.readFileSync(moduleParametersDirectoryPath));
+      if (fs.existsSync(moduleParametersDirectoryPath)) {
+         let moduleParametersData = JSON.parse(fs.readFileSync(moduleParametersDirectoryPath));
+         advanceConfigurationExist = moduleParametersData.advancedConfiguration;
+         moduleParameters = moduleParametersData.parameters;
+      }
       if (fs.existsSync(moduleParametersUISchemaDirectoryPath))
          parametersUISchema = JSON.parse(fs.readFileSync(moduleParametersUISchemaDirectoryPath));
    } catch (e) {
@@ -41,7 +46,12 @@ module.exports.getModuleConfigsAndParameters = (req, res) => {
       res.status(500).send(errorMessage);
    }
 
-   res.send({ allConfigs: moduleConfigsList, parameters: moduleParameters, parametersUISchema: parametersUISchema });
+   res.send({
+      allConfigs: moduleConfigsList,
+      advanceConfigurationExist: advanceConfigurationExist,
+      parameters: moduleParameters,
+      parametersUISchema: parametersUISchema,
+   });
 };
 
 module.exports.getConfigFileData = (req, res) => {

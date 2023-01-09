@@ -3,6 +3,7 @@ export const ModuleInfo = {
    name: "",
    id: "",
    advanceConfiguration: false,
+   advanceConfigurationExist: true,
    machineID: "",
    advanceConfig: {
       names: [],

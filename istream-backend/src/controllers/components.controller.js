@@ -54,6 +54,7 @@ module.exports.getComponentData = (req, res) => {
          moduleData.advanceConfiguration = jsonData[componentName].advanceConfig;
          moduleData.advanceConfig.selected = jsonData[componentName].configName;
          moduleData.machineID = jsonData[componentName].machineID;
+         moduleData.advanceConfigurationExist = true;
 
          if (moduleData.type === "iStream") {
             const defaultModulesListPath = `src/database/defaultModules/default_modules_list.json`;
@@ -98,8 +99,13 @@ module.exports.getComponentData = (req, res) => {
          }
 
          try {
-            if (fs.existsSync(moduleParametersDirectoryPath))
-               moduleData.simpleConfig.parameters = JSON.parse(fs.readFileSync(moduleParametersDirectoryPath));
+            if (fs.existsSync(moduleParametersDirectoryPath)){
+               let moduleParameterData = JSON.parse(fs.readFileSync(moduleParametersDirectoryPath));
+               console.log(moduleParameterData);
+               console.log(moduleParameterData.parameters);
+               moduleData.simpleConfig.parameters = moduleParameterData.parameters;
+               moduleData.advanceConfigurationExist = moduleParameterData.advancedConfiguration;
+            }
             if (fs.existsSync(moduleParametersUISchemaDirectoryPath))
                moduleData.simpleConfig.uiSchema = JSON.parse(fs.readFileSync(moduleParametersUISchemaDirectoryPath));
          } catch (e) {

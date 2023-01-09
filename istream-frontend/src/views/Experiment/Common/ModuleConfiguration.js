@@ -52,8 +52,8 @@ export default class ModuleConfiguration extends Component {
       );
    };
 
-   defaultConfig = () => {
-      console.log(this.props.selectedModule.simpleConfig.uiSchema);
+   simpleConfig = () => {
+
       return (
          <div>
             <Form
@@ -127,8 +127,8 @@ export default class ModuleConfiguration extends Component {
                <input
                   className="form-check-input"
                   type="radio"
-                  name="DefaultConfig"
-                  id="DefaultConfig"
+                  name="simpleConfig"
+                  id="simpleConfig"
                   onChange={() => {
                      this.props.updateSelectedModule("advanceConfiguration", false);
                   }}
@@ -147,6 +147,8 @@ export default class ModuleConfiguration extends Component {
                      this.props.updateSelectedModule("advanceConfiguration", true);
                   }}
                   checked={this.props.selectedModule.advanceConfiguration}
+                  disabled={this.props.selectedModule.advanceConfigurationExist === false}
+
                />
                <label className="form-check-label">Advance Config</label>
             </div>
@@ -159,7 +161,7 @@ export default class ModuleConfiguration extends Component {
       return (
          <div>
             {this.configTypeSelection()}
-            {this.props.selectedModule.advanceConfiguration ? this.advanceConfig() : this.defaultConfig()}
+            {this.props.selectedModule.advanceConfiguration ? this.advanceConfig() : this.simpleConfig()}
          </div>
       );
    };

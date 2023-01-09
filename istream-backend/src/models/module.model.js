@@ -3,6 +3,7 @@ const moduleDataModel = {
    name: "",
    id:"",
    advanceConfiguration: "",
+   advanceConfigurationExist: "",
    machineID: "",
    advanceConfig: {
       names: [],
