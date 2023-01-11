@@ -13,8 +13,9 @@ downlodedFilesPathDestination="${mainDir}/src/database/users/${username}/Experim
 rm -rf "${downlodedFilesPathDestination}"
 mkdir -p "${downlodedFilesPathDestination}"
 
+
 if [[ "${componentType}" == "iStream" ]]; then
-    resultsPath="${mainDir}/src/database/supportedModules/${component}/${componentName}/Results/"
+    resultsPath="${mainDir}/src/database/defaultModules/${component}/${componentName}/Results/"
 elif [[ "${componentType}" == "Custom" ]]; then
     resultsPath="${mainDir}/src/database/users/${username}/Modules/${component}/${componentName}/Results/"
 fi

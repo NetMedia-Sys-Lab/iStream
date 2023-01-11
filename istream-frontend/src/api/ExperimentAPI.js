@@ -48,21 +48,21 @@ export function subscribeToRunExperiment(userInfo, cb) {
    SOCKET.emit("subscribeToRunExperiment", userInfo);
 }
 
-// export function downloadExperimentResult(username, experimentId) {
-//    return API.get("/experiment/downloadExperimentResult", {
-//       params: {
-//          username,
-//          experimentId,
-//       },
-//    }).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          return error.response;
-//       }
-//    );
-// }
+export function downloadExperimentResult(username, experimentId) {
+   return API.get("/experiment/downloadExperimentResult", {
+      params: {
+         username,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+}
 
 // export function deleteUserMachine(user, machineID) {
 //    return API.delete("/experiment/userMachine", {

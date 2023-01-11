@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
 
-docker exec network_container tcset eth0 --delay 20ms   
+docker exec network_container tcset eth0    
 
 #if [ -f "${DIR}/config.sh" ]; then
    #docker cp "${DIR}/config.sh" network_container:/

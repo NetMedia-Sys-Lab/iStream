@@ -101,8 +101,6 @@ module.exports.getComponentData = (req, res) => {
          try {
             if (fs.existsSync(moduleParametersDirectoryPath)){
                let moduleParameterData = JSON.parse(fs.readFileSync(moduleParametersDirectoryPath));
-               console.log(moduleParameterData);
-               console.log(moduleParameterData.parameters);
                moduleData.simpleConfig.parameters = moduleParameterData.parameters;
                moduleData.advanceConfigurationExist = moduleParameterData.advancedConfiguration;
             }

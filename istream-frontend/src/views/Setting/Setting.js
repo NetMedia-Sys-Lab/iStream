@@ -4,7 +4,7 @@ import CustomModulesTable from "src/views/Setting/customModulesTable";
 // import { getUserMachineList, deleteUserMachine } from "src/api/ExperimentAPI";
 // import { getVideosList, deleteUserVideo } from "src/api/ModulesAPI";
 import InformationButton from "src/views/Common/InformationButton";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export default class Setting extends Component {
    state = {

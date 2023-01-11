@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Button, Modal, Spinner } from "react-bootstrap";
 
-import { subscribeToRunExperiment } from "src/api/ExperimentAPI";
+import { subscribeToRunExperiment, downloadExperimentResult } from "src/api/ExperimentAPI";
+import b64ToBlob from "b64-to-blob";
+import fileSaver from "file-saver";
 
 export default class RunExperiment extends Component {
    state = {
@@ -99,6 +101,13 @@ export default class RunExperiment extends Component {
             </Modal>
          </div>
       );
+   };
+
+   downloadResults = () => {
+      downloadExperimentResult(this.state.user.username, this.props.experimentId).then((response) => {
+         const blob = b64ToBlob(response, "application/zip");
+         fileSaver.saveAs(blob, `results.zip`);
+      });
    };
 
    render() {

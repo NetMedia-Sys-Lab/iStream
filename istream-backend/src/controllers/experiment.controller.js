@@ -1,5 +1,6 @@
 const fs = require("fs");
 const fsExtra = require("fs-extra");
+const path = require('path')
 
 const experimentModel = require("../models/experiment.model");
 const dockerModel = require("../models/dockerConfig.model");
@@ -281,4 +282,16 @@ module.exports.run = (endpoint, socket) => {
          socket.disconnect();
       });
    });
+};
+
+module.exports.downloadExperimentResult = async (req, res) => {
+   const username = req.query.username;
+   const experimentId = req.query.experimentId;
+
+   const spawnSync = require("child_process").spawnSync;
+   let result = spawnSync("bash", ["src/database/scripts/downloadResults.sh", username, experimentId], { encoding: "utf-8" });
+   // console.log(result.stdout);
+   var file = fs.readFileSync(path.resolve(`src/database/users/${username}/Experiments/${experimentId}/Results.zip`), "base64");
+
+   res.send(file);
 };

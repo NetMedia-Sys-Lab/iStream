@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import { getUserModules, deleteUserModule } from "src/api/ModulesAPI";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export default class CustomModulesTable extends Component {
    state = {

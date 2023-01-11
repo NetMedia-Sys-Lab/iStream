@@ -1,5 +1,4 @@
 {
-    "advancedConfiguration": true,
     "parameters": {
         "type": "object",
         "title": "Network's Config",

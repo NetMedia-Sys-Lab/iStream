@@ -1,0 +1,18 @@
+{
+    "parameters": {
+        "type": "object",
+        "title": "Server's Config",
+        "properties": {
+            "serverIP": {
+                "title": "Server IP",
+                "type": "string",
+                "default": "172.20.0.2"
+            },
+            "networkIP": {
+                "title": "Network IP",
+                "type": "string",
+                "default": "172.20.0.4"
+            }
+        }
+    }
+}

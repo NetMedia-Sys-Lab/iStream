@@ -4,6 +4,7 @@ const controller = require("../controllers/experiment.controller");
 router.get("/getUserExperimentsList", controller.getUserExperimentsList);
 router.get("/getExperimentConfig", controller.getExperimentConfig);
 router.get("/getExperimentData", controller.getExperimentData);
+router.get("/downloadExperimentResult", controller.downloadExperimentResult);
 
 router.post("/create", controller.createNewExperiment);
 router.post("/deleteExperiment", controller.deleteExperiment);

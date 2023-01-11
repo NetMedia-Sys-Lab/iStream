@@ -8,10 +8,18 @@
       "id": "2",
       "name": "Default Network",
       "description": "Linux Traffic Control"
+   },{
+      "id": "3",
+      "name": "Mininet",
+      "description": "Test"
    }],
    "Client": [{
       "id": "6",
       "name": "Headless Player ABR",
       "description": "test"
+   }, {
+      "id": "7",
+      "name": "Headless Player",
+      "description": "Test"
    }]
 }
