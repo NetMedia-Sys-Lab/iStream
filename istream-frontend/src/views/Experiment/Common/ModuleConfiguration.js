@@ -53,7 +53,6 @@ export default class ModuleConfiguration extends Component {
    };
 
    simpleConfig = () => {
-
       return (
          <div>
             <Form
@@ -148,7 +147,6 @@ export default class ModuleConfiguration extends Component {
                   }}
                   checked={this.props.selectedModule.advanceConfiguration}
                   disabled={this.props.selectedModule.advanceConfigurationExist === false}
-
                />
                <label className="form-check-label">Advance Config</label>
             </div>

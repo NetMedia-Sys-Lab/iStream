@@ -48,9 +48,8 @@ export default class ComponentCard extends Component {
    fetchData = () => {
       getComponentData(this.state.user, this.props.experimentId, this.state.componentName).then((data) => {
          if (data.name !== "") {
-            console.log(data);
             this.setState({
-               selectedModule: data,
+               selectedModule: cloneDeep(data),
                savedModule: cloneDeep(data),
                showComponentConfiguration: true,
             });
@@ -80,7 +79,6 @@ export default class ComponentCard extends Component {
       )
          .then((res) => {
             res.allConfigs.unshift("No Config");
-            console.log(res);
             let tempState = this.state.selectedModule;
             tempState.advanceConfig.names = res.allConfigs;
             tempState.simpleConfig.parameters = res.parameters;
@@ -127,8 +125,10 @@ export default class ComponentCard extends Component {
    };
 
    onModuleSimpleConfigurationChange = (values) => {
+      let data = {};
+      Object.keys(this.state.selectedModule.simpleConfig.parameters["properties"]).map((item) => (data[item] = values[item]));
       let tempState = this.state.selectedModule;
-      tempState.simpleConfig.values = values;
+      tempState.simpleConfig.values = data;
       this.setState({ selectedModule: tempState });
    };
 
