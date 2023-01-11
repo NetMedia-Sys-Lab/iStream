@@ -13,7 +13,7 @@ firstRun=true
 
 # Video Component
 echo "------ Video component Running started ------"
-# bash "${mainDir}/src/database/scripts/Video/run.sh" "${username}" "${experimentId}" 2>&1
+bash "${mainDir}/src/database/scripts/Video/run.sh" "${username}" "${experimentId}" 2>&1
 echo "------ Video component Running Finished ------"
 
 for i in $(seq 1 $numberOfRepetition); do
@@ -23,7 +23,7 @@ for i in $(seq 1 $numberOfRepetition); do
 
     # Server Component
     echo "------ Server component running started ------"
-    # bash "${mainDir}/src/database/scripts/Server/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
+    bash "${mainDir}/src/database/scripts/Server/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
     echo "------ Server component running Finished ------"
 
     #     # Transcoder Component
@@ -36,13 +36,13 @@ for i in $(seq 1 $numberOfRepetition); do
     # Network Component
     if [ ${networkComponentExistence} = true ]; then
         echo "------ Network component running started ------"
-        # bash "${mainDir}/src/database/scripts/Network/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
+        bash "${mainDir}/src/database/scripts/Network/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
         echo "------ Network component running Finished ------"
     fi
 
     # Client Component
     echo "------ Client component running started ------"
-    # bash "${mainDir}/src/database/scripts/Client/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
+    bash "${mainDir}/src/database/scripts/Client/run.sh" "${username}" "${experimentId}" "${firstRun}" 2>&1
     echo "------ Client component running Finished ------"
 done
 
