@@ -10,8 +10,6 @@ networkConfigName=$(jq -r '.Network.configName' "${mainDir}/src/database/users/$
 networkAdvanceConfig=$(jq -r '.Network.advanceConfig' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 networkType=$(jq -r '.Network.type' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
 networkMachineId=$(jq -r '.Network.machineID' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
-iStreamNetworkManualConfig=$(jq -r '.Network.manualConfig' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")
-configFileExtention=${networkConfigName##*.}
 
 if [[ "${networkName}" == "" ]]; then
     echo "No network module selected. Please select a module first."
