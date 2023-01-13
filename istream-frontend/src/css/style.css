@@ -140,3 +140,7 @@ th {
 span {
 	margin-left: 3px;
 }
+
+textarea {
+	vertical-align: top;
+ }

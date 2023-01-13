@@ -42,10 +42,22 @@ export function subscribeToBuildExperiment(userInfo, cb) {
    SOCKET.emit("subscribeToBuildExperiment", userInfo);
 }
 
-export function subscribeToRunExperiment(userInfo, cb) {
-   const SOCKET = openSocket(DOMAIN + "run");
-   SOCKET.on("getExperiment‌RunInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeToRunExperiment", userInfo);
+export function subscribeServerOfExperiment(userInfo, cb) {
+   const SOCKET = openSocket(DOMAIN + "runServer");
+   SOCKET.on("getServerOfExperimentInfo", (data) => cb(null, data));
+   SOCKET.emit("subscribeServerOfExperiment", userInfo);
+}
+
+export function subscribeClientOfExperiment(userInfo, cb) {
+   const SOCKET = openSocket(DOMAIN + "runClient");
+   SOCKET.on("getClientOfExperimentInfo", (data) => cb(null, data));
+   SOCKET.emit("subscribeClientOfExperiment", userInfo);
+}
+
+export function subscribeNetworkOfExperiment(userInfo, cb) {
+   const SOCKET = openSocket(DOMAIN + "runNetwork");
+   SOCKET.on("getNetworkOfExperimentInfo", (data) => cb(null, data));
+   SOCKET.emit("subscribeNetworkOfExperiment", userInfo);
 }
 
 export function downloadExperimentResult(username, experimentId) {

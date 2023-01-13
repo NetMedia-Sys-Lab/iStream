@@ -1,6 +1,6 @@
 const fs = require("fs");
 const fsExtra = require("fs-extra");
-const path = require('path')
+const path = require("path");
 
 const experimentModel = require("../models/experiment.model");
 const dockerModel = require("../models/dockerConfig.model");
@@ -248,8 +248,8 @@ module.exports.build = (endpoint, socket) => {
    });
 };
 
-module.exports.run = (endpoint, socket) => {
-   socket.on("subscribeToRunExperiment", (userInfo) => {
+module.exports.runServer = (endpoint, socket) => {
+   socket.on("subscribeServerOfExperiment", (userInfo) => {
       const experimentConfigPath = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
 
       let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
@@ -257,12 +257,12 @@ module.exports.run = (endpoint, socket) => {
       fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
 
       const spawn = require("child_process").spawn;
-      const child = spawn("bash", ["src/database/scripts/run.sh", userInfo.username, userInfo.experimentId]);
+      const child = spawn("bash", ["src/database/scripts/Server/run.sh", userInfo.username, userInfo.experimentId, true, "2>&1"]);
 
       child.stdout.setEncoding("utf8");
       child.stdout.on("data", (data) => {
          try {
-            endpoint.emit("getExperiment‌RunInfo", data.toString().split("\n"));
+            endpoint.emit("getServerOfExperimentInfo", data.toString().split("\n"));
          } catch (e) {
             child.kill();
          }
@@ -278,9 +278,82 @@ module.exports.run = (endpoint, socket) => {
       });
 
       child.on("close", function (code) {
-         endpoint.emit("getExperiment‌RunInfo", "SOCKET_CLOSED");
+         endpoint.emit("getServerOfExperimentInfo", "SOCKET_CLOSED");
          socket.disconnect();
       });
+   });
+};
+
+module.exports.runClient = (endpoint, socket) => {
+   socket.on("subscribeClientOfExperiment", (userInfo) => {
+      const experimentConfigPath = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
+
+      let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
+      experimentConfigData["repetition"] = Number(userInfo.numberOfRepetition);
+      fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
+      setTimeout(function () {
+         const spawn = require("child_process").spawn;
+         const child = spawn("bash", ["src/database/scripts/Client/run.sh", userInfo.username, userInfo.experimentId, true, "2>&1"]);
+         child.stdout.setEncoding("utf8");
+         child.stdout.on("data", (data) => {
+            try {
+               endpoint.emit("getClientOfExperimentInfo", data.toString().split("\n"));
+            } catch (e) {
+               child.kill();
+            }
+         });
+
+         child.stderr.setEncoding("utf8");
+         child.stderr.on("data", (data) => {
+            try {
+               console.log(data);
+            } catch (e) {
+               child.kill();
+            }
+         });
+
+         child.on("close", function (code) {
+            endpoint.emit("getClientOfExperimentInfo", "SOCKET_CLOSED");
+            socket.disconnect();
+         });
+      }, 10000);
+   });
+};
+
+module.exports.runNetwork = (endpoint, socket) => {
+   socket.on("subscribeNetworkOfExperiment", (userInfo) => {
+      const experimentConfigPath = `src/database/users/${userInfo.username}/Experiments/${userInfo.experimentId}/experimentConfig.json`;
+
+      let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
+      experimentConfigData["repetition"] = Number(userInfo.numberOfRepetition);
+      fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
+      setTimeout(function () {
+         const spawn = require("child_process").spawn;
+         const child = spawn("bash", ["src/database/scripts/Network/run.sh", userInfo.username, userInfo.experimentId, true, "2>&1"]);
+
+         child.stdout.setEncoding("utf8");
+         child.stdout.on("data", (data) => {
+            try {
+               endpoint.emit("getNetworkOfExperimentInfo", data.toString().split("\n"));
+            } catch (e) {
+               child.kill();
+            }
+         });
+
+         child.stderr.setEncoding("utf8");
+         child.stderr.on("data", (data) => {
+            try {
+               console.log(data);
+            } catch (e) {
+               child.kill();
+            }
+         });
+
+         child.on("close", function (code) {
+            endpoint.emit("getNetworkOfExperimentInfo", "SOCKET_CLOSED");
+            socket.disconnect();
+         });
+      }, 3000);
    });
 };
 

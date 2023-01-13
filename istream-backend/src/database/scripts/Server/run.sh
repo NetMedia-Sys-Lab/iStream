@@ -15,6 +15,11 @@ if [[ "${serverName}" == "" ]]; then
     echo "No server module selected. Please select a module first."
     exit
 else
+    # Video Component
+    echo "------ Video component Running started ------"
+    bash "${mainDir}/src/database/scripts/Video/run.sh" "${username}" "${experimentId}" 2>&1
+    echo "------ Video component Running Finished ------"
+
     serverContainerPort=$(jq -r '.Server.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
 
     arguments=$(jq -n \
@@ -22,8 +27,10 @@ else
         '{serverContainerPort: $serverContainerPort}')
 
     if [[ "${firstRun}" == "true" ]]; then
-        bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${serverAdvanceConfig}" "${serverConfigName}"
+        bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${serverAdvanceConfig}" "${serverConfigName}" 2>&1
     fi
 
-    bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${arguments}"
+    bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${arguments}" 2>&1
+    
+    bash "${mainDir}/src/database/scripts/Video/delete.sh" "${username}" "${experimentId}"
 fi

@@ -22,8 +22,8 @@ else
         '{networkContainerPort: $networkContainerPort}')
 
     if [[ "${firstRun}" == "true" ]]; then
-        bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${networkAdvanceConfig}" "${networkConfigName}"
+        bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${networkAdvanceConfig}" "${networkConfigName}" 2>&1
     fi
 
-    bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}"
+    bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}" 2>&1
 fi

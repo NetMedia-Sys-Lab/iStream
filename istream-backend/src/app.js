@@ -46,6 +46,14 @@ let build = io.of("/build").on("connection", (socket) => {
    experimentController.build(build, socket);
 });
 
-var run = io.of("/run").on("connection", function (socket) {
-   experimentController.run(run, socket);
+let runServer = io.of("/runServer").on("connection", function (socket) {
+   experimentController.runServer(runServer, socket);
+});
+
+let runClient = io.of("/runClient").on("connection", function (socket) {
+   experimentController.runClient(runClient, socket);
+});
+
+let runNetwork = io.of("/runNetwork").on("connection", function (socket) {
+   experimentController.runNetwork(runNetwork, socket);
 });

@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-"""Custom topology example
-"""
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.node import Controller, RemoteController, OVSController
@@ -18,18 +16,25 @@ import os
 import json
 
 
+"""Custom topology example"""
+
+
 class Topology(Topo):
     def build(self):
-        s2 = self.addSwitch('s2')
-        h4 = self.addHost('h4', ip="10.0.0.4")
-        h5 = self.addHost('h5', ip="10.0.0.5")
-        self.addLink(h4, s2)
-        self.addLink(h5, s2)
+        s3 = self.addSwitch('s3')
+        s4 = self.addSwitch('s4')
+        s5 = self.addSwitch('s5')
+        s6 = self.addSwitch('s6')
+
+        self.addLink(s3, s5)
+        self.addLink(s5, s4)
+        self.addLink(s3, s6)
+        self.addLink(s6, s4)
 
 
 if __name__ == '__main__':
     setLogLevel('info')
-    print("----- Here in Server -----------")
+    print("----- Here in Network -----------")
 
     defaultConfigPath = "{}/config.json".format(
         os.path.realpath(os.path.dirname(__file__)))
@@ -37,32 +42,22 @@ if __name__ == '__main__':
     if os.path.isfile(defaultConfigPath):
         with open(defaultConfigPath, "rt") as configFile:
             config = json.load(configFile)
-
     topo = Topology()
+
     c1 = RemoteController('c1', ip=config["networkIP"])
     net = Mininet(topo=topo, controller=c1, link=TCLink)
     net.start()
-    sleep(20)
+
+    sleep(40)
 
     os.system(
-        'ovs-vsctl add-port s2 gres -- set interface gres type=gre options:remote_ip={}'.format(config["networkIP"]))
+        'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]))
+    os.system(
+        'ovs-vsctl add-port s4 gre1 -- set interface gre1 type=gre options:remote_ip={}'.format(config["serverIP"]))
 
-    hosts = net.hosts
-    hostNumber = 5
-    for host in hosts:
-        for i in range(1, hostNumber+1):
-            if i < 10:
-                host.cmdPrint(
-                    'arp -s 10.0.0.{} 00:00:00:00:00:0{}'.format(i, i))
-            if i >= 10:
-                host.cmdPrint(
-                    'arp -s 10.0.0.{} 00:00:00:00:00:{}'.format(i, i))
-
-    # print("sleep....")
-    # sleep(30)
-    #hosts[0].cmdPrint('python3 -m dash_emulator.main http://10.0.0.3/live.mpd --output /root/result -y')
-    hosts[0].cmdPrint('nginx')
-    hosts[1].cmdPrint('nginx')
+    postFilePath = "{}/post.py".format(
+        os.path.realpath(os.path.dirname(__file__)))
+    os.system('python3 {} {}'.format(postFilePath, config["networkIP"]))
 
     CLI(net)
     while 1:

@@ -39,8 +39,8 @@ else
       '{clientContainerPort: $clientContainerPort, serverMachineIP: $serverMachineIP, serverContainerPort: $serverContainerPort}')
 
    if [[ "${firstRun}" == "true" ]]; then
-      bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${clientAdvanceConfig}" "${clientConfigName}"
+      bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${clientAdvanceConfig}" "${clientConfigName}" 2>&1
    fi
 
-   bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${arguments}"
+   bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${arguments}" 2>&1
 fi

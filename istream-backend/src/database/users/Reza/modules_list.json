@@ -4,7 +4,11 @@
       "name": "Mininet Server",
       "description": "test"
    }],
-   "Network": [],
+   "Network": [{
+      "id": "151714850234821",
+      "name": "Mininet",
+      "description": "test"
+   }],
    "Client": [{
       "id": "1671110234821",
       "name": "Mininet Headless Player",

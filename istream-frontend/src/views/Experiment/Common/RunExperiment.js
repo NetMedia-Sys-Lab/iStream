@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Button, Modal, Spinner } from "react-bootstrap";
 
-import { subscribeToRunExperiment, downloadExperimentResult } from "src/api/ExperimentAPI";
+import {
+   subscribeServerOfExperiment,
+   subscribeClientOfExperiment,
+   subscribeNetworkOfExperiment,
+   downloadExperimentResult,
+} from "src/api/ExperimentAPI";
 import b64ToBlob from "b64-to-blob";
 import fileSaver from "file-saver";
 
@@ -10,30 +15,63 @@ export default class RunExperiment extends Component {
       user: JSON.parse(localStorage.getItem("user")),
       displayRunModal: false,
       fullscreenRunModal: false,
-      runOutput: [],
-      runSpinner: false,
+      serverRunOutput: [],
+      clientRunOutput: [],
+      networkRunOutput: [],
+      clientRunSpinner: false,
+      networkRunSpinner: false,
+      serverRunSpinner: false,
    };
 
    runExperiment = () => {
-      this.setState({ runOutput: [] });
+      this.setState({ serverRunOutput: [], clientRunOutput: [], networkRunOutput: [] });
 
       const data = {
          username: this.state.user.username,
          experimentId: this.props.experimentId,
          numberOfRepetition: this.props.numberOfRepetition,
       };
-      subscribeToRunExperiment(data, (err, output) => {
+
+      subscribeServerOfExperiment(data, (err, output) => {
          if (output === "SOCKET_CLOSED") {
-            this.setState({ runSpinner: false });
+            this.setState({ serverRunSpinner: false });
             return;
          }
-         this.setState({ runSpinner: true });
+         this.setState({ serverRunSpinner: true });
 
          output = output.filter((str) => str !== "");
          let out = "";
          output.forEach((element) => (out += element + "\n"));
 
-         this.setState({ runOutput: this.state.runOutput + out });
+         this.setState({ serverRunOutput: this.state.serverRunOutput + out });
+      });
+
+      subscribeClientOfExperiment(data, (err, output) => {
+         if (output === "SOCKET_CLOSED") {
+            this.setState({ clientRunSpinner: false });
+            return;
+         }
+         this.setState({ clientRunSpinner: true });
+
+         output = output.filter((str) => str !== "");
+         let out = "";
+         output.forEach((element) => (out += element + "\n"));
+
+         this.setState({ clientRunOutput: this.state.clientRunOutput + out });
+      });
+
+      subscribeNetworkOfExperiment(data, (err, output) => {
+         if (output === "SOCKET_CLOSED") {
+            this.setState({ networkRunSpinner: false });
+            return;
+         }
+         this.setState({ networkRunSpinner: true });
+
+         output = output.filter((str) => str !== "");
+         let out = "";
+         output.forEach((element) => (out += element + "\n"));
+
+         this.setState({ networkRunOutput: this.state.networkRunOutput + out });
       });
    };
 
@@ -78,23 +116,71 @@ export default class RunExperiment extends Component {
                         />
                      </div>
                   </div>
-                  <textarea
-                     style={{ width: "100%", height: this.state.fullscreenRunModal ? "85%" : "45vh" }}
-                     id="modalTextArea"
-                     name="modalTextArea"
-                     value={this.state.runOutput}
-                  />
+                  <div className="row">
+                     <div className="col">
+                        <label>
+                           <b>Server</b>
+                           {this.state.serverRunSpinner ? (
+                              <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
+                           ) : (
+                              ""
+                           )}
+                        </label>
+                        <br />
+                        <textarea
+                           label="Server"
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           id="modalTextArea"
+                           name="modalTextArea"
+                           // className="me-2"
+                           value={this.state.serverRunOutput}
+                        />
+                     </div>
+
+                     <div className="col">
+                        <label>
+                           <b>Network</b>
+                           {this.state.networkRunSpinner ? (
+                              <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
+                           ) : (
+                              ""
+                           )}
+                        </label>
+                        <br />
+                        <textarea
+                           label="Client"
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           id="modalTextArea"
+                           name="modalTextArea"
+                           value={this.state.networkRunOutput}
+                        />
+                     </div>
+
+                     <div className="col">
+                        <label>
+                           <b>Client</b>
+                           {this.state.clientRunSpinner ? (
+                              <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
+                           ) : (
+                              ""
+                           )}
+                        </label>
+                        <br />
+                        <textarea
+                           label="Client"
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           id="modalTextArea"
+                           name="modalTextArea"
+                           value={this.state.clientRunOutput}
+                        />
+                     </div>
+                  </div>
 
                   <hr />
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>
                      <Button variant="success" className="float-end" onClick={this.runExperiment}>
                         Start
-                        {this.state.runSpinner ? (
-                           <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
-                        ) : (
-                           ""
-                        )}
                      </Button>
                   </div>
                </Modal.Body>
