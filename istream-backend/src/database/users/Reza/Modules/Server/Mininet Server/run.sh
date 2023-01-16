@@ -14,5 +14,4 @@ docker create --name mininet-server-container --rm --privileged -e DISPLAY --net
 docker cp "${DIR}/Run" mininet-server-container:/.
 docker cp "${DIR}/Run/Videos/." mininet-server-container:/usr/local/nginx/html/
 docker start mininet-server-container
-sleep 10
 docker exec mininet-server-container python Run/Topology.py &

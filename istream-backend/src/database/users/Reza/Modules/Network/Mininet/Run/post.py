@@ -38,8 +38,8 @@ def post_flows(filename, url):
                 print(
                     f"REQUEST SENT - switch {item['dpid']} with meters {item['meter_id']}")
             else:
-                print(f"REQUEST SENT - switch {item['dpid']} with flows")
-            # print(response.text)
+                print(
+                    f"REQUEST SENT - switch {item['dpid']} with flows ipvc: {item['match']['ipv4_src']} ipvd: {item['match']['ipv4_dst']}")
         else:
             #print('There is a problem connecting to REST API')
             if "meter_id" in item:

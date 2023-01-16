@@ -255,32 +255,33 @@ module.exports.runServer = (endpoint, socket) => {
       let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
       experimentConfigData["repetition"] = Number(userInfo.numberOfRepetition);
       fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
+      setTimeout(function () {
+         const spawn = require("child_process").spawn;
+         const child = spawn("bash", ["src/database/scripts/Server/run.sh", userInfo.username, userInfo.experimentId, true, "2>&1"]);
 
-      const spawn = require("child_process").spawn;
-      const child = spawn("bash", ["src/database/scripts/Server/run.sh", userInfo.username, userInfo.experimentId, true, "2>&1"]);
+         child.stdout.setEncoding("utf8");
+         child.stdout.on("data", (data) => {
+            try {
+               endpoint.emit("getServerOfExperimentInfo", data.toString().split("\n"));
+            } catch (e) {
+               child.kill();
+            }
+         });
 
-      child.stdout.setEncoding("utf8");
-      child.stdout.on("data", (data) => {
-         try {
-            endpoint.emit("getServerOfExperimentInfo", data.toString().split("\n"));
-         } catch (e) {
-            child.kill();
-         }
-      });
+         child.stderr.setEncoding("utf8");
+         child.stderr.on("data", (data) => {
+            try {
+               console.log(data);
+            } catch (e) {
+               child.kill();
+            }
+         });
 
-      child.stderr.setEncoding("utf8");
-      child.stderr.on("data", (data) => {
-         try {
-            console.log(data);
-         } catch (e) {
-            child.kill();
-         }
-      });
-
-      child.on("close", function (code) {
-         endpoint.emit("getServerOfExperimentInfo", "SOCKET_CLOSED");
-         socket.disconnect();
-      });
+         child.on("close", function (code) {
+            endpoint.emit("getServerOfExperimentInfo", "SOCKET_CLOSED");
+            socket.disconnect();
+         });
+      }, 0);
    });
 };
 
@@ -316,7 +317,7 @@ module.exports.runClient = (endpoint, socket) => {
             endpoint.emit("getClientOfExperimentInfo", "SOCKET_CLOSED");
             socket.disconnect();
          });
-      }, 10000);
+      }, 0);
    });
 };
 
@@ -353,7 +354,7 @@ module.exports.runNetwork = (endpoint, socket) => {
             endpoint.emit("getNetworkOfExperimentInfo", "SOCKET_CLOSED");
             socket.disconnect();
          });
-      }, 3000);
+      }, 0);
    });
 };
 

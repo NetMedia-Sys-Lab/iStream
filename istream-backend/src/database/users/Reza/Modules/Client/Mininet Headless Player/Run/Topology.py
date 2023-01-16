@@ -31,8 +31,6 @@ class Topology(Topo):
 
 if __name__ == '__main__':
     setLogLevel('info')
-
-    print("----- Here in Client -----------")
     defaultConfigPath = "{}/config.json".format(
         os.path.realpath(os.path.dirname(__file__)))
 
@@ -41,10 +39,10 @@ if __name__ == '__main__':
             config = json.load(configFile)
 
     topo = Topology()
+    sleep(2)
     c1 = RemoteController('c1', ip=config["networkIP"])
     net = Mininet(topo=topo, controller=c1, link=TCLink)
     net.start()
-    sleep(20)
     os.system(
         'ovs-vsctl add-port s1 grec -- set interface grec type=gre options:remote_ip={}'.format(config["networkIP"]))
 
@@ -61,7 +59,7 @@ if __name__ == '__main__':
 
     hosts[0].cmdPrint('ifconfig h1-eth0 mtu 1400 up')
     #os.system('python3 post.py')
-
+    sleep(12)
     print("here in client about to running experiment")
     hosts[0].cmdPrint("ping 10.0.0.4 -c 4")
     # print(hosts[0].cmd("ping 10.0.0.4"))

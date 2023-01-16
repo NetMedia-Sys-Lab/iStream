@@ -13,6 +13,4 @@ docker create --name mininet-client-container --rm --privileged -e DISPLAY --net
 
 docker cp "${DIR}/Run" mininet-client-container:/dash-emulator-different-ABR
 docker start mininet-client-container
-
-sleep 10
 docker exec mininet-client-container python Run/Topology.py &

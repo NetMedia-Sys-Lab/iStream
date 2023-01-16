@@ -14,6 +14,7 @@ from time import sleep
 from mininet.term import makeTerms, makeTerm, runX11
 import os
 import json
+import subprocess
 
 
 """Custom topology example"""
@@ -34,7 +35,6 @@ class Topology(Topo):
 
 if __name__ == '__main__':
     setLogLevel('info')
-    print("----- Here in Network -----------")
 
     defaultConfigPath = "{}/config.json".format(
         os.path.realpath(os.path.dirname(__file__)))
@@ -48,13 +48,14 @@ if __name__ == '__main__':
     net = Mininet(topo=topo, controller=c1, link=TCLink)
     net.start()
 
-    sleep(40)
-
+    # subprocess.check_output(
+    #     'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]), shell=True)
+    # subprocess.check_output('ovs-vsctl add-port s4 gre1 -- set interface gre1 type=gre options:remote_ip={}'.format(config["serverIP"])', shell=True)
     os.system(
-        'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]))
+    'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]))
     os.system(
         'ovs-vsctl add-port s4 gre1 -- set interface gre1 type=gre options:remote_ip={}'.format(config["serverIP"]))
-
+    sleep(5)
     postFilePath = "{}/post.py".format(
         os.path.realpath(os.path.dirname(__file__)))
     os.system('python3 {} {}'.format(postFilePath, config["networkIP"]))

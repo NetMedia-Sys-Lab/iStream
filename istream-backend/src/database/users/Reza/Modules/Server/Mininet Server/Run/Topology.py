@@ -29,7 +29,6 @@ class Topology(Topo):
 
 if __name__ == '__main__':
     setLogLevel('info')
-    print("----- Here in Server -----------")
 
     defaultConfigPath = "{}/config.json".format(
         os.path.realpath(os.path.dirname(__file__)))
@@ -39,10 +38,10 @@ if __name__ == '__main__':
             config = json.load(configFile)
 
     topo = Topology()
+    sleep(2)
     c1 = RemoteController('c1', ip=config["networkIP"])
     net = Mininet(topo=topo, controller=c1, link=TCLink)
     net.start()
-    sleep(20)
 
     os.system(
         'ovs-vsctl add-port s2 gres -- set interface gres type=gre options:remote_ip={}'.format(config["networkIP"]))
@@ -61,8 +60,8 @@ if __name__ == '__main__':
     # print("sleep....")
     # sleep(30)
     #hosts[0].cmdPrint('python3 -m dash_emulator.main http://10.0.0.3/live.mpd --output /root/result -y')
-    hosts[0].cmdPrint('nginx')
-    hosts[1].cmdPrint('nginx')
+    hosts[0].cmdPrint('/usr/local/nginx/sbin/nginx')
+    hosts[1].cmdPrint('/usr/local/nginx/sbin/nginx')
 
     CLI(net)
     while 1:
