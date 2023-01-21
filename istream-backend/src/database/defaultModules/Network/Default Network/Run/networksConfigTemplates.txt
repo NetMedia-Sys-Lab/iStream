@@ -1,0 +1,13 @@
+#!/bin/bash
+DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
+
+${defaultConfig}docker exec istream_network_tc_container tcset eth0 ${delay} ${bandwidth} ${packetLoss} ${corruptPacket}
+
+${manualConfig}if [ -f "${DIR}/config.sh" ]; then
+   ${manualConfig}docker cp "${DIR}/config.sh" istream_network_tc_container:/
+${manualConfig}elif [ -f "${DIR}/Run/config.sh" ]; then
+   ${manualConfig}docker cp "${DIR}/Run/config.sh" istream_network_tc_container:/
+${manualConfig}fi
+
+${manualConfig}docker exec istream_network_tc_container chmod 777 ./config.sh
+${manualConfig}docker exec istream_network_tc_container sh ./config.sh

@@ -21,8 +21,8 @@ import json
 class Topology(Topo):
     def build(self):
         s2 = self.addSwitch('s2')
-        h4 = self.addHost('h4', ip="10.0.0.4")
-        h5 = self.addHost('h5', ip="10.0.0.5")
+        h4 = self.addHost('h4', ip="10.0.0.4", mac="00:00:00:00:00:04")
+        h5 = self.addHost('h5', ip="10.0.0.5", mac="00:00:00:00:00:05")
         self.addLink(h4, s2)
         self.addLink(h5, s2)
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
             config = json.load(configFile)
 
     topo = Topology()
-    sleep(2)
+    sleep(5)
     c1 = RemoteController('c1', ip=config["networkIP"])
     net = Mininet(topo=topo, controller=c1, link=TCLink)
     net.start()
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     hosts[1].cmdPrint('/usr/local/nginx/sbin/nginx')
 
     CLI(net)
-    while 1:
-        True
+    # while 1:
+    #     True
     # net.stop()

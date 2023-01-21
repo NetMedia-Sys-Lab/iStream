@@ -40,20 +40,22 @@ const io = new Server(server, {
    },
 });
 
-let experimentController = require("./controllers/experiment.controller");
+let experimentHandlerController = require("./controllers/experimentHandler.controller");
 
 let build = io.of("/build").on("connection", (socket) => {
-   experimentController.build(build, socket);
+   experimentHandlerController.build(build, socket);
 });
 
-let runServer = io.of("/runServer").on("connection", function (socket) {
-   experimentController.runServer(runServer, socket);
+// app.set('socketIO', io);
+
+let run = io.of("/runExperiment").on("connection", function (socket) {
+   experimentHandlerController.run(run, socket);
 });
 
-let runClient = io.of("/runClient").on("connection", function (socket) {
-   experimentController.runClient(runClient, socket);
-});
+// let runClient = io.of("/runClient").on("connection", function (socket) {
+//    experimentController.runClient(runClient, socket);
+// });
 
-let runNetwork = io.of("/runNetwork").on("connection", function (socket) {
-   experimentController.runNetwork(runNetwork, socket);
-});
+// let runNetwork = io.of("/runNetwork").on("connection", function (socket) {
+//    experimentController.runNetwork(runNetwork, socket);
+// });

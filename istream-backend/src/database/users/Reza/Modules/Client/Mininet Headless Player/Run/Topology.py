@@ -11,7 +11,7 @@ from mininet.node import IVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from mininet.link import TCLink, Intf
-from subprocess import call
+import subprocess
 from time import sleep
 from mininet.term import makeTerms, makeTerm, runX11
 import os
@@ -21,9 +21,9 @@ import json
 class Topology(Topo):
     def build(self):
         s1 = self.addSwitch('s1')
-        h1 = self.addHost('h1', ip="10.0.0.1")
-        h2 = self.addHost('h2', ip="10.0.0.2")
-        h3 = self.addHost('h3', ip="10.0.0.3")
+        h1 = self.addHost('h1', ip="10.0.0.1", mac="00:00:00:00:00:01")
+        h2 = self.addHost('h2', ip="10.0.0.2", mac="00:00:00:00:00:02")
+        h3 = self.addHost('h3', ip="10.0.0.3", mac="00:00:00:00:00:03")
         self.addLink(h1, s1)
         self.addLink(h2, s1)
         self.addLink(h3, s1)
@@ -58,17 +58,35 @@ if __name__ == '__main__':
                     'arp -s 10.0.0.{} 00:00:00:00:00:{}'.format(i, i))
 
     hosts[0].cmdPrint('ifconfig h1-eth0 mtu 1400 up')
+    hosts[1].cmdPrint('ifconfig h2-eth0 mtu 1400 up')
+    hosts[2].cmdPrint('ifconfig h3-eth0 mtu 1400 up')
     #os.system('python3 post.py')
-    sleep(12)
-    print("here in client about to running experiment")
-    hosts[0].cmdPrint("ping 10.0.0.4 -c 4")
-    # print(hosts[0].cmd("ping 10.0.0.4"))
+    sleep(20)
+    # print("here in client about to running experiment")
+    # hosts[0].cmdPrint("ping 10.0.0.4 -c 4")
+    # # print(hosts[0].cmd("ping 10.0.0.4"))
     hosts[0].cmdPrint(
-        'scripts/dash-emulator.py --dump-results results/result http://10.0.0.4/output.mpd')
+        'scripts/dash-emulator.py --dump-results results/result1 http://10.0.0.4/output.mpd')
 
-    # print(h1_process.wait())
+    # hosts[1].popen(
+    #     'scripts/dash-emulator.py --dump-results results/result2 http://10.0.0.4/output.mpd')
+
+    # hosts[2].popen(
+    #     'scripts/dash-emulator.py --dump-results results/result3 http://10.0.0.5/output.mpd')
 
     CLI(net)
     while 1:
         True
+
+    # resultNotReady = True
+    # sleep(15)
+    # while resultNotReady:
+    #     output = subprocess.check_output(
+    #         'cd results & ls result* | wc -l', shell=True)
+    #     # os.popen('cd results & ls result* | wc -l').read()
+    #     print(output)
+    #     if output == 3:
+    #         resultNotReady = False
+# # os.system('cd results & ls result* | wc -l')
+
     # net.stop()

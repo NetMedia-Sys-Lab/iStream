@@ -5,9 +5,9 @@ arguments=$1
 DIR="$(dirname -- "$0")"
 serverDockerPort=$(jq -r '.serverContainerPort' <<<${arguments})
 
-docker ps -a -q --filter "name=server_container" | grep -q . &&
-    echo "Remove previous server docker container" && docker stop server_container && docker rm -fv server_container
+docker ps -a -q --filter "name=istream_server_nginx_container" | grep -q . &&
+    echo "Remove previous server docker container" && docker stop istream_server_nginx_container && docker rm -fv istream_server_nginx_container
 
-docker run --name server_container -p ${serverDockerPort}:80 -d server_image
+docker run --name istream_server_nginx_container -p ${serverDockerPort}:80 -d istream_server_nginx_image
 
-docker cp "${DIR}/Run/Videos/." server_container:/usr/local/nginx/html/
+docker cp "${DIR}/Run/Videos/." istream_server_nginx_container:/usr/local/nginx/html/

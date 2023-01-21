@@ -4,4 +4,4 @@ arguments=$1
 DIR="$(dirname -- "$0")"
 python3 "${DIR}/Build/createNginxConfigFile.py" "${arguments}"
 
-docker build -q "${DIR}/Build" -t network_image
+docker build -q "${DIR}/Build" -t istream_network_tc_image

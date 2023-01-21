@@ -23,6 +23,7 @@ if [[ ${runFileExtention} = "py" ]]; then
     commandToRunInLocal=(python3 "${componentPath}/run.py" "${arguments}")
 elif [[ ${runFileExtention} = "sh" ]]; then
     commandToRunInCluster="cd '${componentName}' && bash run.sh '${arguments}'"
+    # commandToRunInLocal=(xterm -title "${component}" -e "${componentPath}/run.sh" "${arguments}")
     commandToRunInLocal=(bash "${componentPath}/run.sh" "${arguments}")
 fi
 

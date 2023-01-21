@@ -1,0 +1,79 @@
+[{
+        "dpid": 2,
+        "table_id": 0,
+        "idle_timeout": 0,
+        "hard_timeout": 0,
+        "priority": 100,
+        "match": {
+            "ipv4_src": "10.0.0.1",
+            "ipv4_dst": "10.0.0.4",
+            "eth_type": 2048
+        },
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
+    },
+
+    {
+        "dpid": 2,
+        "table_id": 0,
+        "idle_timeout": 0,
+        "hard_timeout": 0,
+        "priority": 100,
+        "match": {
+            "ipv4_src": "10.0.0.2",
+            "ipv4_dst": "10.0.0.4",
+            "eth_type": 2048
+        },
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
+    },
+
+    {
+        "dpid": 2,
+        "table_id": 0,
+        "idle_timeout": 0,
+        "hard_timeout": 0,
+        "priority": 200,
+        "match": {
+            "ipv4_src": "10.0.0.4",
+            "ipv4_dst": "10.0.0.1",
+            "eth_type": 2048
+        },
+        "actions": [{
+                "type": "METER",
+                "meter_id": 3
+            },
+            {
+                "type": "OUTPUT",
+                "port": 3
+            }
+        ]
+    },
+
+    {
+        "dpid": 2,
+        "table_id": 0,
+        "idle_timeout": 0,
+        "hard_timeout": 0,
+        "priority": 200,
+        "match": {
+            "ipv4_src": "10.0.0.4",
+            "ipv4_dst": "10.0.0.2",
+            "eth_type": 2048
+        },
+        "actions": [{
+                "type": "METER",
+                "meter_id": 4
+            },
+            {
+                "type": "OUTPUT",
+                "port": 3
+            }
+        ]
+    }
+
+]

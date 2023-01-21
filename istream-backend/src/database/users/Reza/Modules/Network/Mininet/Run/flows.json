@@ -1,5 +1,4 @@
-[
-    {
+[{
         "dpid": 1,
         "table_id": 0,
         "idle_timeout": 0,
@@ -10,8 +9,7 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 1
             },
@@ -32,12 +30,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 5,
@@ -50,12 +46,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 4,
@@ -68,12 +62,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 2,
@@ -86,12 +78,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 1,
@@ -104,8 +94,7 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 2
             },
@@ -126,12 +115,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 5,
@@ -144,12 +131,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 4,
@@ -162,12 +147,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 2,
@@ -180,12 +163,10 @@
             "ipv4_dst": "10.0.0.4",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 1,
@@ -198,8 +179,7 @@
             "ipv4_dst": "10.0.0.5",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 5
             },
@@ -220,12 +200,10 @@
             "ipv4_dst": "10.0.0.5",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 6,
@@ -238,12 +216,10 @@
             "ipv4_dst": "10.0.0.5",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 4,
@@ -256,12 +232,10 @@
             "ipv4_dst": "10.0.0.5",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 2,
@@ -274,12 +248,10 @@
             "ipv4_dst": "10.0.0.5",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 2,
@@ -292,8 +264,7 @@
             "ipv4_dst": "10.0.0.1",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 3
             },
@@ -314,12 +285,10 @@
             "ipv4_dst": "10.0.0.1",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 5,
@@ -332,12 +301,10 @@
             "ipv4_dst": "10.0.0.1",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 3,
@@ -350,12 +317,10 @@
             "ipv4_dst": "10.0.0.1",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 1,
@@ -368,12 +333,10 @@
             "ipv4_dst": "10.0.0.1",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 2,
@@ -386,8 +349,7 @@
             "ipv4_dst": "10.0.0.2",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 4
             },
@@ -408,12 +370,10 @@
             "ipv4_dst": "10.0.0.2",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 5,
@@ -426,12 +386,10 @@
             "ipv4_dst": "10.0.0.2",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 3,
@@ -444,12 +402,10 @@
             "ipv4_dst": "10.0.0.2",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 1,
@@ -462,12 +418,10 @@
             "ipv4_dst": "10.0.0.2",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 2,
@@ -480,8 +434,7 @@
             "ipv4_dst": "10.0.0.3",
             "eth_type": 2048
         },
-        "actions": [
-            {
+        "actions": [{
                 "type": "METER",
                 "meter_id": 6
             },
@@ -502,12 +455,10 @@
             "ipv4_dst": "10.0.0.3",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 2
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 2
+        }]
     },
     {
         "dpid": 6,
@@ -520,12 +471,10 @@
             "ipv4_dst": "10.0.0.3",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 1
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 1
+        }]
     },
     {
         "dpid": 3,
@@ -538,12 +487,10 @@
             "ipv4_dst": "10.0.0.3",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     },
     {
         "dpid": 1,
@@ -556,11 +503,9 @@
             "ipv4_dst": "10.0.0.3",
             "eth_type": 2048
         },
-        "actions": [
-            {
-                "type": "OUTPUT",
-                "port": 3
-            }
-        ]
+        "actions": [{
+            "type": "OUTPUT",
+            "port": 3
+        }]
     }
 ]

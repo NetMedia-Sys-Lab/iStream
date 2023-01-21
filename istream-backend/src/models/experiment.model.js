@@ -36,6 +36,7 @@ const experimentConfigJSONData = {
    transcoderComponentExistence: false,
    networkComponentExistence: false,
    repetition: 1,
+   runningInXterm: false,
 };
 
 exports.experimentDataModel = experimentDataModel;

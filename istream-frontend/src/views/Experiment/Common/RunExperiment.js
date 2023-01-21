@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-import { Button, Modal, Spinner } from "react-bootstrap";
+import { Button, Modal, Spinner, Form, Row, Col } from "react-bootstrap";
 
-import {
-   subscribeServerOfExperiment,
-   subscribeClientOfExperiment,
-   subscribeNetworkOfExperiment,
-   downloadExperimentResult,
-} from "src/api/ExperimentAPI";
+import { runExperiment, downloadExperimentResult } from "src/api/ExperimentAPI";
 import b64ToBlob from "b64-to-blob";
 import fileSaver from "file-saver";
 
@@ -26,53 +21,55 @@ export default class RunExperiment extends Component {
    runExperiment = () => {
       this.setState({ serverRunOutput: [], clientRunOutput: [], networkRunOutput: [] });
 
-      const data = {
+      const experimentInfo = {
          username: this.state.user.username,
          experimentId: this.props.experimentId,
          numberOfRepetition: this.props.numberOfRepetition,
+         runningInXterm: this.props.runningInXterm,
       };
 
-      subscribeServerOfExperiment(data, (err, output) => {
-         if (output === "SOCKET_CLOSED") {
-            this.setState({ serverRunSpinner: false });
-            return;
+      runExperiment(
+         experimentInfo,
+         (err, serverOutput) => {
+            if (serverOutput === "SOCKET_CLOSED") {
+               this.setState({ serverRunSpinner: false });
+               return;
+            }
+            this.setState({ serverRunSpinner: true });
+            console.log(serverOutput);
+            serverOutput = serverOutput.filter((str) => str !== "");
+            let out = "";
+            serverOutput.forEach((element) => (out += element + "\n"));
+
+            this.setState({ serverRunOutput: this.state.serverRunOutput + out });
+         },
+         (err, clientOutput) => {
+            if (clientOutput === "SOCKET_CLOSED") {
+               this.setState({ clientRunSpinner: false });
+               return;
+            }
+            this.setState({ clientRunSpinner: true });
+
+            clientOutput = clientOutput.filter((str) => str !== "");
+            let out = "";
+            clientOutput.forEach((element) => (out += element + "\n"));
+
+            this.setState({ clientRunOutput: this.state.clientRunOutput + out });
+         },
+         (err, networkOutput) => {
+            if (networkOutput === "SOCKET_CLOSED") {
+               this.setState({ networkRunSpinner: false });
+               return;
+            }
+            this.setState({ networkRunSpinner: true });
+
+            networkOutput = networkOutput.filter((str) => str !== "");
+            let out = "";
+            networkOutput.forEach((element) => (out += element + "\n"));
+
+            this.setState({ networkRunOutput: this.state.networkRunOutput + out });
          }
-         this.setState({ serverRunSpinner: true });
-
-         output = output.filter((str) => str !== "");
-         let out = "";
-         output.forEach((element) => (out += element + "\n"));
-
-         this.setState({ serverRunOutput: this.state.serverRunOutput + out });
-      });
-
-      subscribeClientOfExperiment(data, (err, output) => {
-         if (output === "SOCKET_CLOSED") {
-            this.setState({ clientRunSpinner: false });
-            return;
-         }
-         this.setState({ clientRunSpinner: true });
-
-         output = output.filter((str) => str !== "");
-         let out = "";
-         output.forEach((element) => (out += element + "\n"));
-
-         this.setState({ clientRunOutput: this.state.clientRunOutput + out });
-      });
-
-      subscribeNetworkOfExperiment(data, (err, output) => {
-         if (output === "SOCKET_CLOSED") {
-            this.setState({ networkRunSpinner: false });
-            return;
-         }
-         this.setState({ networkRunSpinner: true });
-
-         output = output.filter((str) => str !== "");
-         let out = "";
-         output.forEach((element) => (out += element + "\n"));
-
-         this.setState({ networkRunOutput: this.state.networkRunOutput + out });
-      });
+      );
    };
 
    runStateModal = () => {
@@ -102,20 +99,40 @@ export default class RunExperiment extends Component {
                   </Button>
                </Modal.Header>
                <Modal.Body>
-                  <div className="form-group row mb-2">
-                     <label className="col-4 col-form-label">Number of Repetition:</label>
-                     <div className="col-2">
-                        <input
-                           className="form-control"
-                           type="number"
-                           value={this.props.numberOfRepetition}
-                           onChange={(event) => {
-                              this.props.updateState(event.target.value);
-                           }}
-                           required
-                        />
-                     </div>
+                  <div className="row mb-2">
+                     <h4 style={{ display: "inline" }}>Running Configuration</h4>
                   </div>
+                  <Form>
+                     <Row className="align-items-center">
+                        <Col sm={8}>
+                           <Form.Group as={Row}>
+                              <Form.Label column>Number of Repetition:</Form.Label>
+                              <Col>
+                                 <Form.Control
+                                    type="number"
+                                    value={this.props.numberOfRepetition}
+                                    onChange={(event) => {
+                                       this.props.updateState(event.target.value, "repetition");
+                                    }}
+                                    required
+                                 />
+                              </Col>
+                           </Form.Group>
+                        </Col>
+                        {/* <Col sm={4}>
+                           <Form.Check
+                              type="switch"
+                              defaultChecked={this.props.runningInXterm}
+                              label="Running in xterm"
+                              onChange={(event) => {
+                                 this.props.updateState(event.target.checked, "xterm");
+                              }}
+                           />
+                        </Col> */}
+                     </Row>
+                  </Form>
+
+                  <hr />
                   <div className="row">
                      <div className="col">
                         <label>
@@ -129,7 +146,7 @@ export default class RunExperiment extends Component {
                         <br />
                         <textarea
                            label="Server"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
                            id="modalTextArea"
                            name="modalTextArea"
                            // className="me-2"
@@ -149,7 +166,7 @@ export default class RunExperiment extends Component {
                         <br />
                         <textarea
                            label="Client"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
                            id="modalTextArea"
                            name="modalTextArea"
                            value={this.state.networkRunOutput}
@@ -168,7 +185,7 @@ export default class RunExperiment extends Component {
                         <br />
                         <textarea
                            label="Client"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "70vh" : "18vh" }}
+                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
                            id="modalTextArea"
                            name="modalTextArea"
                            value={this.state.clientRunOutput}

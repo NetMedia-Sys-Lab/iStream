@@ -54,6 +54,6 @@ COPY ENTRYPOINT.sh /
 
 RUN chmod +x /ENTRYPOINT.sh
 
-EXPOSE 80 1935
+EXPOSE 80 1935 6633 6653 6640
 # CMD ["./usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
 ENTRYPOINT ["/ENTRYPOINT.sh"]

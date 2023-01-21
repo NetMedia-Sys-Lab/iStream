@@ -22,6 +22,7 @@ class Experiment extends Component {
          networkComponentExistence: true,
          transcoderComponentExistence: true,
          repetition: 1,
+         runningInXterm: false,
       },
    };
 
@@ -30,11 +31,13 @@ class Experiment extends Component {
 
       getExperimentConfig(this.state.user, this.state.experimentId)
          .then((res) => {
+            console.log(res.runningInXterm);
             this.setState({
                experimentConfig: {
                   networkComponentExistence: res.networkComponentExistence,
                   transcoderComponentExistence: res.transcoderComponentExistence,
                   repetition: res.repetition,
+                  runningInXterm: res.runningInXterm,
                },
             });
          })
@@ -43,10 +46,16 @@ class Experiment extends Component {
          });
    }
 
-   updateState = (value) => {
-      let tempState = this.state.experimentConfig;
-      tempState.repetition = value;
-      this.setState({ experimentConfig: tempState });
+   updateState = (value, type) => {
+      if (type === "repetition") {
+         let tempState = this.state.experimentConfig;
+         tempState.repetition = value;
+         this.setState({ experimentConfig: tempState });
+      } else if (type === "xterm") {
+         let tempState = this.state.experimentConfig;
+         tempState.runningInXterm = value;
+         this.setState({ experimentConfig: tempState });
+      }
    };
 
    render() {
@@ -87,6 +96,7 @@ class Experiment extends Component {
                         <RunExperiment
                            experimentId={this.state.experimentId}
                            numberOfRepetition={this.state.experimentConfig.repetition}
+                           runningInXterm={this.state.experimentConfig.runningInXterm}
                            updateState={this.updateState}
                         />
                      </div>

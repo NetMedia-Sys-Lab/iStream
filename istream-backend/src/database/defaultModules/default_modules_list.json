@@ -2,7 +2,7 @@
    "Server": [{
       "id": "1",
       "name": "Nginx Dash",
-      "description": "Simple Nginx"
+      "description": "Nginx Server"
    }],
    "Network": [{
       "id": "2",
@@ -15,7 +15,7 @@
       "description": "test"
    }, {
       "id": "7",
-      "name": "Headless Player",
-      "description": "Test"
+      "name": "Headless Player New",
+      "description": "test"
    }]
 }

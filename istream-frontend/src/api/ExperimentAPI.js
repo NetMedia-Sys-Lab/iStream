@@ -42,23 +42,32 @@ export function subscribeToBuildExperiment(userInfo, cb) {
    SOCKET.emit("subscribeToBuildExperiment", userInfo);
 }
 
-export function subscribeServerOfExperiment(userInfo, cb) {
-   const SOCKET = openSocket(DOMAIN + "runServer");
-   SOCKET.on("getServerOfExperimentInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeServerOfExperiment", userInfo);
+export function runExperiment(experimentInfo, serverCb, clientCb, networkCb) {
+   const socket = openSocket(DOMAIN + "runExperiment");
+   socket.emit("experimentInfo", experimentInfo);
+
+   socket.on("getServerOfExperimentInfo", (err, data) => serverCb(err, data));
+   socket.on("getClientOfExperimentInfo", (err, data) => clientCb(err, data));
+   socket.on("getNetworkOfExperimentInfo", (err, data) => networkCb(err, data));
 }
 
-export function subscribeClientOfExperiment(userInfo, cb) {
-   const SOCKET = openSocket(DOMAIN + "runClient");
-   SOCKET.on("getClientOfExperimentInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeClientOfExperiment", userInfo);
-}
+// export function subscribeServerOfExperiment(userInfo, cb) {
+//    const SOCKET = openSocket(DOMAIN + "runServer");
+//    SOCKET.on("getServerOfExperimentInfo", (data) => cb(null, data));
+//    SOCKET.emit("subscribeServerOfExperiment", userInfo);
+// }
 
-export function subscribeNetworkOfExperiment(userInfo, cb) {
-   const SOCKET = openSocket(DOMAIN + "runNetwork");
-   SOCKET.on("getNetworkOfExperimentInfo", (data) => cb(null, data));
-   SOCKET.emit("subscribeNetworkOfExperiment", userInfo);
-}
+// export function subscribeClientOfExperiment(userInfo, cb) {
+//    const SOCKET = openSocket(DOMAIN + "runClient");
+//    SOCKET.on("getClientOfExperimentInfo", (data) => cb(null, data));
+//    SOCKET.emit("subscribeClientOfExperiment", userInfo);
+// }
+
+// export function subscribeNetworkOfExperiment(userInfo, cb) {
+//    const SOCKET = openSocket(DOMAIN + "runNetwork");
+//    SOCKET.on("getNetworkOfExperimentInfo", (data) => cb(null, data));
+//    SOCKET.emit("subscribeNetworkOfExperiment", userInfo);
+// }
 
 export function downloadExperimentResult(username, experimentId) {
    return API.get("/experiment/downloadExperimentResult", {

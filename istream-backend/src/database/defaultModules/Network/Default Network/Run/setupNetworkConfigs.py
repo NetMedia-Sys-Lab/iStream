@@ -6,7 +6,7 @@ import glob
 defaultConfigPath = "{}/config.json".format(
     os.path.realpath(os.path.dirname(__file__)))
 
-networkConfigTemplateScript = "{}/networksConfigTemplates.sh".format(
+networkConfigTemplateScript = "{}/networksConfigTemplates.txt".format(
     os.path.realpath(os.path.dirname(__file__)))
 
 applyNetworkConfigScript = "{}/applyNetworksConfig.sh".format(
@@ -18,6 +18,12 @@ with open(networkConfigTemplateScript, "rt") as fileToChange:
     if os.path.isfile(defaultConfigPath):
         with open(defaultConfigPath, "rt") as configFile:
             networkConfig = json.load(configFile)
+
+        if networkConfig['delay'] == 0 & networkConfig['bandwidth'] == 0 & networkConfig['packetLoss'] == 0 & networkConfig['corruptPacket'] == 0:
+            filedata = filedata.replace(
+                '${defaultConfig}', '#')
+            filedata = filedata.replace(
+                '${manualConfig}', '#')
 
         if networkConfig['delay'] != 0:
             filedata = filedata.replace(

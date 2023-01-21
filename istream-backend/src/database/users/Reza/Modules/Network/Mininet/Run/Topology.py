@@ -27,6 +27,9 @@ class Topology(Topo):
         s5 = self.addSwitch('s5')
         s6 = self.addSwitch('s6')
 
+        # h6 = self.addHost('h6', ip="10.0.0.6")
+        # self.addLink(s3, s4)
+
         self.addLink(s3, s5)
         self.addLink(s5, s4)
         self.addLink(s3, s6)
@@ -52,13 +55,14 @@ if __name__ == '__main__':
     #     'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]), shell=True)
     # subprocess.check_output('ovs-vsctl add-port s4 gre1 -- set interface gre1 type=gre options:remote_ip={}'.format(config["serverIP"])', shell=True)
     os.system(
-    'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]))
+        'ovs-vsctl add-port s3 gre0 -- set interface gre0 type=gre options:remote_ip={}'.format(config["clientIP"]))
     os.system(
         'ovs-vsctl add-port s4 gre1 -- set interface gre1 type=gre options:remote_ip={}'.format(config["serverIP"]))
-    sleep(5)
+    sleep(10)
     postFilePath = "{}/post.py".format(
         os.path.realpath(os.path.dirname(__file__)))
     os.system('python3 {} {}'.format(postFilePath, config["networkIP"]))
+    # os.system("curl -X POST http://localhost:8080/stats/flowentry/add -d '@flows-new.json'")
 
     CLI(net)
     while 1:

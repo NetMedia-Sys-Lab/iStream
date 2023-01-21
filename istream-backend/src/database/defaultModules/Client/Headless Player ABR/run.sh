@@ -21,6 +21,7 @@ selectedAdaptation=$(echo $(jq --arg model "${AdaptationAlgorithm}" '.[$model]' 
 docker ps -a -q --filter "name=headless_player_container" | grep -q . &&
     echo "Remove previous headless player docker container" && docker stop headless_player_container && docker rm -fv headless_player_container
 
+sleep 5
 docker run --name headless_player_container headless_player_component \
     scripts/dash-emulator.py ${selectedAdaptation} --dump-results results/result http://${serverMachineIP}:${serverContainerPort}/${MPDName}
 

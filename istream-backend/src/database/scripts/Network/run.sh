@@ -1,7 +1,6 @@
 #!/bin/bash
 username=$1
 experimentId=$2
-firstRun=$3
 
 mainDir=$(pwd)
 
@@ -21,9 +20,6 @@ else
         --arg networkContainerPort "$networkContainerPort" \
         '{networkContainerPort: $networkContainerPort}')
 
-    if [[ "${firstRun}" == "true" ]]; then
-        bash "${mainDir}/src/database/scripts/Common/prepareForRun.sh" "${username}" "${experimentId}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${networkAdvanceConfig}" "${networkConfigName}" 2>&1
-    fi
-
+    echo "------ Network component running started ------"
     bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}" 2>&1
 fi

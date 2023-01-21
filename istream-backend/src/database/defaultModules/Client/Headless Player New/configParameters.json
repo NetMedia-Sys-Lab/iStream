@@ -1,0 +1,31 @@
+{
+   "advancedConfiguration": false,
+   "parameters": {
+      "type": "object",
+      "title": "Headless Player's Config",
+      "properties": {
+         "beta": {
+            "title": "beta",
+            "type": "boolean",
+            "default": false
+         },
+         "protocol": {
+            "title": "Protocol",
+            "type": "string",
+            "enum": ["tcp", "quic"],
+            "default": "tcp"
+         },
+         "abr": {
+            "title": "Adaptation Algorithm Method",
+            "type": "string",
+            "enum": ["buffer-based", "bandwidth-based", "hybrid", "BOLA"],
+            "default": "BOLA"
+         },
+         "MPDName": {
+            "title": "MPD File Name",
+            "type": "string",
+            "default": "output.mpd"
+         }
+      }
+   }
+}

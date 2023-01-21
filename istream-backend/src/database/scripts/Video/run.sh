@@ -46,8 +46,10 @@ fi
 
 mkdir -p "${serverVideosDirectoryPath}"
 
+videoNumber=0
 for i in "${!userVideosName[@]}"; do
-    echo "Move video number $(($i + 1)) beside server component"
+    videoNumber=$((videoNumber + 1))
+    echo "Move video number $(($videoNumber)) beside server component"
     videoName=$(echo $(jq '.name' <<<${userVideosName[$i]}) | tr -d '"')
     videoId=$(echo $(jq '.id' <<<${userVideosName[$i]}) | tr -d '"')
     videoExtension=$(echo $(jq '.extension' <<<${userVideosName[$i]}) | tr -d '"')
@@ -63,7 +65,8 @@ for i in "${!userVideosName[@]}"; do
 done
 
 for j in "${!defaultVideosName[@]}"; do
-    echo "Move video number $(($j + $i + 2)) beside server component"
+    videoNumber=$((videoNumber + 1))
+    echo "Move video number $(($videoNumber)) beside server component"
     videoName=$(echo $(jq '.name' <<<${defaultVideosName[$j]}) | tr -d '"')
     videoId=$(echo $(jq '.id' <<<${defaultVideosName[$j]}) | tr -d '"')
     videoExtension=$(echo $(jq '.extension' <<<${defaultVideosName[$j]}) | tr -d '"')
