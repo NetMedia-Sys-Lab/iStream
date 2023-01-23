@@ -65,6 +65,6 @@ if __name__ == '__main__':
     # os.system("curl -X POST http://localhost:8080/stats/flowentry/add -d '@flows-new.json'")
 
     CLI(net)
-    while 1:
-        True
+    # while 1:
+    #     True
     # net.stop()

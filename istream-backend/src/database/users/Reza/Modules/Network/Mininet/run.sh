@@ -14,5 +14,5 @@ docker create --name mininet-container --rm --privileged -e DISPLAY --net custom
 docker cp "${DIR}/Run" mininet-container:/root
 docker start mininet-container
 docker exec mininet-container bash Run/startRyu.sh
-# docker exec mininet-container python Run/Topology.py 
+docker exec mininet-container python Run/Topology.py 
 
