@@ -31,7 +31,7 @@ export default class ModuleConfiguration extends Component {
             </div>
          );
       return (
-         <div className={classNames + " row mt-1"}>
+         <div className={classNames + " row"}>
             <div className="col-6 center">
                <label htmlFor={id} className="float-start">
                   {label + ":"}
@@ -45,7 +45,7 @@ export default class ModuleConfiguration extends Component {
                   ""
                )}
             </div>
-            <div className="col-6">{children}</div>
+            <div className="col-6 center">{children}</div>
             {errors}
             {help}
          </div>
@@ -61,6 +61,7 @@ export default class ModuleConfiguration extends Component {
                uiSchema={this.props.selectedModule.simpleConfig.uiSchema}
                formData={this.props.selectedModule.simpleConfig.values}
                onChange={(values) => this.props.onSimpleConfigurationChange(values.formData)}
+               // onSubmit={(values, e) => this.props.onSimpleConfigurationChange(values.formData, e)}
             >
                <Button style={{ display: "none" }} type="submit" />
             </Form>

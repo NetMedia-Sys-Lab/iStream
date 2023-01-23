@@ -31,7 +31,6 @@ class Experiment extends Component {
 
       getExperimentConfig(this.state.user, this.state.experimentId)
          .then((res) => {
-            console.log(res.runningInXterm);
             this.setState({
                experimentConfig: {
                   networkComponentExistence: res.networkComponentExistence,

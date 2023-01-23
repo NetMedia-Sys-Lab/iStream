@@ -84,6 +84,7 @@ export default class ComponentCard extends Component {
             tempState.simpleConfig.parameters = res.parameters;
             tempState.advanceConfigurationExist = res.advanceConfigurationExist;
             tempState.simpleConfig.uiSchema = res.parametersUISchema;
+            tempState.simpleConfig.values = {};
             if (Object.keys(res.parameters).length === 0) {
                tempState.advanceConfiguration = true;
             }
@@ -125,10 +126,13 @@ export default class ComponentCard extends Component {
    };
 
    onModuleSimpleConfigurationChange = (values) => {
-      let data = {};
-      Object.keys(this.state.selectedModule.simpleConfig.parameters["properties"]).map((item) => (data[item] = values[item]));
+      // console.log(this.state.selectedModule.simpleConfig.parameters);
+      console.log(values);
+
+      // let data = {};
+      // Object.keys(this.state.selectedModule.simpleConfig.parameters["properties"]).map((item) => (data[item] = values[item]));
       let tempState = this.state.selectedModule;
-      tempState.simpleConfig.values = data;
+      tempState.simpleConfig.values = values;
       this.setState({ selectedModule: tempState });
    };
 

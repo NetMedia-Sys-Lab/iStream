@@ -39,6 +39,21 @@ export default class ShowComponentConfig extends Component {
       );
    };
 
+   searchKey(obj, key) {
+      for (let k in obj) {
+         if (k === key) {
+            return obj[k];
+         }
+         if (typeof obj[k] === "object") {
+            let result = this.searchKey(obj[k], key);
+            if (result !== undefined) {
+               return result;
+            }
+         }
+      }
+      return undefined;
+   }
+
    moduleConfig = () => {
       let configTemplate = "";
       if (this.props.moduleData.advanceConfiguration === true) {
@@ -50,12 +65,14 @@ export default class ShowComponentConfig extends Component {
          );
       } else {
          configTemplate = Object.keys(this.props.moduleData.simpleConfig.values).map((key, index) => {
+            let value = this.searchKey(this.props.moduleData.simpleConfig.parameters, key);
+
             return (
                <div key={index}>
-                  <strong> {this.props.moduleData.simpleConfig.parameters["properties"][key]["title"]}: </strong>
+                  <strong> {value["title"]}: </strong>
                   {key === "bandwidth" && this.props.moduleData.simpleConfig.values[key] === 0
                      ? "Without limit"
-                     : this.props.moduleData.simpleConfig.values[key]}
+                     : String(this.props.moduleData.simpleConfig.values[key])}
                </div>
             );
          });
