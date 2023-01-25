@@ -9,4 +9,6 @@ router.post("/addNewVideo", controller.addNewVideo);
 router.post("/addNewVideoDataset", controller.addNewVideoDataset);
 router.post("/saveVideoModuleData", controller.saveVideoModuleData);
 
+router.delete("/userVideo", controller.deleteUserVideo);
+
 module.exports = router;

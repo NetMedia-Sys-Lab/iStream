@@ -110,7 +110,7 @@ export default class Stepper extends Component {
                      {this.nextButton}
                      {this.submitButton}
 
-                     {this.props.componentName === "Video" ? this.props.addNewVideoButton : ""}
+                     {/* {this.props.componentName === "Video" ? this.props.addNewVideoButton : ""} */}
                   </div>
                </Modal.Body>
             </Modal>

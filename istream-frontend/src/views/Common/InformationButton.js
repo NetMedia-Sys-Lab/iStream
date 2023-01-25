@@ -1,18 +1,23 @@
 import React, { Component } from "react";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export default class InformationButton extends Component {
    render() {
-      const popoverHover = (
-         <Popover className="p-1" id="popover-trigger-hover" title="Popover bottom">
+      const renderTooltip = (props) => (
+         <Tooltip id="button-tooltip" {...props}>
             {this.props.message}
-         </Popover>
+         </Tooltip>
       );
+
       return (
-         <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={popoverHover}>
-            <button type="button" className="btn btn-info btn-rounded">
+         <OverlayTrigger
+            placement={this.props.placement ? this.props.placement : "bottom"}
+            delay={{ show: 0, hide: 400 }}
+            overlay={renderTooltip}
+         >
+            <Button className="button-block" variant="info">
                <i className="fa fa-info" aria-hidden="true"></i>
-            </button>
+            </Button>
          </OverlayTrigger>
       );
    }

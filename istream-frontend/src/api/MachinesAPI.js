@@ -53,3 +53,19 @@ export function getComponentSelectedMachine(user, componentName, experimentId) {
       }
    );
 }
+
+export function deleteUserMachine(user, machineID) {
+   return API.delete("/machines/userMachine", {
+      params: {
+         user,
+         machineID,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}

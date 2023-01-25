@@ -1,79 +1,11 @@
 import React, { Component } from "react";
-import { Dropdown, DropdownButton, Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import AddModule from "src/views/Experiment/Common/AddModule";
 
 export default class ModuleSelection extends Component {
    state = {
       displayAddModule: false,
-   };
-
-   radioButtonOptions = (list) => {
-      return list.map((item) => {
-         return (
-            <div className="form-check" key={item}>
-               <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
-                  onChange={() => {
-                     this.props.updateSelectedModule("name", item);
-                  }}
-                  checked={this.props.selectedModule.name === item}
-               />
-               <label className="form-check-label">{item}</label>
-            </div>
-         );
-      });
-   };
-
-   oldModuleSelection = () => {
-      const moduleTypeOptions = (
-         <DropdownButton
-            id="dropdown-basic-button"
-            title={this.props.selectedModule.type === "" ? "Select Module Type" : this.props.selectedModule.type}
-            variant="secondary"
-         >
-            {this.props.modules.types.map((moduleType) => (
-               <Dropdown.Item key={moduleType}>
-                  <div
-                     onClick={() => {
-                        this.props.updateSelectedModule("type", moduleType);
-                     }}
-                  >
-                     {moduleType}
-                  </div>
-               </Dropdown.Item>
-            ))}
-         </DropdownButton>
-      );
-      const iStreamModuleOptions = this.radioButtonOptions(this.props.modules.names.iStream);
-      const userModuleOptions =
-         this.props.modules.names.custom.length === 0 ? (
-            <div>No Modules found. Please add a module to proceed.</div>
-         ) : (
-            this.radioButtonOptions(this.props.modules.names.custom)
-         );
-
-      return (
-         <div className="row mb-2">
-            <div className="col-6">
-               <h5>Select Module Type</h5>
-               <div>{moduleTypeOptions}</div>
-            </div>
-            <div className="col-6">
-               <div>{this.props.selectedModule.type !== "" ? <h5>Select Module</h5> : ""}</div>
-               <div>
-                  {this.props.selectedModule.type !== ""
-                     ? this.props.selectedModule.type === "iStream"
-                        ? iStreamModuleOptions
-                        : userModuleOptions
-                     : ""}
-               </div>
-            </div>
-         </div>
-      );
    };
 
    onModuleClick = (moduleIndex) => {
@@ -94,7 +26,7 @@ export default class ModuleSelection extends Component {
 
       let modulesRow = allModules.map((module) => {
          let isSelected = false;
-         if ((this.props.selectedModule.id === module.id)) {
+         if (this.props.selectedModule.id === module.id) {
             isSelected = true;
          }
 
@@ -139,23 +71,29 @@ export default class ModuleSelection extends Component {
    };
 
    get addModuleButton() {
+      const renderTooltip = (props) => (
+         <Tooltip id="button-tooltip" {...props}>
+            Add New Module
+         </Tooltip>
+      );
       return (
-         <Button
-            variant="secondary"
-            className="float-end ms-1"
-            onClick={() => {
-               this.setState({ displayAddModule: true });
-            }}
-         >
-            +
-         </Button>
+         <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+            <Button
+               variant="secondary"
+               className="float-end ms-1"
+               onClick={() => {
+                  this.setState({ displayAddModule: true });
+               }}
+            >
+               +
+            </Button>
+         </OverlayTrigger>
       );
    }
 
    render() {
       return (
          <div>
-            {/* {this.oldModuleSelection()} */}
             {this.moduleSelection()}
             <AddModule
                display={this.state.displayAddModule}

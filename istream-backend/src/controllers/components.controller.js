@@ -2,7 +2,6 @@ const fs = require("fs");
 const decompress = require("decompress");
 const { moduleDataModel, moduleInfoModel } = require("../models/module.model");
 const dockerModel = require("../models/dockerConfig.model");
-const { log } = require("console");
 
 module.exports.getModules = (req, res) => {
    const { username } = JSON.parse(req.query.user);
@@ -248,5 +247,45 @@ module.exports.saveComponentData = (req, res) => {
       componentsDockerConfig[componentName] = dockerConfig.newValues;
       fs.writeFileSync(dockerConfigPath, JSON.stringify(componentsDockerConfig));
       res.status(200).send("Configuration Saved Successfully");
+   });
+};
+
+module.exports.deleteUserModule = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const componentName = req.query.componentName;
+   const moduleId = req.query.moduleId;
+
+   const userModulesPath = `src/database/users/${username}/modules_list.json`;
+   let allUserModules = JSON.parse(fs.readFileSync(userModulesPath, "utf8"));
+   let selectedModule = allUserModules[componentName].find((module) => module.id === moduleId);
+   allUserModules[componentName] = allUserModules[componentName].filter((module) => module.id !== moduleId);
+
+   fs.writeFileSync(userModulesPath, JSON.stringify(allUserModules));
+   const userExperimentsPath = `src/database/users/${username}/Experiments`;
+
+   let allExperiments = fs.readdirSync(userExperimentsPath);
+   allExperiments.forEach((experimentID) => {
+      const experimentDependencyFilePath = userExperimentsPath + `/${experimentID}/dependency.json`;
+      if (fs.existsSync(experimentDependencyFilePath)) {
+         let dependencyFile = JSON.parse(fs.readFileSync(experimentDependencyFilePath, "utf8"));
+
+         if (dependencyFile[componentName]["name"] === selectedModule.name) {
+            dependencyFile[componentName] = experimentModel.experimentJSONData[componentName];
+            const stringifyDependencyFile = JSON.stringify(dependencyFile);
+            fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
+         }
+      }
+   });
+
+   const modulePath = `src/database/users/${username}/Modules/${componentName}/${selectedModule.name}`;
+
+   fs.rm(modulePath, { recursive: true }, function (err) {
+      if (err) {
+         let errorMessage = "Something went wrong in deleteUserModule: Couldn't delete in modulePath directory.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      res.status(200).send("Successfully delete user's module");
    });
 };

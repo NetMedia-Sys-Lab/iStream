@@ -75,3 +75,19 @@ export const AddNewVideoDataset = (request) => {
       }
    );
 };
+
+export const deleteUserVideo = (user, videoID) => {
+   return API.delete("/video/userVideo", {
+      params: {
+         user,
+         videoID,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

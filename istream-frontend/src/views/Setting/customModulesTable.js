@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-// import { getUserModules, deleteUserModule } from "src/api/ModulesAPI";
-// import { toast } from "react-toastify";
+import { getModules, deleteUserModule } from "src/api/ComponentsAPI";
+import { toast } from "react-toastify";
 
 export default class CustomModulesTable extends Component {
    state = {
@@ -14,16 +14,16 @@ export default class CustomModulesTable extends Component {
    }
 
    fetchData = () => {
-      // getUserModules(this.state.user, this.props.componentName).then((res) => {
-      //    this.setState({ userModules: res });
-      // });
+      getModules(this.state.user, this.props.componentName).then((res) => {
+         this.setState({ userModules: res.user });
+      });
    };
 
-   deleteUserModule = (moduleName) => {
-      // deleteUserModule(this.state.user, this.props.componentName, moduleName).then((res) => {
-      //    this.fetchData();
-      //    toast.success(res);
-      // });
+   deleteUserModule = (moduleId) => {
+      deleteUserModule(this.state.user, this.props.componentName, moduleId).then((res) => {
+         this.fetchData();
+         toast.success(res);
+      });
    };
 
    userModulesTable = () => {
@@ -44,13 +44,13 @@ export default class CustomModulesTable extends Component {
       const tableData = this.state.userModules.map((module, index) => {
          return (
             <tr key={index}>
-               <td className="align-middle col-9">{module}</td>
+               <td className="align-middle col-9">{module["name"]}</td>
 
                <td className="align-middle col-3">
                   <button
                      className="btn btn-light mx-1 experiment-button"
                      title="Delete Module"
-                     onClick={() => this.deleteUserModule(module)}
+                     onClick={() => this.deleteUserModule(module["id"])}
                   >
                      <i className="fa fa-trash text-danger" style={{ cursor: "pointer" }}></i>
                   </button>

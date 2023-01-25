@@ -170,3 +170,56 @@ module.exports.getVideoModuleData = (req, res) => {
       res.status(200).send(videosData);
    });
 };
+
+module.exports.deleteUserVideo = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const videoID = req.query.videoID;
+   const userExperimentsPath = `src/database/users/${username}/Experiments`;
+
+   let allExperiments = fs.readdirSync(userExperimentsPath);
+   allExperiments.forEach((experimentID) => {
+      const experimentDependencyFilePath = userExperimentsPath + `/${experimentID}/dependency.json`;
+      if (fs.existsSync(experimentDependencyFilePath)) {
+         let dependencyFile = JSON.parse(fs.readFileSync(experimentDependencyFilePath, "utf8"));
+
+         if (dependencyFile["Video"]["id"].includes(videoID)) {
+            dependencyFile["Video"]["id"] = dependencyFile["Video"]["id"].filter((id) => {
+               return id != videoID;
+            });
+            const stringifyDependencyFile = JSON.stringify(dependencyFile);
+            fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
+         }
+      }
+   });
+
+   const videosListPath = `src/database/users/${username}/Videos/videos_list.json`;
+   const videoPath = `src/database/users/${username}/Videos/${videoID}`;
+
+   fs.rmSync(videoPath);
+
+   fs.readFile(videosListPath, "utf8", function (err, data) {
+      if (err) {
+         let errorMessage = "Something went wrong in deleteUserVideo: Couldn't read videosListPath file.";
+         console.log(errorMessage);
+         res.status(500).send(errorMessage);
+      }
+
+      let videosList = JSON.parse(data);
+
+      videosList = videosList.filter((obj) => {
+         return obj.id != videoID.toString();
+      });
+
+      const stringifyVideosList = JSON.stringify(videosList);
+
+      fs.writeFile(videosListPath, stringifyVideosList, function (err) {
+         if (err) {
+            let errorMessage = "Something went wrong in deleteUserVideo: Couldn't write in videosListPath file.";
+            console.log(errorMessage);
+            res.status(500).send(errorMessage);
+         }
+      });
+
+      res.status(200).send("Successfully delete user's video.");
+   });
+};

@@ -71,3 +71,20 @@ export const saveComponentData = (data) => {
       }
    );
 };
+
+export const deleteUserModule = (user, componentName, moduleId) => {
+   return API.delete("/components/userModule", {
+      params: {
+         user,
+         componentName,
+         moduleId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+};

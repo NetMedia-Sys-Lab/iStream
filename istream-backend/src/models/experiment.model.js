@@ -9,13 +9,6 @@ const experimentDataModel = {
       configName: "",
       machineID: "",
    },
-   Transcoder: {
-      type: "",
-      name: "",
-      advanceConfig: "",
-      configName: "",
-      machineID: "",
-   },
    Network: {
       type: "",
       name: "",

@@ -7,4 +7,6 @@ router.get("/getComponentSelectedMachine", controller.getComponentSelectedMachin
 router.post("/addNewMachine", controller.addNewMachine);
 router.post("/saveComponentMachineInfo", controller.saveComponentMachineInfo);
 
+router.delete("/userMachine", controller.deleteUserMachine);
+
 module.exports = router;

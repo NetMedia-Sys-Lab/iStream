@@ -3,8 +3,10 @@ import Stepper from "src/views/Experiment/Common/Stepper";
 import AddVideo from "src/views/Experiment/Common/AddVideo";
 import { ComponentsIcons } from "src/models/UserInterface";
 import { getUserVideosList, getDefaultVideosList, saveVideoModuleData, getVideoModuleData } from "src/api/VideoAPI";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { toast } from "react-toastify";
+import InformationButton from "src/views/Common/InformationButton";
+
 import "src/css/style.css";
 
 export default class VideoCard extends Component {
@@ -25,14 +27,14 @@ export default class VideoCard extends Component {
       this.fetchData();
 
       getDefaultVideosList().then((res) => {
-         res.map((element) => (element["isDefault"] = "Yes"));
+         
          this.setState({ defaultVideosList: res });
       });
    }
 
    fetchData = () => {
       getUserVideosList(this.state.user).then((res) => {
-         res.map((element) => (element["isDefault"] = "No"));
+         
          this.setState({ userVideosList: res });
       });
 
@@ -109,7 +111,9 @@ export default class VideoCard extends Component {
       return (
          <div>
             <div>
-               <h4>Videos</h4>
+               <h4 style={{ display: "inline" }}>Videos</h4>
+               <InformationButton message={"Selected videos move beside the server component in Run directory"} placement={"top"} />
+               {this.addNewVideoButton}
             </div>
             <table className="table table-hover p-5">
                <thead className="thead-dark">
@@ -176,16 +180,23 @@ export default class VideoCard extends Component {
    };
 
    get addNewVideoButton() {
+      const renderTooltip = (props) => (
+         <Tooltip id="button-tooltip" {...props}>
+            Add New Video or Dataset
+         </Tooltip>
+      );
       return (
-         <Button
-            variant="secondary"
-            className="float-end me-1"
-            onClick={() => {
-               this.setState({ displayAddNewVideo: true, displayModal: false });
-            }}
-         >
-            Add Video
-         </Button>
+         <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+            <Button
+               variant="secondary"
+               className="float-end ms-1"
+               onClick={() => {
+                  this.setState({ displayAddNewVideo: true, displayModal: false });
+               }}
+            >
+               +
+            </Button>
+         </OverlayTrigger>
       );
    }
 
@@ -212,7 +223,7 @@ export default class VideoCard extends Component {
                onSubmit={this.onSubmit}
                toggleDisplay={() => this.setState({ displayModal: !this.state.displayModal })}
                componentName={this.state.componentName}
-               addNewVideoButton={this.addNewVideoButton}
+               // addNewVideoButton={this.addNewVideoButton}
             />
 
             <AddVideo

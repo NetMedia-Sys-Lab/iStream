@@ -55,7 +55,7 @@ export default class AddVideo extends Component {
       let uploadVideo = (
          <form onSubmit={this.handleSubmitVideo}>
             <div className="form-group row">
-               <label className="col-6 col-form-label">Resolution:(required)</label>
+               <label className="col-6 col-form-label">Resolution:*</label>
                <div className="col-6">
                   <input
                      className="form-control"
