@@ -27,14 +27,14 @@ export default class VideoCard extends Component {
       this.fetchData();
 
       getDefaultVideosList().then((res) => {
-         
+         res.map((element) => (element["isDefault"] = "Yes"));
          this.setState({ defaultVideosList: res });
       });
    }
 
    fetchData = () => {
       getUserVideosList(this.state.user).then((res) => {
-         
+         res.map((element) => (element["isDefault"] = "No"));
          this.setState({ userVideosList: res });
       });
 
