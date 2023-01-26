@@ -196,7 +196,12 @@ export default class RunExperiment extends Component {
                   <hr />
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>
-                     <Button variant="success" className="float-end" onClick={this.runExperiment}>
+                     <Button
+                        variant="success"
+                        className="float-end"
+                        onClick={this.runExperiment}
+                        disabled={this.state.serverRunSpinner || this.state.clientRunSpinner || this.state.networkRunSpinner}
+                     >
                         Start
                      </Button>
                   </div>

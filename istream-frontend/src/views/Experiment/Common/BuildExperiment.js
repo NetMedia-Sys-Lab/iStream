@@ -48,7 +48,7 @@ export default class BuildExperiment extends Component {
 
                   <hr />
                   <div className="mt-3">
-                     <Button variant="success" className="float-end" onClick={this.buildExperiment}>
+                     <Button variant="success" className="float-end" onClick={this.buildExperiment} disabled={this.state.buildSpinner}>
                         Start
                         {this.state.buildSpinner ? (
                            <Spinner as="span" variant="light" size="sm" role="status" aria-hidden="true" animation="border" />
