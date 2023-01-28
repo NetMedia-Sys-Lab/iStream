@@ -202,7 +202,6 @@ module.exports.saveComponentData = (req, res) => {
    let advanceConfig = selectedModuleData.advanceConfiguration;
    let selectedConfigFileName = selectedModuleData.advanceConfig.selected;
    let simpleConfigValues = selectedModuleData.simpleConfig.values;
-   console.log(simpleConfigValues);
 
    const dependencyFile = `src/database/users/${username}/Experiments/${experimentId}/dependency.json`;
    const dockerConfigPath = `src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json`;

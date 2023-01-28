@@ -79,7 +79,6 @@ export default class ComponentCard extends Component {
       )
          .then((res) => {
             res.allConfigs.unshift("No Config");
-            console.log(res);
             let tempState = this.state.selectedModule;
             tempState.advanceConfig.names = res.allConfigs;
             tempState.simpleConfig.parameters = res.parameters;
@@ -126,31 +125,23 @@ export default class ComponentCard extends Component {
       this.setState({ dockerConfig: tempState });
    };
 
-   onModuleSimpleConfigurationChange = (values) => {
-      // console.log(this.state.selectedModule.simpleConfig.parameters);
-      console.log(values);
-
-      // let data = {};
-      // Object.keys(this.state.selectedModule.simpleConfig.parameters["properties"]).map((item) => (data[item] = values[item]));
+   onSubmit = (values) => {
       let tempState = this.state.selectedModule;
       tempState.simpleConfig.values = values;
-      this.setState({ selectedModule: tempState });
-   };
-
-   onSubmit = () => {
-      let data = {
-         userId: this.state.user.userId,
-         username: this.state.user.username,
-         componentName: this.state.componentName,
-         experimentId: this.props.experimentId,
-         selectedModuleData: this.state.selectedModule,
-         dockerConfig: this.state.dockerConfig,
-      };
-
-      saveComponentData(data).then((res) => {
-         this.fetchData();
-         this.setState({ showModuleConfiguration: true });
-         toast.success(res);
+      this.setState({ selectedModule: tempState, displayStepperModal: !this.state.displayStepperModal }, () => {
+         let data = {
+            userId: this.state.user.userId,
+            username: this.state.user.username,
+            componentName: this.state.componentName,
+            experimentId: this.props.experimentId,
+            selectedModuleData: this.state.selectedModule,
+            dockerConfig: this.state.dockerConfig,
+         };
+         saveComponentData(data).then((res) => {
+            this.fetchData();
+            this.setState({ showModuleConfiguration: true });
+            toast.success(res);
+         });
       });
    };
 
@@ -194,11 +185,11 @@ export default class ComponentCard extends Component {
                      updateSelectedModule={this.updateSelectedModule}
                      getOneModuleInfo={this.getOneModuleInfo}
                      onSimpleConfigurationChange={this.onModuleSimpleConfigurationChange}
+                     onSubmit={this.onSubmit}
                   />,
                ]}
                toggleDisplay={() => this.setState({ displayStepperModal: !this.state.displayStepperModal })}
                componentName={this.state.componentName}
-               onSubmit={this.onSubmit}
                selectedModule={this.state.selectedModule}
             />
          </div>

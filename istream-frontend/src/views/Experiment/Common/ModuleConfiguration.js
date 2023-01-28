@@ -60,9 +60,11 @@ export default class ModuleConfiguration extends Component {
                FieldTemplate={this.customFieldTemplate}
                uiSchema={this.props.selectedModule.simpleConfig.uiSchema}
                formData={this.props.selectedModule.simpleConfig.values}
-               onChange={(values) => this.props.onSimpleConfigurationChange(values.formData)}
+               onSubmit={(values) => this.props.onSubmit(values.formData)}
             >
-               <Button style={{ display: "none" }} type="submit" />
+               <Button className="float-end mt-3" type="submit">
+                  Submit
+               </Button>
             </Form>
          </div>
       );
