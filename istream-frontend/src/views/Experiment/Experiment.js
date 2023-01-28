@@ -19,8 +19,13 @@ class Experiment extends Component {
       user: JSON.parse(localStorage.getItem("user")),
       experimentId: this.props.params.experimentId,
       experimentConfig: {
-         networkComponentExistence: true,
-         transcoderComponentExistence: true,
+         componentExistence: {
+            video: false,
+            server: false,
+            transcoder: false,
+            network: false,
+            client: false,
+         },
          repetition: 1,
          runningInXterm: false,
       },
@@ -33,8 +38,7 @@ class Experiment extends Component {
          .then((res) => {
             this.setState({
                experimentConfig: {
-                  networkComponentExistence: res.networkComponentExistence,
-                  transcoderComponentExistence: res.transcoderComponentExistence,
+                  componentExistence: res.componentExistence,
                   repetition: res.repetition,
                   runningInXterm: res.runningInXterm,
                },
@@ -72,11 +76,25 @@ class Experiment extends Component {
                            <VideoCard experimentId={this.state.experimentId} />
                         </div>
 
-                        <div className="col-lg p-0">
-                           <ComponentCard experimentId={this.state.experimentId} componentName="Server" />
-                        </div>
+                        {this.state.experimentConfig.componentExistence.server &&
+                        this.state.experimentConfig.componentExistence.transcoder ? (
+                           <div className="col-lg p-0">
+                              <ComponentCard experimentId={this.state.experimentId} componentName="Server" />
+                           </div>
+                        ) : (
+                           ""
+                        )}
 
-                        {this.state.experimentConfig.networkComponentExistence ? (
+                        {this.state.experimentConfig.componentExistence.server &&
+                        !this.state.experimentConfig.componentExistence.transcoder ? (
+                           <div className="col-lg p-0">
+                              <ComponentCard experimentId={this.state.experimentId} componentName="Server" />
+                           </div>
+                        ) : (
+                           ""
+                        )}
+
+                        {this.state.experimentConfig.componentExistence.network ? (
                            <div className="col-lg p-0">
                               <ComponentCard experimentId={this.state.experimentId} componentName="Network" />
                            </div>
@@ -84,9 +102,13 @@ class Experiment extends Component {
                            ""
                         )}
 
-                        <div className="col-lg p-0">
-                           <ComponentCard experimentId={this.state.experimentId} componentName="Client" />
-                        </div>
+                        {this.state.experimentConfig.componentExistence.client ? (
+                           <div className="col-lg p-0">
+                              <ComponentCard experimentId={this.state.experimentId} componentName="Client" />
+                           </div>
+                        ) : (
+                           ""
+                        )}
                      </div>
                   </div>
                   <div className="container">
@@ -94,6 +116,7 @@ class Experiment extends Component {
                         <BuildExperiment experimentId={this.state.experimentId} />
                         <RunExperiment
                            experimentId={this.state.experimentId}
+                           componentExistence={this.state.experimentConfig.componentExistence}
                            numberOfRepetition={this.state.experimentConfig.repetition}
                            runningInXterm={this.state.experimentConfig.runningInXterm}
                            updateState={this.updateState}

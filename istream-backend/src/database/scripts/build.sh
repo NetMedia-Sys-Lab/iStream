@@ -5,20 +5,13 @@ experimentId=$2
 
 mainDir=$(pwd)
 
-transcoderComponentExistence=$(jq -r '.transcoderComponentExistence' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
-networkComponentExistence=$(jq -r '.networkComponentExistence' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+networkComponentExistence=$(jq -r '.componentExistence.network' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+clientComponentExistence=$(jq -r '.componentExistence.client' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
 
 # Server Component
 echo "------ Server component building started ------"
 bash "${mainDir}/src/database/scripts/Server/build.sh" "${username}" "${experimentId}" 2>&1
 echo "------ Server component building Finished ------"
-
-# Transcoder Component
-# if [ ${transcoderComponentExistence} = true ]; then
-#     echo "------ Transcoder component building started ------"
-#     sh ${DIR}/Transcoder/build.sh "${username}" "${experimentId}" 2>&1
-#     echo "------ Transcoder component building Finished ------"
-# fi
 
 # Network Component
 if [ ${networkComponentExistence} = true ]; then
@@ -28,8 +21,10 @@ if [ ${networkComponentExistence} = true ]; then
 fi
 
 # Client Component
-echo "------ Client component building started ------"
-bash "${mainDir}/src/database/scripts/Client/build.sh" "${username}" "${experimentId}" 2>&1
-echo "------ Client component building Finished ------"
+if [ ${clientComponentExistence} = true ]; then
+    echo "------ Client component building started ------"
+    bash "${mainDir}/src/database/scripts/Client/build.sh" "${username}" "${experimentId}" 2>&1
+    echo "------ Client component building Finished ------"
+fi
 
 echo -n "Experiment has been built"

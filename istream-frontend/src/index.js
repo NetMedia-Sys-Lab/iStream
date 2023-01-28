@@ -11,6 +11,7 @@ import Preview from "src/views/Preview/Preview";
 import Login from "src/views/Login/Login";
 import Register from "src/views/Register/Register";
 import Home from "src/views/Home/Home";
+import Machines from "src/views/Machines/Machines";
 import Setting from "src/views/Setting/Setting";
 import Experiment from "src/views/Experiment/Experiment";
 
@@ -24,6 +25,7 @@ root.render(
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="/setting" element={<Setting />} />
+            <Route path="/machines" element={<Machines />} />
             <Route path="/experiment/:experimentId" element={<Experiment experiment={() => useParams()} />} />
          </Routes>
          <ToastContainer position="bottom-left" autoClose={4000} />

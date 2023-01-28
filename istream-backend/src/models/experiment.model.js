@@ -26,8 +26,13 @@ const experimentDataModel = {
 };
 
 const experimentConfigJSONData = {
-   transcoderComponentExistence: false,
-   networkComponentExistence: false,
+   componentExistence: {
+      video: true,
+      server: true,
+      transcoder: false,
+      network: false,
+      client: true,
+   },
    repetition: 1,
    runningInXterm: false,
 };

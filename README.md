@@ -44,7 +44,7 @@ cd istream-frontend
 npm start
 ```
 
-Then the back0end will be run on port 8888 on localhost and the front-end most likely on port 3000, and you can access them in your browser on [localhost](http://localhost:3000)
+Then the back-end will be run on port 8888 on localhost and the front-end most likely on port 3000, and you can access them in your browser on [localhost](http://localhost:3000)
 
 ## How it works?
 

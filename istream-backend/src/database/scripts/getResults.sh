@@ -6,7 +6,9 @@ experimentId=$2
 mainDir=$(pwd)
 
 experimentsList=$(jq --arg experimentId ${experimentId} '.[] | select(.experimentId == $experimentId)' src/database/users/${username}/experiments_list.json)
-networkComponentExistence=$(jq -r '.networkComponentExistence' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+
+networkComponentExistence=$(jq -r '.componentExistence.network' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
+clientComponentExistence=$(jq -r '.componentExistence.client' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
 
 index=1
 resultsDestination="${mainDir}/src/database/users/${username}/Experiments/${experimentId}/Results"
@@ -36,8 +38,10 @@ if [ ${networkComponentExistence} = true ]; then
 fi
 
 # Client Component
-clientName=$(jq -r '.Client.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
-clientType=$(jq -r '.Client.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
-clientMachineId=$(jq -r '.Client.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+if [ ${clientComponentExistence} = true ]; then
+   clientName=$(jq -r '.Client.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+   clientType=$(jq -r '.Client.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
+   clientMachineId=$(jq -r '.Client.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" ${index}
+   bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" ${index}
+fi

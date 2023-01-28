@@ -73,6 +73,11 @@ export default class RunExperiment extends Component {
    };
 
    runStateModal = () => {
+      let textAreaSize = "30vw";
+      if (!this.props.componentExistence.network && this.props.componentExistence.client) textAreaSize = "45vw";
+      else if (this.props.componentExistence.network && !this.props.componentExistence.client) textAreaSize = "45vw";
+      else if (!this.props.componentExistence.network && !this.props.componentExistence.client) textAreaSize = "90vw";
+
       return (
          <div>
             <Modal
@@ -146,53 +151,68 @@ export default class RunExperiment extends Component {
                         <br />
                         <textarea
                            label="Server"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
+                           style={{
+                              width: this.state.fullscreenRunModal ? textAreaSize : "30vw",
+                              height: this.state.fullscreenRunModal ? "65vh" : "18vh",
+                           }}
                            id="modalTextArea"
                            name="modalTextArea"
-                           // className="me-2"
                            value={this.state.serverRunOutput}
                         />
                      </div>
 
-                     <div className="col">
-                        <label>
-                           <b>Network</b>
-                           {this.state.networkRunSpinner ? (
-                              <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
-                           ) : (
-                              ""
-                           )}
-                        </label>
-                        <br />
-                        <textarea
-                           label="Client"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
-                           id="modalTextArea"
-                           name="modalTextArea"
-                           value={this.state.networkRunOutput}
-                        />
-                     </div>
+                     {this.props.componentExistence.network ? (
+                        <div className="col">
+                           <label>
+                              <b>Network</b>
+                              {this.state.networkRunSpinner ? (
+                                 <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
+                              ) : (
+                                 ""
+                              )}
+                           </label>
+                           <br />
+                           <textarea
+                              label="Client"
+                              style={{
+                                 width: this.state.fullscreenRunModal ? textAreaSize : "30vw",
+                                 height: this.state.fullscreenRunModal ? "65vh" : "18vh",
+                              }}
+                              id="modalTextArea"
+                              name="modalTextArea"
+                              value={this.state.networkRunOutput}
+                           />
+                        </div>
+                     ) : (
+                        ""
+                     )}
 
-                     <div className="col">
-                        <label>
-                           <b>Client</b>
-                           {this.state.clientRunSpinner ? (
-                              <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
-                           ) : (
-                              ""
-                           )}
-                        </label>
-                        <br />
-                        <textarea
-                           label="Client"
-                           style={{ width: "30vw", height: this.state.fullscreenRunModal ? "65vh" : "18vh" }}
-                           id="modalTextArea"
-                           name="modalTextArea"
-                           value={this.state.clientRunOutput}
-                        />
-                     </div>
+                     {this.props.componentExistence.client ? (
+                        <div className="col">
+                           <label>
+                              <b>Client</b>
+                              {this.state.clientRunSpinner ? (
+                                 <Spinner as="span" size="sm" role="status" aria-hidden="true" animation="border" />
+                              ) : (
+                                 ""
+                              )}
+                           </label>
+                           <br />
+                           <textarea
+                              label="Client"
+                              style={{
+                                 width: this.state.fullscreenRunModal ? textAreaSize : "30vw",
+                                 height: this.state.fullscreenRunModal ? "65vh" : "18vh",
+                              }}
+                              id="modalTextArea"
+                              name="modalTextArea"
+                              value={this.state.clientRunOutput}
+                           />
+                        </div>
+                     ) : (
+                        ""
+                     )}
                   </div>
-
                   <hr />
                   <div className="mt-3">
                      <Button onClick={this.downloadResults}>Download Results</Button>

@@ -8,15 +8,7 @@ const dockerModel = require("../models/dockerConfig.model");
 const writeToFile = require("../utils/fileUtils");
 
 module.exports.createNewExperiment = (req, res) => {
-   const {
-      experimentId,
-      experimentName,
-      experimentDescription,
-      userId,
-      username,
-      networkComponentExistence,
-      transcoderComponentExistence,
-   } = req.body;
+   const { experimentId, experimentName, experimentDescription, userId, username, componentExistence } = req.body;
 
    const experimentDate = new Date(parseInt(experimentId)).toLocaleDateString();
    const experimentTime = new Date(parseInt(experimentId)).toLocaleTimeString();
@@ -60,8 +52,8 @@ module.exports.createNewExperiment = (req, res) => {
    const stringifyExperimentData = JSON.stringify(experimentModel.experimentDataModel);
 
    let experimentConfigData = experimentModel.experimentConfigJSONData;
-   experimentConfigData.networkComponentExistence = networkComponentExistence;
-   experimentConfigData.transcoderComponentExistence = transcoderComponentExistence;
+   experimentConfigData.componentExistence = componentExistence;
+   // experimentConfigData.transcoderComponentExistence = transcoderComponentExistence;
    const stringifyExperimentConfigData = JSON.stringify(experimentConfigData);
 
    const stringifyExperimentDockerConfig = JSON.stringify(dockerModel.modulesDockerConfigModel);

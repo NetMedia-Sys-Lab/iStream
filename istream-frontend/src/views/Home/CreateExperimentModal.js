@@ -7,8 +7,13 @@ export default class CreateExperimentModal extends Component {
    state = {
       experimentName: "",
       experimentDescription: "",
-      networkComponentExistence: false,
-      transcoderComponentExistence: false,
+      componentExistence: {
+         video: true,
+         server: true,
+         transcoder: false,
+         network: false,
+         client: true,
+      },
       user: JSON.parse(localStorage.getItem("user")),
    };
 
@@ -21,14 +26,31 @@ export default class CreateExperimentModal extends Component {
          experimentDescription: this.state.experimentDescription,
          userId: this.state.user.userId,
          username: this.state.user.username,
-         networkComponentExistence: this.state.networkComponentExistence,
-         transcoderComponentExistence: this.state.transcoderComponentExistence,
+         componentExistence: {
+            video: this.state.componentExistence.video,
+            server: this.state.componentExistence.server,
+            transcoder: this.state.componentExistence.transcoder,
+            network: this.state.componentExistence.network,
+            client: this.state.componentExistence.client,
+         },
       };
 
       createNewExperiment(newExperimentObj).then((res) => {
          toast.success(res);
          window.location.assign(`/experiment/${newExperimentObj.experimentId}`);
       });
+   };
+
+   changeComponentExistenceState = (component, value) => {
+      let tempState = this.state.componentExistence;
+      // if (component === "transcoder" && value === true) {
+      //    tempState.server = true;
+      // } else if (component === "server" && value === false) {
+      //    tempState.transcoder = false;
+      // }
+
+      tempState[component] = !this.state.componentExistence[component];
+      this.setState({ componentExistence: tempState });
    };
 
    render() {
@@ -68,40 +90,56 @@ export default class CreateExperimentModal extends Component {
                            />
                         </div>
                      </div>
-                     <div className="mt-2">
-                        Which of these components do you need in your experiment?
-                     </div>
+                     <div className="mt-2">Which of these components do you need in your experiment?</div>
                      <div className="form-check">
+                        <label className="form-check-label">Video Source</label>
                         <input
                            className="form-check-input"
                            type="checkbox"
-                           onChange={() => {
-                              this.setState({
-                                 transcoderComponentExistence:
-                                    !this.state.transcoderComponentExistence,
-                              });
-                           }}
+                           // onChange={() => this.changeComponentExistenceState("video")}
+                           checked={this.state.componentExistence.video}
                         />
+                     </div>
+                     <div className="form-check">
+                        <label className="form-check-label">Server Module</label>
+                        <input
+                           className="form-check-input"
+                           type="checkbox"
+                           // onChange={(e) => this.changeComponentExistenceState("server", e.target.checked)}
+                           checked={this.state.componentExistence.server}
+                        />
+                     </div>
+                     <div className="form-check  ms-5">
                         <label className="form-check-label">Transcoder Module</label>
-                     </div>
-                     <div className="form-check">
                         <input
                            className="form-check-input"
                            type="checkbox"
-                           onChange={() => {
-                              this.setState({
-                                 networkComponentExistence: !this.state.networkComponentExistence,
-                              });
+                           onChange={(e) => {
+                              this.changeComponentExistenceState("transcoder", e.target.checked);
                            }}
+                           checked={this.state.componentExistence.transcoder}
                         />
+                     </div>
+                     <div className="form-check">
                         <label className="form-check-label">Network Module</label>
+                        <input
+                           className="form-check-input"
+                           type="checkbox"
+                           onChange={() => this.changeComponentExistenceState("network")}
+                           checked={this.state.componentExistence.network}
+                        />
+                     </div>
+                     <div className="form-check">
+                        <label className="form-check-label">Client Module</label>
+                        <input
+                           className="form-check-input"
+                           type="checkbox"
+                           onChange={() => this.changeComponentExistenceState("client")}
+                           checked={this.state.componentExistence.client}
+                        />
                      </div>
                      <div className="mt-3">
-                        <Button
-                           type="submit"
-                           className="float-end me-2"
-                           style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}
-                        >
+                        <Button type="submit" className="float-end me-2" style={{ backgroundColor: "#4CAF50", borderColor: "#4CAF50" }}>
                            Create
                         </Button>
                         <Button onClick={this.props.toggleDisplayModal} variant="danger">

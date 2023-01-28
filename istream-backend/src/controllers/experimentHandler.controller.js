@@ -181,17 +181,33 @@ module.exports.run = async (endpoint, socket) => {
 
       for (let i = 0; i < numberOfRepetition; i++) {
          if (i === 0) {
+            let preparePromises = [];
             const prepareServerPromise = prepareRunScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
-            const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
-            const prepareClientPromise = prepareRunScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
-
-            await Promise.all([prepareServerPromise, prepareNetworkPromise, prepareClientPromise]);
+            preparePromises.push(prepareServerPromise);
+            if (experimentConfigData.componentExistence.network === true) {
+               const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
+               preparePromises.push(prepareNetworkPromise);
+            }
+            if (experimentConfigData.componentExistence.client === true) {
+               const prepareClientPromise = prepareRunScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
+               preparePromises.push(prepareClientPromise);
+            }
+            await Promise.all(preparePromises);
          }
-         const serverPromise = runScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
-         const networkPromise = runScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
-         const clientPromise = runScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
 
-         await Promise.all([serverPromise, networkPromise, clientPromise]);
+         let runPromises = [];
+
+         const serverPromise = runScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
+         runPromises.push(serverPromise);
+         if (experimentConfigData.componentExistence.network === true) {
+            const networkPromise = runScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
+            runPromises.push(networkPromise);
+         }
+         if (experimentConfigData.componentExistence.client === true) {
+            const clientPromise = runScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
+            runPromises.push(clientPromise);
+         }
+         await Promise.all(runPromises);
          await createResult(experimentInfo);
       }
 

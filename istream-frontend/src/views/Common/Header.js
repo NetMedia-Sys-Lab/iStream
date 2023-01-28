@@ -8,9 +8,7 @@ export default class Header extends Component {
 
    render() {
       return (
-         <nav
-            className="navbar navbar-expand-lg navbar-dark bg-dark"
-         >
+         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container">
                <span className="navbar-brand mb-0 ms-1 h1">iStream</span>
 
@@ -22,10 +20,16 @@ export default class Header extends Component {
                         </a>
                      </li>
                      <li className="nav-item">
+                        <a className="nav-link" href="/machines">
+                           Machines
+                        </a>
+                     </li>
+                     <li className="nav-item">
                         <a className="nav-link" href="/setting">
                            Setting
                         </a>
                      </li>
+
                      <li className="nav-item">
                         <a className="nav-link" href="/login" onClick={this.logout}>
                            Logout

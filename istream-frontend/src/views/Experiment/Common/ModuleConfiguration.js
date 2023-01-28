@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Form from "@rjsf/core";
 
 import EditConfigFile from "src/views/Experiment/Common/EditConfigFile";
@@ -167,16 +167,23 @@ export default class ModuleConfiguration extends Component {
 
    get addModuleConfigButton() {
       if (this.props.selectedModule.advanceConfiguration) {
+         const renderTooltip = (props) => (
+            <Tooltip id="button-tooltip" {...props}>
+               Add New Config File
+            </Tooltip>
+         );
          return (
-            <Button
-               variant="secondary"
-               className="float-end me-1"
-               onClick={() => {
-                  this.setState({ displayAddModuleConfigFile: true });
-               }}
-            >
-               Add New Config
-            </Button>
+            <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+               <Button
+                  variant="secondary"
+                  className="float-end ms-1"
+                  onClick={() => {
+                     this.setState({ displayAddModuleConfigFile: true });
+                  }}
+               >
+                  +
+               </Button>
+            </OverlayTrigger>
          );
       }
       return null;
