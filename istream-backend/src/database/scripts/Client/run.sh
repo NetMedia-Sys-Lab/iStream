@@ -16,6 +16,9 @@ if [[ "${clientName}" == "" ]]; then
    exit
 else
    clientContainerPort=$(jq -r '.Client.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+   clientContainerCpus=$(jq -r '.Client.cpus' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+   clientContainerMemory=$(jq -r '.Client.memory' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+
    networkComponentExistence=$(jq -r '.networkComponentExistence' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json")
    if [ ${networkComponentExistence} = true ]; then
       serverContainerPort=$(jq -r '.Network.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
@@ -32,11 +35,15 @@ else
       serverMachineIP=$(python3 "${mainDir}/src/database/scripts/Common/retrieveHostIP.py" 2>&1)
    fi
 
-   arguments=$(jq -n \
-      --arg clientContainerPort "$clientContainerPort" \
-      --arg serverMachineIP "$serverMachineIP" \
-      --arg serverContainerPort "$serverContainerPort" \
-      '{clientContainerPort: $clientContainerPort, serverMachineIP: $serverMachineIP, serverContainerPort: $serverContainerPort}')
+   arguments=$(
+      jq -n \
+         --arg clientContainerPort "$clientContainerPort" \
+         --arg serverMachineIP "$serverMachineIP" \
+         --arg serverContainerPort "$serverContainerPort" \
+         --arg clientContainerCpus "$clientContainerCpus" \
+         --arg clientContainerMemory "$clientContainerMemory" \
+         '{clientContainerPort: $clientContainerPort, serverMachineIP: $serverMachineIP, serverContainerPort: $serverContainerPort, clientContainerCpus: $clientContainerCpus, clientContainerMemory: $clientContainerMemory}'
+   )
 
    echo "------ Client component running started ------"
    bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${arguments}" 2>&1

@@ -61,7 +61,6 @@ export default class ModuleConfiguration extends Component {
                uiSchema={this.props.selectedModule.simpleConfig.uiSchema}
                formData={this.props.selectedModule.simpleConfig.values}
                onChange={(values) => this.props.onSimpleConfigurationChange(values.formData)}
-               // onSubmit={(values, e) => this.props.onSimpleConfigurationChange(values.formData, e)}
             >
                <Button style={{ display: "none" }} type="submit" />
             </Form>

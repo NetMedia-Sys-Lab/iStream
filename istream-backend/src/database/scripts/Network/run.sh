@@ -15,10 +15,16 @@ if [[ "${networkName}" == "" ]]; then
     exit
 else
     networkContainerPort=$(jq -r '.Network.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+    networkContainerCpus=$(jq -r '.Network.cpus' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+    networkContainerMemory=$(jq -r '.Network.memory' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
 
-    arguments=$(jq -n \
-        --arg networkContainerPort "$networkContainerPort" \
-        '{networkContainerPort: $networkContainerPort}')
+    arguments=$(
+        jq -n \
+            --arg networkContainerPort "$networkContainerPort" \
+            --arg networkContainerCpus "$networkContainerCpus" \
+            --arg networkContainerMemory "$networkContainerMemory" \
+            '{networkContainerPort: $networkContainerPort, networkContainerCpus: $networkContainerCpus, networkContainerMemory: $networkContainerMemory}'
+    )
 
     echo "------ Network component running started ------"
     bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${arguments}" 2>&1

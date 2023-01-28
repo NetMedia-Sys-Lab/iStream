@@ -79,6 +79,7 @@ export default class ComponentCard extends Component {
       )
          .then((res) => {
             res.allConfigs.unshift("No Config");
+            console.log(res);
             let tempState = this.state.selectedModule;
             tempState.advanceConfig.names = res.allConfigs;
             tempState.simpleConfig.parameters = res.parameters;

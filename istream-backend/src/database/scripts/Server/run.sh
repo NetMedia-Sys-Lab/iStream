@@ -15,10 +15,16 @@ if [[ "${serverName}" == "" ]]; then
     exit
 else
     serverContainerPort=$(jq -r '.Server.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+    serverContainerCpus=$(jq -r '.Server.cpus' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
+    serverContainerMemory=$(jq -r '.Server.memory' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
 
-    arguments=$(jq -n \
-        --arg serverContainerPort "$serverContainerPort" \
-        '{serverContainerPort: $serverContainerPort}')
+    arguments=$(
+        jq -n \
+            --arg serverContainerPort "$serverContainerPort" \
+            --arg serverContainerCpus "$serverContainerCpus" \
+            --arg serverContainerMemory "$serverContainerMemory" \
+            '{serverContainerPort: $serverContainerPort, serverContainerCpus: $serverContainerCpus, serverContainerMemory: $serverContainerMemory}'
+    )
 
     echo "------ Server component running started ------"
     bash "${mainDir}/src/database/scripts/Common/run.sh" "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${arguments}" 2>&1

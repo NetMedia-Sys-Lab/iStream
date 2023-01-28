@@ -36,7 +36,6 @@ export default class RunExperiment extends Component {
                return;
             }
             this.setState({ serverRunSpinner: true });
-            console.log(serverOutput);
             serverOutput = serverOutput.filter((str) => str !== "");
             let out = "";
             serverOutput.forEach((element) => (out += element + "\n"));
