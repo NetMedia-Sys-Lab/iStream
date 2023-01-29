@@ -1,5 +1,6 @@
 const fs = require("fs");
 const fsExtra = require("fs-extra");
+const admZip = require("adm-zip");
 const path = require("path");
 
 const experimentModel = require("../models/experiment.model");
@@ -210,14 +211,66 @@ module.exports.getExperimentData = (req, res) => {
    });
 };
 
-module.exports.downloadExperimentResult = async (req, res) => {
+module.exports.downloadExperimentResults = async (req, res) => {
    const username = req.query.username;
    const experimentId = req.query.experimentId;
 
-   const spawnSync = require("child_process").spawnSync;
-   let result = spawnSync("bash", ["src/database/scripts/downloadResults.sh", username, experimentId], { encoding: "utf-8" });
-   // console.log(result.stdout);
-   var file = fs.readFileSync(path.resolve(`src/database/users/${username}/Experiments/${experimentId}/Results.zip`), "base64");
+   const resultPath = `src/database/users/${username}/Experiments/${experimentId}/Results`;
+   const pathToZip = `src/database/users/${username}/Experiments/${experimentId}/Results.zip`;
+
+   var zip = new admZip();
+   zip.addLocalFolder(resultPath);
+   zip.writeZip(pathToZip);
+
+   var file = fs.readFileSync(path.resolve(pathToZip), "base64");
+   fs.rmSync(pathToZip);
 
    res.send(file);
+};
+
+module.exports.getExperimentResults = (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+
+   const resultsDirectory = `src/database/users/${username}/Experiments/${experimentId}/Results`;
+   let resultsName = [];
+
+   if (fs.existsSync(resultsDirectory)) {
+      resultsName = fs.readdirSync(resultsDirectory);
+   }
+
+   res.status(200).send(resultsName);
+};
+
+module.exports.downloadResult = async (req, res) => {
+   const { username } = JSON.parse(req.query.user);
+   const experimentId = req.query.experimentId;
+   const resultName = req.query.resultName;
+   const resultPath = `src/database/users/${username}/Experiments/${experimentId}/Results/${resultName}`;
+   const pathToZip = `src/database/users/${username}/Experiments/${experimentId}/Results/${resultName}.zip`;
+
+   var zip = new admZip();
+   zip.addLocalFolder(resultPath);
+   zip.writeZip(pathToZip);
+
+   var file = fs.readFileSync(path.resolve(pathToZip), "base64");
+   fs.rmSync(pathToZip);
+
+   res.send(file);
+};
+
+module.exports.deleteResult = (req, res) => {
+   const { userId, username, experimentId, resultName } = req.body;
+
+   const resultPath = `src/database/users/${username}/Experiments/${experimentId}/Results/${resultName}`;
+   try {
+      fs.rmSync(resultPath, {
+         recursive: true,
+      });
+      res.status(200).send("Result deleted successfully");
+   } catch (err) {
+      let errorMessage = "Something went wrong in deleteExperiment: Couldn't delete directory.";
+      console.log(errorMessage);
+      res.status(500).send(errorMessage);
+   }
 };

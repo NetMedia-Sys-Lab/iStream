@@ -7,6 +7,7 @@ import ComponentCard from "src/views/Experiment/ComponentCard";
 import VideoCard from "src/views/Experiment/VideoCard";
 import BuildExperiment from "src/views/Experiment/Common/BuildExperiment";
 import RunExperiment from "src/views/Experiment/Common/RunExperiment";
+import Results from "src/views/Experiment/Common/Results";
 
 import { toast } from "react-toastify";
 
@@ -121,6 +122,7 @@ class Experiment extends Component {
                            runningInXterm={this.state.experimentConfig.runningInXterm}
                            updateState={this.updateState}
                         />
+                        <Results experimentId={this.state.experimentId} />
                      </div>
                   </div>
                </div>

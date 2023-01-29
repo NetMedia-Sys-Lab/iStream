@@ -51,26 +51,8 @@ export function runExperiment(experimentInfo, serverCb, clientCb, networkCb) {
    socket.on("getNetworkOfExperimentInfo", (err, data) => networkCb(err, data));
 }
 
-// export function subscribeServerOfExperiment(userInfo, cb) {
-//    const SOCKET = openSocket(DOMAIN + "runServer");
-//    SOCKET.on("getServerOfExperimentInfo", (data) => cb(null, data));
-//    SOCKET.emit("subscribeServerOfExperiment", userInfo);
-// }
-
-// export function subscribeClientOfExperiment(userInfo, cb) {
-//    const SOCKET = openSocket(DOMAIN + "runClient");
-//    SOCKET.on("getClientOfExperimentInfo", (data) => cb(null, data));
-//    SOCKET.emit("subscribeClientOfExperiment", userInfo);
-// }
-
-// export function subscribeNetworkOfExperiment(userInfo, cb) {
-//    const SOCKET = openSocket(DOMAIN + "runNetwork");
-//    SOCKET.on("getNetworkOfExperimentInfo", (data) => cb(null, data));
-//    SOCKET.emit("subscribeNetworkOfExperiment", userInfo);
-// }
-
-export function downloadExperimentResult(username, experimentId) {
-   return API.get("/experiment/downloadExperimentResult", {
+export function downloadExperimentResults(username, experimentId) {
+   return API.get("/experiment/downloadExperimentResults", {
       params: {
          username,
          experimentId,
@@ -85,11 +67,45 @@ export function downloadExperimentResult(username, experimentId) {
    );
 }
 
-// export function deleteUserMachine(user, machineID) {
-//    return API.delete("/experiment/userMachine", {
+export function getExperimentResults(user, experimentId) {
+   return API.get("/experiment/getExperimentResults", {
+      params: {
+         user,
+         experimentId,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}
+
+export function downloadResult(user, experimentId, resultName) {
+   return API.get("/experiment/downloadResult", {
+      params: {
+         user,
+         experimentId,
+         resultName,
+      },
+   }).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         throw error.response;
+      }
+   );
+}
+
+// export function deleteResult(user, experimentId, resultName) {
+//    return API.get("/experiment/deleteResult", {
 //       params: {
 //          user,
-//          machineID,
+//          experimentId,
+//          resultName,
 //       },
 //    }).then(
 //       (response) => {
@@ -100,3 +116,14 @@ export function downloadExperimentResult(username, experimentId) {
 //       }
 //    );
 // }
+
+export const deleteResult = (request) => {
+   return API.post("/experiment/deleteResult", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+};

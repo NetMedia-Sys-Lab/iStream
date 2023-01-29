@@ -10,23 +10,17 @@ experimentsList=$(jq --arg experimentId ${experimentId} '.[] | select(.experimen
 networkComponentExistence=$(jq -r '.componentExistence.network' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
 clientComponentExistence=$(jq -r '.componentExistence.client' src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json)
 
-index=1
 resultsDestination="${mainDir}/src/database/users/${username}/Experiments/${experimentId}/Results"
+resultsFolderName=$(date +"%Y-%m-%d %T")
 
-while true; do
-   if [ ! -d "${resultsDestination}/${index}" ]; then
-      mkdir -p "${resultsDestination}/${index}"
-      break
-   fi
-   ((index++))
-done
+mkdir -p "${resultsDestination}/${resultsFolderName}"
 
 # Server Component
 serverName=$(jq -r '.Server.name' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 serverType=$(jq -r '.Server.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 serverMachineId=$(jq -r '.Server.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" ${index}
+bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" "${resultsFolderName}"
 
 # Network Component
 if [ ${networkComponentExistence} = true ]; then
@@ -34,7 +28,7 @@ if [ ${networkComponentExistence} = true ]; then
    networkType=$(jq -r '.Network.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
    networkMachineId=$(jq -r '.Network.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-   bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" ${index}
+   bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Network" "${networkName}" "${networkType}" "${networkMachineId}" "${resultsFolderName}"
 fi
 
 # Client Component
@@ -43,5 +37,5 @@ if [ ${clientComponentExistence} = true ]; then
    clientType=$(jq -r '.Client.type' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
    clientMachineId=$(jq -r '.Client.machineID' src/database/users/${username}/Experiments/${experimentId}/dependency.json)
 
-   bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" ${index}
+   bash "${mainDir}/src/database/scripts/Common/getResults.sh" "${username}" "${experimentId}" "Client" "${clientName}" "${clientType}" "${clientMachineId}" "${resultsFolderName}"
 fi

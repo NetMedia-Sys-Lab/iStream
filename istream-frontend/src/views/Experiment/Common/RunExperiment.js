@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Modal, Spinner, Form, Row, Col } from "react-bootstrap";
 
-import { runExperiment, downloadExperimentResult } from "src/api/ExperimentAPI";
+import { runExperiment, downloadExperimentResults } from "src/api/ExperimentAPI";
 import b64ToBlob from "b64-to-blob";
 import fileSaver from "file-saver";
 
@@ -214,7 +214,7 @@ export default class RunExperiment extends Component {
                   </div>
                   <hr />
                   <div className="mt-3">
-                     <Button onClick={this.downloadResults}>Download Results</Button>
+                     {/* <Button onClick={this.downloadResults}>Download Results</Button> */}
                      <Button
                         variant="success"
                         className="float-end"
@@ -231,7 +231,7 @@ export default class RunExperiment extends Component {
    };
 
    downloadResults = () => {
-      downloadExperimentResult(this.state.user.username, this.props.experimentId).then((response) => {
+      downloadExperimentResults(this.state.user.username, this.props.experimentId).then((response) => {
          const blob = b64ToBlob(response, "application/zip");
          fileSaver.saveAs(blob, `results.zip`);
       });
