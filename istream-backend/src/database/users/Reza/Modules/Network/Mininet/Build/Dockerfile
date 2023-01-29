@@ -40,8 +40,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && touch /etc/network/interfaces 
 
 RUN pip install ryu 
-RUN pip uninstall eventlet gunicorn -y
-RUN pip install eventlet==0.25.2 gunicorn==20.0.04 
+RUN pip uninstall eventlet gunicorn dnspython -y
+RUN pip install eventlet==0.25.2 gunicorn==20.0.04 dnspython==2.2.1
 RUN git clone https://github.com/faucetsdn/ryu.git
 
 COPY ENTRYPOINT.sh /
