@@ -117,6 +117,9 @@ export default class ModuleConfiguration extends Component {
             <br />
 
             <div>{configFiles}</div>
+            <Button className="float-end mt-3" onClick={() => this.props.onSubmit()}>
+               Submit
+            </Button>
          </div>
       );
    };
