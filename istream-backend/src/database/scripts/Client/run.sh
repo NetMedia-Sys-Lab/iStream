@@ -19,7 +19,7 @@ else
    clientContainerCpus=$(jq -r '.Client.cpus' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
    clientContainerMemory=$(jq -r '.Client.memory' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
 
-   networkComponentExistence=$(jq -r '.networkComponentExistence' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json")
+   networkComponentExistence=$(jq -r '.componentExistence.network' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/experimentConfig.json")
    if [ ${networkComponentExistence} = true ]; then
       serverContainerPort=$(jq -r '.Network.port' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dockerConfig.json")
       serverMachineId=$(jq -r '.Network.machineID' "${mainDir}/src/database/users/${username}/Experiments/${experimentId}/dependency.json")

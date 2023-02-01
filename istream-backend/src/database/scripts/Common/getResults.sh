@@ -21,7 +21,7 @@ fi
 
 if [[ "${componentMachineId}" != "" ]] && [[ "${componentMachineId}" != "0" ]]; then
     read sshUsername machineIp privateKeyPath <<<$(sh src/database/scripts/Common/findMachine.sh "${username}" "${componentMachineId}")
-    scp -r -i "${privateKeyPath}" ${sshUsername}@${machineIp}:"/home/'${sshUsername}/${componentName}'/Results/*" "${resultsDestination}"
+    scp -r -i "${privateKeyPath}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}/Results/*" "${resultsDestination}"
 else
     cp -a "${resultsPath}" "${resultsDestination}"
 fi

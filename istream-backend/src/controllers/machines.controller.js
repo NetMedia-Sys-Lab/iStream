@@ -1,4 +1,5 @@
 const fs = require("fs");
+const experimentModel = require("../models/experiment.model");
 
 module.exports.addNewMachine = (req, res) => {
    const { userId, username, machineIp, sshUsername } = req.body;
@@ -128,7 +129,7 @@ module.exports.deleteUserMachine = (req, res) => {
 
          components.forEach((componentName) => {
             if (dependencyFile[componentName]["machineID"] === machineID) {
-               dependencyFile[componentName] = experimentModel.experimentJSONData[componentName];
+               dependencyFile[componentName] = experimentModel.experimentDataModel[componentName];
                const stringifyDependencyFile = JSON.stringify(dependencyFile);
                fs.writeFileSync(experimentDependencyFilePath, stringifyDependencyFile);
             }
