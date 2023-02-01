@@ -137,6 +137,10 @@ export default class VideoCard extends Component {
                </thead>
                <tbody>{datasetTableData}</tbody>
             </table>
+
+            <Button className="float-end mt-3" onClick={this.onSubmit}>
+               Submit
+            </Button>
          </div>
       );
    };
@@ -164,7 +168,7 @@ export default class VideoCard extends Component {
    };
 
    onSubmit = () => {
-      this.setState({ showModuleConfiguration: true });
+      this.setState({ showModuleConfiguration: true, displayModal: false });
 
       const data = {
          userId: this.state.user.userId,
