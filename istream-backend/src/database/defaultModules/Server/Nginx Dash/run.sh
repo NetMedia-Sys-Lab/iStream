@@ -23,3 +23,5 @@ docker ps -a -q --filter "name=istream_server_nginx_container" | grep -q . &&
 docker run --name istream_server_nginx_container ${dockerCupConfig} ${dockerMemoryConfig} -p ${serverDockerPort}:80 -d istream_server_nginx_image
 
 docker cp "${DIR}/Run/Videos/." istream_server_nginx_container:/usr/local/nginx/html/
+docker cp "${DIR}/Run/config.sh" istream_server_nginx_container:/usr/local/nginx/html/
+docker exec istream_server_nginx_container bash /usr/local/nginx/html/config.sh

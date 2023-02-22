@@ -1,1 +1,11 @@
-[{"userId":1,"username":"Navid","email":"anavid.akbari@gmail.com","comments":"Develop"},{"userId":2,"username":"Reza","email":"test@test.com","comments":"Use Case"}]
+[{
+   "userId": 1,
+   "username": "Navid",
+   "email": "anavid.akbari@gmail.com",
+   "comments": "Develop"
+}, {
+   "userId": 2,
+   "username": "Reza",
+   "email": "test@test.com",
+   "comments": "Use Case"
+}]

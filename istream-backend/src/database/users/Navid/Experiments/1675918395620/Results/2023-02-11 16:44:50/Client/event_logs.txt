@@ -1,0 +1,30 @@
+#TYPE json
+#EVENT PLAYBACK_START {"type": "PLAYBACK_START", "time": 1676159030035}
+#EVENT STATE {"type": "STATE", "time": 1676159038249, "progress": 0.0, "old_state": "State.BUFFERING", "new_state": "State.READY"}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159038300, "progress": 0.010306072235107423}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159039314, "progress": 0.21310458183288575}
+#EVENT STATE {"type": "STATE", "time": 1676159040258, "progress": 0.40015263557434083, "old_state": "State.READY", "new_state": "State.BUFFERING"}
+#EVENT STATE {"type": "STATE", "time": 1676159048691, "progress": 0.40015263557434083, "old_state": "State.BUFFERING", "new_state": "State.READY"}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159048742, "progress": 0.41049513816833494}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159049756, "progress": 0.6131807804107666}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159050763, "progress": 0.8147073268890381}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159051774, "progress": 1.016788864135742}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159052782, "progress": 1.218496608734131}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159053791, "progress": 1.4201356887817382}
+#EVENT STATE {"type": "STATE", "time": 1676159054691, "progress": 1.600158166885376, "old_state": "State.READY", "new_state": "State.BUFFERING"}
+#EVENT STATE {"type": "STATE", "time": 1676159064028, "progress": 1.600158166885376, "old_state": "State.BUFFERING", "new_state": "State.READY"}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159064078, "progress": 1.6103931427001954}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159065088, "progress": 1.812352991104126}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159066100, "progress": 2.014671230316162}
+#EVENT STATE {"type": "STATE", "time": 1676159067027, "progress": 2.2001280307769777, "old_state": "State.READY", "new_state": "State.BUFFERING"}
+#EVENT STATE {"type": "STATE", "time": 1676159076582, "progress": 2.2001280307769777, "old_state": "State.BUFFERING", "new_state": "State.READY"}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159076633, "progress": 2.2103171825408934}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159077648, "progress": 2.4132171630859376}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159078658, "progress": 2.6152181148529055}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159079684, "progress": 2.8204463005065916}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159080696, "progress": 3.0229162216186523}
+#EVENT STATE {"type": "STATE", "time": 1676159081582, "progress": 3.2000221252441405, "old_state": "State.READY", "new_state": "State.BUFFERING"}
+#EVENT STATE {"type": "STATE", "time": 1676159087929, "progress": 3.2000221252441405, "old_state": "State.BUFFERING", "new_state": "State.READY"}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159087979, "progress": 3.2102256774902345}
+#EVENT PROGRESS {"type": "PROGRESS", "time": 1676159088989, "progress": 3.4121788501739503}
+#EVENT STATE {"type": "STATE", "time": 1676159089929, "progress": 3.6000014781951903, "old_state": "State.READY", "new_state": "State.END"}

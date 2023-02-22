@@ -58,7 +58,7 @@ for i in "${!userVideosName[@]}"; do
     videoPath="${mainDir}/src/database/users/${username}/Videos/${videoId}"
 
     if [[ "${videoExtension}" == "zip" ]]; then
-        unzip -o -q -d "${serverPath}" "${videoPath}"
+        unzip -o -q -d "${serverVideosDirectoryPath}" "${videoPath}"
     else
         cp "${videoPath}" "${serverPath}"
     fi

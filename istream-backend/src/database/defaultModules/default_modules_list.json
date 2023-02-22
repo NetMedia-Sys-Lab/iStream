@@ -8,6 +8,10 @@
       "id": "2",
       "name": "Default Network",
       "description": "Linux Traffic Control"
+   }, {
+      "id": "3",
+      "name": "Traffic Shaper",
+      "description": "Linux Traffic Control"
    }],
    "Client": [{
       "id": "6",
@@ -16,6 +20,10 @@
    }, {
       "id": "7",
       "name": "Headless Player New",
+      "description": "test"
+   }, {
+      "id": "8",
+      "name": "DASH.js",
       "description": "test"
    }]
 }

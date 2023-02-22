@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
 
-#docker exec istream_network_tc_container tcset eth0    
+#docker exec istream_network_tc_container tcset eth0  --rate 5300Kbps  
 
 #if [ -f "${DIR}/config.sh" ]; then
    #docker cp "${DIR}/config.sh" istream_network_tc_container:/
@@ -10,4 +10,4 @@ DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
 #fi
 
 #docker exec istream_network_tc_container chmod 777 ./config.sh
-#docker exec istream_network_tc_container sh ./config.sh
+#docker exec istream_network_tc_container bash ./config.sh

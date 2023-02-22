@@ -96,6 +96,9 @@ export default class ExperimentsList extends Component {
                   >
                      <i className="fa fa-copy text-success" style={{ cursor: "pointer" }}></i>
                   </button>
+                  <button className="btn btn-light mx-1 experiment-button" title="Time Experiment">
+                     <i className="fa fa-hourglass" style={{ cursor: "pointer", color: "#244D5A" }}></i>
+                  </button>
                </td>
             </tr>
          );

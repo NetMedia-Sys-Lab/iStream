@@ -29,11 +29,11 @@ export default class ShowComponentConfig extends Component {
             {this.props.dockerConfig.port}
             <br />
             <strong>CPUs: </strong>
-            {this.props.dockerConfig.cpus}
+            {this.props.dockerConfig.cpus === 0 ? "No Limitation" : this.props.dockerConfig.cpus}
             <br />
             <div>
                <strong>Memory: </strong>
-               {this.props.dockerConfig.memory}
+               {this.props.dockerConfig.memory === 0 ? "No Limitation" : this.props.dockerConfig.memory +" GB"}
             </div>
          </div>
       );
@@ -87,10 +87,16 @@ export default class ShowComponentConfig extends Component {
          <div>
             <hr />
             {this.moduleInfo()}
-            <hr />
-            {this.dockerConfig()}
-            <hr />
-            {this.moduleConfig()}
+            {this.props.moduleData.name === "DASH.js" ? (
+               ""
+            ) : (
+               <div>
+                  <hr />
+                  {this.dockerConfig()}
+                  <hr />
+                  {this.moduleConfig()}
+               </div>
+            )}
          </div>
       );
    }
