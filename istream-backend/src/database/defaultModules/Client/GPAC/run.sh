@@ -1,9 +1,26 @@
 #!/bin/bash
+arguments=$1
 
-docker ps -q --filter "name=gpac_container" | grep -q . && \
-echo "Remove previous server docker container" && docker stop gpac_container && docker rm -fv gpac_container
+DIR="$(dirname -- "$0")"
+clientContainerPort=$(jq -r '.clientContainerPort' <<<${arguments})
+clientContainerCpus=$(jq -r '.clientContainerCpus' <<<${arguments})
+clientContainerMemory=$(jq -r '.clientContainerMemory' <<<${arguments})
 
-# sudo docker run --name gpac_container --mount type=bind,source=/mnt/volume/outputs,target=/usr/local/nginx/html/,readonly -p 9000:80 -d server_navid
-docker run --name gpac_container -d gpac_image
+dockerCupConfig=""
+dockerMemoryConfig=""
 
-# echo "here"
+if [ ${clientContainerCpus} != 0 ]; then
+   dockerCupConfig="--cpus=${clientContainerCpus}"
+fi
+
+if [ ${clientContainerMemory} != 0 ]; then
+   dockerMemoryConfig="--memory=${clientContainerMemory}g"
+fi
+
+
+docker ps -a -q --filter "name=istream_gpac_container" | grep -q . &&
+   echo "Remove previous gpac docker container" && docker stop istream_gpac_container && docker rm -fv istream_gpac_container
+
+docker run -it --name istream_gpac_container ${dockerCupConfig} ${dockerMemoryConfig} -d gpac_image
+docker cp "${DIR}/Run/config.sh" istream_gpac_container:/
+docker exec istream_gpac_container bash ./config.sh

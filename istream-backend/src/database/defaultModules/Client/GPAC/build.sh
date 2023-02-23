@@ -1,7 +1,6 @@
 #!/bin/bash
-DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
-cd "${DIR}"
 
-sudo docker build -t gpac_image -f "Build/Dockerfile" . 
+DIR="$(dirname -- "$0")"
+cd "${DIR}/Build"
 
-# what should be done about the sudo? should we put sudo
+docker build -t gpac_image .

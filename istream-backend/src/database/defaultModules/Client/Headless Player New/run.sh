@@ -27,7 +27,7 @@ docker ps -a -q --filter "name=headless_player_container" | grep -q . &&
 
 python3 "${DIR}/Run/createEnvConfig.py"
 
-echo "http://${serverMachineIP}:${serverContainerPort}/${MPDName}"
+# echo "http://${serverMachineIP}:${serverContainerPort}/${MPDName}"
 
 docker create --name headless_player_container ${dockerCupConfig} ${dockerMemoryConfig} headlessplayernew:latest --config-file /Run/config.json --env /Run/env.yaml --run-dir /Run --target http://${serverMachineIP}:${serverContainerPort}/${MPDName}
 docker cp "${DIR}/Run" headless_player_container:/
