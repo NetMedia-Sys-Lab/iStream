@@ -207,12 +207,8 @@ module.exports.run = async (endpoint, socket) => {
             const clientPromise = runScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
             runPromises.push(clientPromise);
          }
-         await Promise.all(runPromises).catch((error) => {
-            console.error(error.message);
-         });
-         await createResult(experimentInfo).catch((error) => {
-            console.error(error.message);
-         });
+         await Promise.all(runPromises);
+         await createResult(experimentInfo);
       }
 
       await runCleanUpScript(experimentInfo).catch((error) => {

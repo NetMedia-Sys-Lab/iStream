@@ -18,9 +18,9 @@ if [ ${clientContainerMemory} != 0 ]; then
 fi
 
 
-docker ps -a -q --filter "name=istream_gpac_container" | grep -q . &&
-   echo "Remove previous gpac docker container" && docker stop istream_gpac_container && docker rm -fv istream_gpac_container
+docker ps -a -q --filter "name=istream_vlc_container" | grep -q . &&
+   echo "Remove previous gpac docker container" && docker stop istream_vlc_container && docker rm -fv istream_vlc_container
 
-docker run -it --name istream_gpac_container ${dockerCupConfig} ${dockerMemoryConfig} -d gpac_image
-docker cp "${DIR}/Run/config.sh" istream_gpac_container:/
-docker exec istream_gpac_container bash ./config.sh
+docker run -it --name istream_vlc_container ${dockerCupConfig} ${dockerMemoryConfig} -d vlc_image
+docker cp "${DIR}/Run/config.sh" istream_vlc_container:/
+docker exec istream_vlc_container bash ./config.sh
