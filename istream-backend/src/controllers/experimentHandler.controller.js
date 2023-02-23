@@ -179,22 +179,22 @@ module.exports.run = async (endpoint, socket) => {
 
       fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
 
-      for (let i = 0; i < numberOfRepetition; i++) {
-         if (i === 0) {
-            let preparePromises = [];
-            const prepareServerPromise = prepareRunScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
-            preparePromises.push(prepareServerPromise);
-            if (experimentConfigData.componentExistence.network === true) {
-               const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
-               preparePromises.push(prepareNetworkPromise);
-            }
-            if (experimentConfigData.componentExistence.client === true) {
-               const prepareClientPromise = prepareRunScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
-               preparePromises.push(prepareClientPromise);
-            }
-            await Promise.all(preparePromises);
-         }
+      let preparePromises = [];
+      const prepareServerPromise = prepareRunScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
+      preparePromises.push(prepareServerPromise);
+      if (experimentConfigData.componentExistence.network === true) {
+         const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
+         preparePromises.push(prepareNetworkPromise);
+      }
+      if (experimentConfigData.componentExistence.client === true) {
+         const prepareClientPromise = prepareRunScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
+         preparePromises.push(prepareClientPromise);
+      }
+      await Promise.all(preparePromises).catch((error) => {
+         console.error(error.message);
+      });
 
+      for (let i = 0; i < numberOfRepetition; i++) {
          let runPromises = [];
 
          const serverPromise = runScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
@@ -207,10 +207,16 @@ module.exports.run = async (endpoint, socket) => {
             const clientPromise = runScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
             runPromises.push(clientPromise);
          }
-         await Promise.all(runPromises);
-         await createResult(experimentInfo);
+         await Promise.all(runPromises).catch((error) => {
+            console.error(error.message);
+         });
+         await createResult(experimentInfo).catch((error) => {
+            console.error(error.message);
+         });
       }
 
-      runCleanUpScript(experimentInfo);
+      await runCleanUpScript(experimentInfo).catch((error) => {
+         console.error(error.message);
+      });
    });
 };

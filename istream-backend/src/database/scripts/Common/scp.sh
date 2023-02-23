@@ -19,6 +19,10 @@ elif [[ "${scpKind}" == "config" ]]; then
 fi
 
 if [[ "${scpKind}" == "build" ]]; then
+    # if [[ "${componentName}" == "DASH.js" ]]; then
+    #     scp -i "${privateKeyPath}" "${filePath}/${buildFileName}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}"
+    #     exit 0
+    # fi
     scp -r -i "${privateKeyPath}" "${filePath}/Build" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}"
     scp -i "${privateKeyPath}" "${filePath}/${buildFileName}" ${sshUsername}@${machineIp}:"/home/${sshUsername}/${componentName}"
 elif [[ "${scpKind}" == "run" ]]; then

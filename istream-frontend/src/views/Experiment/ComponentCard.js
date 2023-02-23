@@ -174,6 +174,7 @@ export default class ComponentCard extends Component {
                   />,
                   <DockerConfiguration
                      componentName={this.state.componentName}
+                     selectedModule={this.state.selectedModule}
                      dockerConfig={this.state.dockerConfig}
                      onChangeConfig={this.onDockerConfigurationChange}
                      experimentId={this.props.experimentId}

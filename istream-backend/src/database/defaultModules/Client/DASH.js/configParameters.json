@@ -1,0 +1,14 @@
+{
+   "advancedConfiguration": false,
+   "parameters": {
+      "type": "object",
+      "title": "DASH.js Configuration",
+      "properties": {
+         "port": {
+            "title": "Port",
+            "type": "number",
+            "default": 9090
+         }
+      }
+   }
+}

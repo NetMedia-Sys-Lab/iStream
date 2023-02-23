@@ -81,26 +81,34 @@ export default class DockerConfiguration extends Component {
    render() {
       return (
          <div>
-            <div>
-               <h4 style={{ display: "inline" }}>Docker Configuration</h4>
+            {this.props.selectedModule.name === "DASH.js" ? (
+               <div>
+                  <h6 style={{ display: "inline" }}>No Docker Configuration for this component</h6>
+               </div>
+            ) : (
+               <div>
+                  <div>
+                     <h4 style={{ display: "inline" }}>Docker Configuration</h4>
 
-               {this.selectMachineButton}
-               <br />
-               <br />
+                     {this.selectMachineButton}
+                     <br />
+                     <br />
 
-               <div>{this.dockerConfigForm()}</div>
-            </div>
-            <div>
-               <MachineConfig
-                  display={this.state.displayMachineConfig}
-                  toggleDisplay={() => {
-                     this.setState({ displayMachineConfig: !this.state.displayMachineConfig });
-                  }}
-                  componentName={this.props.componentName}
-                  experimentId={this.props.experimentId}
-                  updateData={this.props.updateData}
-               />
-            </div>
+                     <div>{this.dockerConfigForm()}</div>
+                  </div>
+                  <div>
+                     <MachineConfig
+                        display={this.state.displayMachineConfig}
+                        toggleDisplay={() => {
+                           this.setState({ displayMachineConfig: !this.state.displayMachineConfig });
+                        }}
+                        componentName={this.props.componentName}
+                        experimentId={this.props.experimentId}
+                        updateData={this.props.updateData}
+                     />
+                  </div>{" "}
+               </div>
+            )}
          </div>
       );
    }

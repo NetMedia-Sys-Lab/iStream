@@ -6,10 +6,6 @@
    }],
    "Network": [{
       "id": "2",
-      "name": "Default Network",
-      "description": "Linux Traffic Control"
-   }, {
-      "id": "3",
       "name": "Traffic Shaper",
       "description": "Linux Traffic Control"
    }],

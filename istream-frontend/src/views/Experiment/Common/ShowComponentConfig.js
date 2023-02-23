@@ -33,7 +33,7 @@ export default class ShowComponentConfig extends Component {
             <br />
             <div>
                <strong>Memory: </strong>
-               {this.props.dockerConfig.memory === 0 ? "No Limitation" : this.props.dockerConfig.memory +" GB"}
+               {this.props.dockerConfig.memory === 0 ? "No Limitation" : this.props.dockerConfig.memory + " GB"}
             </div>
          </div>
       );
@@ -88,7 +88,10 @@ export default class ShowComponentConfig extends Component {
             <hr />
             {this.moduleInfo()}
             {this.props.moduleData.name === "DASH.js" ? (
-               ""
+               <div>
+                  <hr />
+                  {this.moduleConfig()}
+               </div>
             ) : (
                <div>
                   <hr />
