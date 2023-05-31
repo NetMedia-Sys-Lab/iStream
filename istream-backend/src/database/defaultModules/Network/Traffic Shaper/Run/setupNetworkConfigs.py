@@ -18,8 +18,10 @@ with open(networkConfigTemplateScript, "rt") as fileToChange:
     if os.path.isfile(defaultConfigPath):
         with open(defaultConfigPath, "rt") as configFile:
             networkConfig = json.load(configFile)
+            print(networkConfig['packetLoss'] == 0)
 
-        if networkConfig['delay'] == 0 & networkConfig['bandwidth'] == 0 & networkConfig['packetLoss'] == 0 & networkConfig['corruptPacket'] == 0:
+        if (networkConfig['delay'] == 0 and networkConfig['bandwidth'] == 0 and networkConfig['packetLoss'] == 0 and networkConfig['corruptPacket'] == 0):
+            print("here")
             filedata = filedata.replace(
                 '${defaultConfig}', '#')
             filedata = filedata.replace(

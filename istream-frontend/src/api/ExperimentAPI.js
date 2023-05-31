@@ -34,21 +34,22 @@ export function getExperimentDependency(user, experimentId) {
    );
 }
 
-export function subscribeToBuildExperiment(userInfo, cb) {
-   const SOCKET = openSocket(DOMAIN + "build");
-   SOCKET.on("getExperiment‌BuildInfo", (data) => {
-      cb(null, data);
-   });
-   SOCKET.emit("subscribeToBuildExperiment", userInfo);
+export function buildExperiment(experimentInfo, serverCb, clientCb, networkCb) {
+   const socket = openSocket(DOMAIN + "buildExperiment");
+   socket.emit("buildExperimentInfo", experimentInfo);
+
+   socket.on("getServerComponentBuildInfo", (err, data) => serverCb(err, data));
+   socket.on("getClientComponentBuildInfo", (err, data) => clientCb(err, data));
+   socket.on("getNetworkComponentBuildInfo", (err, data) => networkCb(err, data));
 }
 
 export function runExperiment(experimentInfo, serverCb, clientCb, networkCb) {
    const socket = openSocket(DOMAIN + "runExperiment");
-   socket.emit("experimentInfo", experimentInfo);
+   socket.emit("runExperimentInfo", experimentInfo);
 
-   socket.on("getServerOfExperimentInfo", (err, data) => serverCb(err, data));
-   socket.on("getClientOfExperimentInfo", (err, data) => clientCb(err, data));
-   socket.on("getNetworkOfExperimentInfo", (err, data) => networkCb(err, data));
+   socket.on("getServerComponentRunInfo", (err, data) => serverCb(err, data));
+   socket.on("getClientComponentRunInfo", (err, data) => clientCb(err, data));
+   socket.on("getNetworkComponentRunInfo", (err, data) => networkCb(err, data));
 }
 
 export function downloadExperimentResults(username, experimentId) {
@@ -100,25 +101,19 @@ export function downloadResult(user, experimentId, resultName) {
    );
 }
 
-// export function deleteResult(user, experimentId, resultName) {
-//    return API.get("/experiment/deleteResult", {
-//       params: {
-//          user,
-//          experimentId,
-//          resultName,
-//       },
-//    }).then(
-//       (response) => {
-//          return response.data;
-//       },
-//       (error) => {
-//          throw error.response;
-//       }
-//    );
-// }
-
 export const deleteResult = (request) => {
    return API.post("/experiment/deleteResult", request).then(
+      (response) => {
+         return response.data;
+      },
+      (error) => {
+         return error.response;
+      }
+   );
+};
+
+export const runBatchOfExperiments = (experimentsList) => {
+   return API.post("/experiment/runBatchOfExperiments", experimentsList).then(
       (response) => {
          return response.data;
       },

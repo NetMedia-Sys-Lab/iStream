@@ -13,3 +13,8 @@ tr:hover button{
     -ms-transition: 0s;
     -o-transition: 0s;
 }
+
+.fixed-table{
+    table-layout: fixed;
+    width:100%;
+}

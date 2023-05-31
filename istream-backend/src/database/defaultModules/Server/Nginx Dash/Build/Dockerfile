@@ -6,12 +6,12 @@ LABEL Description="This is custom Docker Image for running a dash server."
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -q update && \
-	apt-get -q install -y --no-install-recommends build-essential git libpcre3-dev libssl-dev zlib1g-dev gcc make ca-certificates software-properties-common
+	apt-get -q install -y --no-install-recommends build-essential git libpcre3-dev libssl-dev zlib1g-dev gcc make ca-certificates software-properties-common apt-transport-https
 RUN add-apt-repository ppa:savoury1/ffmpeg5 && \
 	add-apt-repository ppa:savoury1/ffmpeg4
 RUN apt-get update
 # RUN apt full-upgrade
-RUN apt-get install -y ffmpeg
+# RUN apt-get install -y ffmpeg
 
 RUN mkdir -p /tmp/build
 RUN cd /tmp/build \

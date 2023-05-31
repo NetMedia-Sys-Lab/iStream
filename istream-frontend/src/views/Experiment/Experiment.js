@@ -114,7 +114,10 @@ class Experiment extends Component {
                   </div>
                   <div className="container">
                      <div>
-                        <BuildExperiment experimentId={this.state.experimentId} />
+                        <BuildExperiment
+                           experimentId={this.state.experimentId}
+                           componentExistence={this.state.experimentConfig.componentExistence}
+                        />
                         <RunExperiment
                            experimentId={this.state.experimentId}
                            componentExistence={this.state.experimentConfig.componentExistence}

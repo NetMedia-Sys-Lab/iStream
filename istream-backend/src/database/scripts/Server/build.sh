@@ -12,5 +12,5 @@ if [[ "${serverName}" == "" ]]; then
     echo "No server module selected. Please select a module first."
     exit
 else
-    bash "${mainDir}/src/database/scripts/Common/build.sh" "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}"
+    bash "${mainDir}/src/database/scripts/Common/build.sh" "${username}" "Server" "${serverName}" "${serverType}" "${serverMachineId}" 2>&1
 fi

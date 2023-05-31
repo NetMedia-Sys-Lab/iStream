@@ -9,25 +9,21 @@
       "name": "Traffic Shaper",
       "description": "Linux Traffic Control"
    }],
-   "Client": [{
-      "id": "6",
-      "name": "Headless Player ABR",
-      "description": "test"
-   }, {
+   "Client": [ {
       "id": "7",
-      "name": "Headless Player New",
-      "description": "test"
+      "name": "iStream Player",
+      "description": "Lightweight headless DASH client"
    }, {
       "id": "8",
       "name": "DASH.js",
-      "description": "test"
+      "description": "A reference MPEG DASH client for browser"
    }, {
       "id": "9",
       "name": "GPAC",
-      "description": "test"
+      "description": "Highly configurable multimedia player"
    }, {
       "id": "10",
       "name": "VLC",
-      "description": "test"
+      "description": "Cross-platform multimedia player"
    }]
 }

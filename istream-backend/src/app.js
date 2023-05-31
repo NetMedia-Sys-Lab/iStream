@@ -42,7 +42,7 @@ const io = new Server(server, {
 
 let experimentHandlerController = require("./controllers/experimentHandler.controller");
 
-let build = io.of("/build").on("connection", (socket) => {
+let build = io.of("/buildExperiment").on("connection", (socket) => {
    experimentHandlerController.build(build, socket);
 });
 

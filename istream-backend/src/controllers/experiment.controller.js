@@ -274,3 +274,9 @@ module.exports.deleteResult = (req, res) => {
       res.status(500).send(errorMessage);
    }
 };
+
+module.exports.runBatchOfExperiments = (req, res) => {
+   const { userId, username, selectedExperiments } = req.body;
+   console.log(username, selectedExperiments);
+
+}

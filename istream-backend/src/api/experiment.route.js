@@ -13,5 +13,7 @@ router.post("/create", controller.createNewExperiment);
 router.post("/deleteExperiment", controller.deleteExperiment);
 router.post("/deleteResult", controller.deleteResult);
 router.post("/duplicateExperiment", controller.duplicateExperiment);
+router.post("/runBatchOfExperiments", controller.runBatchOfExperiments);
+
 
 module.exports = router;

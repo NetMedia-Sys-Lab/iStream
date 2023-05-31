@@ -30,11 +30,8 @@ export default class Home extends Component {
                         });
                      }}
                   />
-                  <div className="row justify-content-center">
-                     <div className="center-container">
-                        <ExperimentsList />
-                     </div>
-                  </div>
+
+                  <ExperimentsList />
                </div>
             </div>
          </main>

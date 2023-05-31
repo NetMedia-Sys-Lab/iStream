@@ -16,12 +16,4 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN pip3 install setuptools 
 RUN pip3 install tcconfig
 
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# COPY $networkConfigName .
-
-# RUN chmod +x $networkConfigName
-
-#RUN ./$networkConfigName
-
 CMD ["nginx", "-g", "daemon off;"]

@@ -2,34 +2,93 @@ const fs = require("fs");
 const { resolve } = require("path");
 const spawn = require("child_process").spawn;
 
-module.exports.build = (endpoint, socket) => {
-   socket.on("subscribeToBuildExperiment", (userInfo) => {
-      const child = spawn("bash", ["src/database/scripts/build.sh", userInfo.username, userInfo.experimentId]);
+function buildScript(endpoint, channel, component, userInfo) {
+   return new Promise((resolve, reject) => {
+      const child = spawn("bash", [`src/database/scripts/${component}/build.sh`, userInfo.username, userInfo.experimentId, "2>&1"]);
 
       child.stdout.setEncoding("utf8");
+      child.stderr.setEncoding("utf8");
+
       child.stdout.on("data", (data) => {
          try {
-            endpoint.emit("getExperiment‌BuildInfo", data.split("\n"));
+            endpoint.emit(channel, "", data.toString().split("\n"));
          } catch (e) {
             child.kill();
          }
       });
 
-      child.stderr.setEncoding("utf8");
-      child.stderr.on("data", (data) => {
+      child.stderr.on("data", (err) => {
          try {
-            console.log(data);
+            endpoint.emit(channel, "", err.toString().split("\n"));
+            console.log(err);
          } catch (e) {
             child.kill();
          }
       });
+      child.on("exit", (code) => {
+         if (code === 0) {
+            endpoint.emit(channel, "", [`----- The ${component} component ran successfully -----`]);
+            endpoint.emit(channel, "", "SOCKET_CLOSED");
+            resolve();
+         } else {
+            endpoint.emit(channel, "", [`------ The ${component} run script exited with code ${code} -----`]);
+            endpoint.emit(channel, "", "SOCKET_CLOSED");
+            reject(`Script ${component} exited with code ${code}`);
+         }
+      });
+   });
+}
 
-      child.on("close", function (code) {
-         endpoint.emit("getExperiment‌BuildInfo", "SOCKET_CLOSED");
-         socket.disconnect();
+module.exports.build = async (endpoint, socket) => {
+   socket.on("buildExperimentInfo", async (experimentInfo) => {
+      const experimentConfigPath = `src/database/users/${experimentInfo.username}/Experiments/${experimentInfo.experimentId}/experimentConfig.json`;
+      let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
+
+      buildPromises = [];
+      const serverPromise = buildScript(endpoint, "getServerComponentBuildInfo", "Server", experimentInfo);
+      buildPromises.push(serverPromise);
+      if (experimentConfigData.componentExistence.network === true) {
+         const networkPromise = buildScript(endpoint, "getNetworkComponentBuildInfo", "Network", experimentInfo);
+         buildPromises.push(networkPromise);
+      }
+      if (experimentConfigData.componentExistence.client === true) {
+         const clientPromise = buildScript(endpoint, "getClientComponentBuildInfo", "Client", experimentInfo);
+         buildPromises.push(clientPromise);
+      }
+      await Promise.all(buildPromises).catch((error) => {
+         console.error(error.message);
       });
    });
 };
+
+// module.exports.build = (endpoint, socket) => {
+//    socket.on("subscribeToBuildExperiment", (userInfo) => {
+//       const child = spawn("bash", ["src/database/scripts/build.sh", userInfo.username, userInfo.experimentId]);
+
+//       child.stdout.setEncoding("utf8");
+//       child.stdout.on("data", (data) => {
+//          try {
+//             endpoint.emit("getExperiment‌BuildInfo", data.split("\n"));
+//          } catch (e) {
+//             child.kill();
+//          }
+//       });
+
+//       child.stderr.setEncoding("utf8");
+//       child.stderr.on("data", (data) => {
+//          try {
+//             console.log(data);
+//          } catch (e) {
+//             child.kill();
+//          }
+//       });
+
+//       child.on("close", function (code) {
+//          endpoint.emit("getExperiment‌BuildInfo", "SOCKET_CLOSED");
+//          socket.disconnect();
+//       });
+//    });
+// };
 
 function runScript(endpoint, channel, component, userInfo) {
    return new Promise((resolve, reject) => {
@@ -170,7 +229,7 @@ function createResult(userInfo) {
 }
 
 module.exports.run = async (endpoint, socket) => {
-   socket.on("experimentInfo", async (experimentInfo) => {
+   socket.on("runExperimentInfo", async (experimentInfo) => {
       const experimentConfigPath = `src/database/users/${experimentInfo.username}/Experiments/${experimentInfo.experimentId}/experimentConfig.json`;
       let numberOfRepetition = Number(experimentInfo.numberOfRepetition);
       let experimentConfigData = JSON.parse(fs.readFileSync(experimentConfigPath));
@@ -180,14 +239,14 @@ module.exports.run = async (endpoint, socket) => {
       fs.writeFileSync(experimentConfigPath, JSON.stringify(experimentConfigData));
 
       let preparePromises = [];
-      const prepareServerPromise = prepareRunScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
+      const prepareServerPromise = prepareRunScript(endpoint, "getServerComponentRunInfo", "Server", experimentInfo);
       preparePromises.push(prepareServerPromise);
       if (experimentConfigData.componentExistence.network === true) {
-         const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
+         const prepareNetworkPromise = prepareRunScript(endpoint, "getNetworkComponentRunInfo", "Network", experimentInfo);
          preparePromises.push(prepareNetworkPromise);
       }
       if (experimentConfigData.componentExistence.client === true) {
-         const prepareClientPromise = prepareRunScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
+         const prepareClientPromise = prepareRunScript(endpoint, "getClientComponentRunInfo", "Client", experimentInfo);
          preparePromises.push(prepareClientPromise);
       }
       await Promise.all(preparePromises).catch((error) => {
@@ -197,18 +256,22 @@ module.exports.run = async (endpoint, socket) => {
       for (let i = 0; i < numberOfRepetition; i++) {
          let runPromises = [];
 
-         const serverPromise = runScript(endpoint, "getServerOfExperimentInfo", "Server", experimentInfo);
+         const serverPromise = runScript(endpoint, "getServerComponentRunInfo", "Server", experimentInfo);
          runPromises.push(serverPromise);
          if (experimentConfigData.componentExistence.network === true) {
-            const networkPromise = runScript(endpoint, "getNetworkOfExperimentInfo", "Network", experimentInfo);
+            const networkPromise = runScript(endpoint, "getNetworkComponentRunInfo", "Network", experimentInfo);
             runPromises.push(networkPromise);
          }
          if (experimentConfigData.componentExistence.client === true) {
-            const clientPromise = runScript(endpoint, "getClientOfExperimentInfo", "Client", experimentInfo);
+            const clientPromise = runScript(endpoint, "getClientComponentRunInfo", "Client", experimentInfo);
             runPromises.push(clientPromise);
          }
-         await Promise.all(runPromises);
-         await createResult(experimentInfo);
+         await Promise.all(runPromises).catch((error) => {
+            console.error(error.message);
+         });
+         await createResult(experimentInfo).catch((error) => {
+            console.error(error.message);
+         });
       }
 
       await runCleanUpScript(experimentInfo).catch((error) => {
