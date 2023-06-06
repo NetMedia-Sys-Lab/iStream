@@ -1,1 +1,0 @@
-{"Video":{"id":["1675824777635"]},"Server":{"type":"iStream","name":"Nginx Dash","advanceConfig":true,"configName":"No Config","machineID":""},"Network":{"type":"iStream","name":"Traffic Shaper","advanceConfig":false,"configName":"","machineID":""},"Client":{"type":"iStream","name":"VLC","advanceConfig":true,"configName":"runPlayer.sh","machineID":"0"}}

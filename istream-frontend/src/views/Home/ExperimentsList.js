@@ -130,7 +130,7 @@ export default class ExperimentsList extends Component {
                            title="Schedule Experiment"
                            onClick={() => this.addToRunList(experiment.experimentId)}
                         >
-                           <i className="fa fa-hourglass" style={{ cursor: "pointer", color: "#244D5A" }}></i>
+                           <i className="fa fa-clock-o" style={{ cursor: "pointer", color: "#244D5A", fontSize: "18px" }}></i>
                         </button>
                      </div>
                      {this.state.selectedExperiments.some((e) => e.experimentId === experiment.experimentId) ? (

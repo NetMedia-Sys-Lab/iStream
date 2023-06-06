@@ -275,8 +275,3 @@ module.exports.deleteResult = (req, res) => {
    }
 };
 
-module.exports.runBatchOfExperiments = (req, res) => {
-   const { userId, username, selectedExperiments } = req.body;
-   console.log(username, selectedExperiments);
-
-}

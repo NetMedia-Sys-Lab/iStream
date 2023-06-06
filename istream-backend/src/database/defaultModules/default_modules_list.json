@@ -25,5 +25,9 @@
       "id": "10",
       "name": "VLC",
       "description": "Cross-platform multimedia player"
+   }, {
+      "id": "11",
+      "name": "Headless Player",
+      "description": "Old version of iStream player"
    }]
 }

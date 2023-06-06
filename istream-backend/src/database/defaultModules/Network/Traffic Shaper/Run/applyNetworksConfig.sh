@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$(cd "$(dirname "${BASH_SOURCE}")" >/dev/null 2>&1 && pwd)"
 
-#docker exec istream_network_tc_container tcset eth0    
+docker exec istream_network_tc_container tcset eth0 --delay 20ms   
 
 #if [ -f "${DIR}/config.sh" ]; then
    #docker cp "${DIR}/config.sh" istream_network_tc_container:/

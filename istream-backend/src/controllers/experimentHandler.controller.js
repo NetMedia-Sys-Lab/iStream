@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { resolve } = require("path");
 const spawn = require("child_process").spawn;
 
 function buildScript(endpoint, channel, component, userInfo) {
@@ -60,35 +59,6 @@ module.exports.build = async (endpoint, socket) => {
       });
    });
 };
-
-// module.exports.build = (endpoint, socket) => {
-//    socket.on("subscribeToBuildExperiment", (userInfo) => {
-//       const child = spawn("bash", ["src/database/scripts/build.sh", userInfo.username, userInfo.experimentId]);
-
-//       child.stdout.setEncoding("utf8");
-//       child.stdout.on("data", (data) => {
-//          try {
-//             endpoint.emit("getExperiment‌BuildInfo", data.split("\n"));
-//          } catch (e) {
-//             child.kill();
-//          }
-//       });
-
-//       child.stderr.setEncoding("utf8");
-//       child.stderr.on("data", (data) => {
-//          try {
-//             console.log(data);
-//          } catch (e) {
-//             child.kill();
-//          }
-//       });
-
-//       child.on("close", function (code) {
-//          endpoint.emit("getExperiment‌BuildInfo", "SOCKET_CLOSED");
-//          socket.disconnect();
-//       });
-//    });
-// };
 
 function runScript(endpoint, channel, component, userInfo) {
    return new Promise((resolve, reject) => {
@@ -222,7 +192,7 @@ function createResult(userInfo) {
          if (code === 0) {
             resolve();
          } else {
-            reject(`Cleanup script exited with code ${code}`);
+            reject(`Create result script exited with code ${code}`);
          }
       });
    });

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controller = require("../controllers/experiment.controller");
+const batchExperimentController = require("../controllers/batchExperimentHandler.controller");
 
 router.get("/getUserExperimentsList", controller.getUserExperimentsList);
 router.get("/getExperimentConfig", controller.getExperimentConfig);
@@ -13,7 +14,7 @@ router.post("/create", controller.createNewExperiment);
 router.post("/deleteExperiment", controller.deleteExperiment);
 router.post("/deleteResult", controller.deleteResult);
 router.post("/duplicateExperiment", controller.duplicateExperiment);
-router.post("/runBatchOfExperiments", controller.runBatchOfExperiments);
 
+router.post("/runBatchOfExperiments", batchExperimentController.runBatchOfExperiments);
 
 module.exports = router;
