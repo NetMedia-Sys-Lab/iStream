@@ -66,13 +66,21 @@ export default class ShowComponentConfig extends Component {
       } else {
          configTemplate = Object.keys(this.props.moduleData.simpleConfig.values).map((key, index) => {
             let value = this.searchKey(this.props.moduleData.simpleConfig.parameters, key);
+            let data = "";
+
+            if (key === "file") {
+               const regex = /name=(.*?);/;
+               data = String(this.props.moduleData.simpleConfig.values[key]).match(regex)[1];
+            } else if (key === "bandwidth" && this.props.moduleData.simpleConfig.values[key] === 0) {
+               data = "Without limit";
+            } else {
+               data = String(this.props.moduleData.simpleConfig.values[key]);
+            }
 
             return (
                <div key={index}>
                   <strong> {value["title"]}: </strong>
-                  {key === "bandwidth" && this.props.moduleData.simpleConfig.values[key] === 0
-                     ? "Without limit"
-                     : String(this.props.moduleData.simpleConfig.values[key])}
+                  {data}
                </div>
             );
          });

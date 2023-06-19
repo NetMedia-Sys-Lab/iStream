@@ -3,13 +3,21 @@
       "id": "1",
       "name": "Nginx Dash",
       "description": "Nginx Server"
+   }, {
+      "id": "2",
+      "name": "Mininet Nginx Server",
+      "description": "Nginx Server within Mininet"
    }],
    "Network": [{
-      "id": "2",
+      "id": "3",
       "name": "Traffic Shaper",
       "description": "Linux Traffic Control"
+   }, {
+      "id": "4",
+      "name": "Mininet",
+      "description": "Mininet Emulator"
    }],
-   "Client": [ {
+   "Client": [{
       "id": "7",
       "name": "iStream Player",
       "description": "Lightweight headless DASH client"
@@ -29,5 +37,9 @@
       "id": "11",
       "name": "Headless Player",
       "description": "Old version of iStream player"
+   }, {
+      "id": "12",
+      "name": "Mininet Headless Player",
+      "description": "Old version of iStream player within Mininet"
    }]
 }

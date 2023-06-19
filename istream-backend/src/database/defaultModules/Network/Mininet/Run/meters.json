@@ -1,0 +1,398 @@
+[
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 1,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3500
+            }
+        ]
+    },
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 2,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3501
+            }
+        ]
+    },
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 3,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3502
+            }
+        ]
+    },
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 4,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 3503
+            }
+        ]
+    },
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 5,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6000
+            }
+        ]
+    },
+    {
+        "dpid": 1,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    },
+    {
+        "dpid": 2,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    },
+    {
+        "dpid": 3,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    },
+    {
+        "dpid": 4,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    },
+    {
+        "dpid": 5,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    },
+    {
+        "dpid": 6,
+        "flags": "KBPS",
+        "meter_id": 6,
+        "bands": [
+            {
+                "type": "DROP",
+                "rate": 6001
+            }
+        ]
+    }
+]

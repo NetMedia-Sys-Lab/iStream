@@ -1,0 +1,1 @@
+{"Video":{"id":["1645531654234"]},"Server":{"type":"iStream","name":"Mininet Nginx Server","advanceConfig":false,"configName":"","machineID":"0"},"Network":{"type":"iStream","name":"Mininet","advanceConfig":false,"configName":"","machineID":"0"},"Client":{"type":"iStream","name":"Mininet Headless Player","advanceConfig":false,"configName":"","machineID":"0"}}
